@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="theme-color" content="#0a1628"/>
+<meta name="description" content="Education Evolution & Long-Term Reform Dynamics Simulator – Aligned with NEP 2020"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="apple-touch-icon" href="icons/icon-192.png"/>
+<title>Education Evolution Simulator | Mateen Yousuf</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Source+Sans+3:wght@300;400;600&display=swap');
+
+  :root {
+    --bg-deep: #060e1f;
+    --bg-mid: #0a1628;
+    --bg-card: #0f1e35;
+    --bg-panel: #112040;
+    --accent-gold: #c9a84c;
+    --accent-silver: #a8b8d0;
+    --accent-blue: #2d6cdf;
+    --accent-glow: #4a9eff;
+    --text-primary: #e8f0fe;
+    --text-secondary: #a8b8d0;
+    --text-muted: #6a7f9a;
+    --danger: #e05a4e;
+    --success: #3ddc97;
+    --warning: #f0b429;
+    --border: rgba(168,184,208,0.12);
+    --border-bright: rgba(201,168,76,0.3);
+    --glow: rgba(74,158,255,0.15);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* STARFIELD BACKGROUND */
+  #stars {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .star { position: absolute; border-radius: 50%; background: white; animation: twinkle 3s infinite; }
+  @keyframes twinkle { 0%,100%{opacity:0.1} 50%{opacity:0.8} }
+
+  /* GRID LINE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-image:
+      linear-gradient(rgba(45,108,223,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(45,108,223,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* SCREENS */
+  .screen { display: none; position: relative; z-index: 1; min-height: 100vh; }
+  .screen.active { display: block; }
+
+  /* ===================== TITLE SCREEN ===================== */
+  #screen-title {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; min-height: 100vh;
+    padding: 40px 20px; text-align: center;
+  }
+  #screen-title.active { display: flex; }
+
+  .title-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    border: 1px solid var(--border-bright);
+    background: rgba(201,168,76,0.08);
+    padding: 6px 18px; border-radius: 40px;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.78rem;
+    letter-spacing: 2px; text-transform: uppercase;
+    color: var(--accent-gold); margin-bottom: 32px;
+    animation: fadeInDown 0.8s ease both;
+  }
+  .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-gold); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.5)} }
+
+  .title-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    font-weight: 900; line-height: 1.15;
+    background: linear-gradient(135deg, #e8f0fe 0%, #c9a84c 50%, #a8b8d0 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text; margin-bottom: 8px;
+    animation: fadeInUp 1s ease 0.2s both;
+  }
+  .title-sub {
+    font-family: 'Rajdhani', sans-serif; font-size: 1.1rem;
+    color: var(--accent-silver); letter-spacing: 3px; text-transform: uppercase;
+    margin-bottom: 40px; animation: fadeInUp 1s ease 0.4s both;
+  }
+
+  /* AUTHOR SECTION */
+  .author-card {
+    display: flex; align-items: center; gap: 20px;
+    background: var(--bg-card); border: 1px solid var(--border-bright);
+    border-radius: 16px; padding: 20px 28px; margin-bottom: 50px;
+    animation: fadeInUp 1s ease 0.6s both;
+    box-shadow: 0 0 40px rgba(201,168,76,0.08);
+  }
+  .author-photo {
+    width: 72px; height: 72px; border-radius: 50%;
+    object-fit: cover; object-position: top center;
+    border: 2px solid var(--accent-gold);
+    box-shadow: 0 0 20px rgba(201,168,76,0.3);
+  }
+  .author-info { text-align: left; }
+  .author-name { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--accent-gold); }
+  .author-role { font-size: 0.85rem; color: var(--text-secondary); margin-top: 2px; }
+
+  /* NAV GRID */
+  .nav-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 16px; width: 100%; max-width: 680px;
+    animation: fadeInUp 1s ease 0.8s both;
+  }
+  .nav-btn {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px 20px;
+    cursor: pointer; transition: all 0.3s ease;
+    text-align: left; position: relative; overflow: hidden;
+  }
+  .nav-btn::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 3px; height: 100%; background: var(--accent-gold);
+    transform: scaleY(0); transition: transform 0.3s ease;
+    transform-origin: bottom;
+  }
+  .nav-btn:hover { border-color: var(--border-bright); background: var(--bg-panel); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.1); }
+  .nav-btn:hover::before { transform: scaleY(1); }
+  .nav-btn-icon { font-size: 1.8rem; margin-bottom: 10px; display: block; }
+  .nav-btn-title { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--text-primary); letter-spacing: 0.5px; }
+  .nav-btn-desc { font-size: 0.78rem; color: var(--text-muted); margin-top: 4px; line-height: 1.4; }
+
+  /* ===================== INNER SCREENS ===================== */
+  .inner-screen { padding: 0; }
+  
+  /* TOP BAR */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: var(--bg-mid);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+  .topbar-left { display: flex; align-items: center; gap: 12px; }
+  .back-btn {
+    background: none; border: 1px solid var(--border); border-radius: 8px;
+    padding: 6px 12px; color: var(--text-secondary); cursor: pointer;
+    font-size: 0.85rem; transition: all 0.2s; display: flex; align-items: center; gap: 6px;
+  }
+  .back-btn:hover { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .topbar-title { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; letter-spacing: 1px; color: var(--text-primary); }
+  .topbar-badge { font-size: 0.7rem; color: var(--accent-gold); background: rgba(201,168,76,0.1); border: 1px solid var(--border-bright); border-radius: 20px; padding: 3px 10px; font-family: 'Rajdhani', sans-serif; letter-spacing: 1px; }
+
+  /* CONTENT AREA */
+  .content-area { padding: 24px; max-width: 1000px; margin: 0 auto; }
+
+  /* SECTION HEADERS */
+  .section-header { margin-bottom: 32px; }
+  .section-label { font-family: 'Rajdhani', sans-serif; font-size: 0.75rem; color: var(--accent-gold); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3vw, 2.2rem); color: var(--text-primary); line-height: 1.2; }
+  .section-desc { font-size: 0.95rem; color: var(--text-secondary); margin-top: 10px; line-height: 1.6; }
+
+  /* CARDS */
+  .card {
+    background: var(--bg-card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 24px; margin-bottom: 20px;
+    transition: border-color 0.2s;
+  }
+  .card:hover { border-color: rgba(201,168,76,0.2); }
+  .card-title { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent-gold); margin-bottom: 12px; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+  .card-body { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 24px; background: var(--bg-card); border-radius: 10px; padding: 4px; border: 1px solid var(--border); overflow-x: auto; }
+  .tab-btn { flex: 1; min-width: fit-content; padding: 8px 16px; border: none; border-radius: 8px; background: none; color: var(--text-muted); cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.5px; transition: all 0.2s; white-space: nowrap; }
+  .tab-btn.active { background: var(--accent-blue); color: white; }
+
+  /* SLIDERS */
+  .slider-group { margin-bottom: 20px; }
+  .slider-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .slider-name { font-size: 0.88rem; color: var(--text-secondary); }
+  .slider-value { font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 700; color: var(--accent-gold); min-width: 40px; text-align: right; }
+  input[type=range] { width: 100%; height: 4px; border-radius: 4px; background: var(--bg-panel); outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; }
+  input[type=range]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--accent-gold); border: 2px solid var(--bg-deep); cursor: pointer; }
+
+  /* METRICS */
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 24px 0; }
+  .metric-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 18px 16px; text-align: center; }
+  .metric-value { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; }
+  .metric-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+  .metric-bar { height: 4px; border-radius: 4px; background: var(--bg-deep); margin-top: 10px; overflow: hidden; }
+  .metric-fill { height: 100%; border-radius: 4px; transition: width 0.8s ease; }
+
+  /* SIMULATE BUTTON */
+  .simulate-btn {
+    width: 100%; padding: 16px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-glow));
+    color: white; font-family: 'Rajdhani', sans-serif; font-size: 1.1rem;
+    font-weight: 700; letter-spacing: 1.5px; cursor: pointer;
+    transition: all 0.3s; text-transform: uppercase; margin-top: 8px;
+    box-shadow: 0 4px 20px rgba(45,108,223,0.3);
+  }
+  .simulate-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(45,108,223,0.4); }
+  .simulate-btn:active { transform: translateY(0); }
+
+  /* CHART CANVAS */
+  .chart-wrap { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin: 20px 0; }
+  .chart-title { font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px; }
+  canvas { width: 100% !important; max-height: 260px; }
+
+  /* STAGE PIPELINE */
+  .stage-pipeline { display: flex; flex-direction: column; gap: 12px; }
+  .stage-item { display: flex; align-items: center; gap: 14px; background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .stage-num { width: 32px; height: 32px; border-radius: 50%; background: var(--accent-blue); display: flex; align-items: center; justify-content: center; font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.9rem; flex-shrink: 0; }
+  .stage-info { flex: 1; }
+  .stage-name { font-family: 'Rajdhani', sans-serif; font-size: 0.95rem; font-weight: 700; }
+  .stage-status { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+  .stage-pct { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.1rem; }
+  .stage-bar { height: 3px; background: var(--bg-deep); border-radius: 4px; margin-top: 8px; overflow: hidden; }
+  .stage-fill { height: 100%; border-radius: 4px; transition: width 1s ease; background: linear-gradient(90deg, var(--accent-blue), var(--accent-glow)); }
+  .stage-item.active-stage { border-color: var(--border-bright); box-shadow: 0 0 15px rgba(201,168,76,0.1); }
+
+  /* RADAR */
+  .radar-wrap { display: flex; justify-content: center; padding: 20px; }
+
+  /* PAGES (FOUNDATIONS) */
+  .page-nav { display: flex; align-items: center; justify-content: space-between; margin: 24px 0 16px; }
+  .page-nav-btn { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 8px 18px; color: var(--text-secondary); cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; transition: all 0.2s; }
+  .page-nav-btn:hover:not(:disabled) { border-color: var(--accent-gold); color: var(--accent-gold); }
+  .page-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .page-indicator { font-family: 'Rajdhani', sans-serif; color: var(--text-muted); font-size: 0.85rem; }
+  .page-content h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; margin-bottom: 16px; color: var(--text-primary); }
+  .page-content h3 { font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--accent-gold); margin: 20px 0 10px; letter-spacing: 0.5px; }
+  .page-content p { font-size: 0.93rem; line-height: 1.8; color: var(--text-secondary); margin-bottom: 14px; }
+  .page-content ul { padding-left: 20px; margin-bottom: 14px; }
+  .page-content li { font-size: 0.9rem; line-height: 1.7; color: var(--text-secondary); margin-bottom: 6px; }
+  .diagram-box { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin: 20px 0; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; color: var(--accent-silver); }
+  .diagram-box pre { font-family: 'Rajdhani', monospace; font-size: 0.82rem; color: var(--accent-silver); white-space: pre-wrap; }
+  .insight-box { background: rgba(201,168,76,0.06); border: 1px solid var(--border-bright); border-radius: 10px; padding: 16px 20px; margin: 20px 0; }
+  .insight-box strong { color: var(--accent-gold); font-family: 'Rajdhani', sans-serif; }
+
+  /* REPORT */
+  .report-section { margin-bottom: 28px; }
+  .report-section h3 { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--accent-gold); margin-bottom: 12px; }
+  .report-timeline { display: flex; flex-direction: column; gap: 14px; }
+  .timeline-item { display: flex; gap: 16px; }
+  .timeline-dot { width: 12px; height: 12px; border-radius: 50%; background: var(--accent-gold); margin-top: 5px; flex-shrink: 0; position: relative; }
+  .timeline-dot::after { content: ''; position: absolute; top: 12px; left: 5px; width: 2px; height: calc(100% + 10px); background: var(--border); }
+  .timeline-content { flex: 1; }
+  .timeline-year { font-family: 'Rajdhani', sans-serif; font-size: 0.8rem; color: var(--accent-silver); letter-spacing: 1px; }
+  .timeline-text { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-top: 3px; }
+
+  /* RISK GAUGE */
+  .risk-gauge { display: flex; align-items: center; gap: 12px; padding: 14px; background: var(--bg-panel); border-radius: 10px; border: 1px solid var(--border); margin: 8px 0; }
+  .risk-label { font-size: 0.85rem; color: var(--text-secondary); flex: 1; }
+  .risk-level { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 0.95rem; padding: 4px 12px; border-radius: 20px; }
+  .risk-low { background: rgba(61,220,151,0.15); color: var(--success); }
+  .risk-med { background: rgba(240,180,41,0.15); color: var(--warning); }
+  .risk-high { background: rgba(224,90,78,0.15); color: var(--danger); }
+
+  /* ANIMATIONS */
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+
+  /* TABS CONTENT */
+  .tab-content { display: none; animation: fadeIn 0.3s ease; }
+  .tab-content.active { display: block; }
+
+  /* RADAR SVG */
+  .radar-svg text { font-family: 'Rajdhani', sans-serif; font-size: 11px; }
+
+  /* RESPONSIVE */
+  @media(max-width: 600px) {
+    .nav-grid { grid-template-columns: 1fr; }
+    .author-card { flex-direction: column; text-align: center; }
+    .author-info { text-align: center; }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+
+  /* EXPORT BTN */
+  .export-btn { background: none; border: 1px solid var(--border-bright); border-radius: 8px; padding: 8px 18px; color: var(--accent-gold); cursor: pointer; font-family: 'Rajdhani', sans-serif; font-size: 0.85rem; font-weight: 600; letter-spacing: 1px; transition: all 0.2s; }
+  .export-btn:hover { background: rgba(201,168,76,0.1); }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg-deep); }
+  ::-webkit-scrollbar-thumb { background: var(--bg-panel); border-radius: 3px; }
+
+  /* INFO ROW */
+  .info-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+  .info-chip { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 0.78rem; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+  .info-chip span { color: var(--accent-gold); font-weight: 600; }
+
+  /* FORMULA BOX */
+  .formula-box { background: var(--bg-deep); border: 1px solid var(--border); border-radius: 8px; padding: 14px 18px; font-family: monospace; font-size: 0.82rem; color: var(--accent-glow); margin: 12px 0; overflow-x: auto; }
+
+  /* GENERATION CARDS */
+  .gen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+  .gen-card { background: var(--bg-panel); border: 1px solid var(--border); border-radius: 12px; padding: 20px; text-align: center; }
+  .gen-icon { font-size: 2rem; margin-bottom: 10px; }
+  .gen-title { font-family: 'Rajdhani', sans-serif; font-weight: 700; font-size: 1rem; margin-bottom: 12px; color: var(--text-primary); }
+  .gen-bar-wrap { margin: 10px 0 4px; }
+  .gen-bar-label { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px; }
+  .gen-bar { height: 6px; background: var(--bg-deep); border-radius: 4px; overflow: hidden; margin-bottom: 8px; }
+  .gen-fill { height: 100%; border-radius: 4px; }
+</style>
+</head>
+<body>
+
+<!-- STAR BACKGROUND -->
+<div id="stars"></div>
+
+<!-- ==================== SCREEN: TITLE ==================== -->
+<div id="screen-title" class="screen active">
+  <div class="title-badge">
+    <div class="badge-dot"></div>
+    Aligned with NEP 2020 | Long-Term System Modeling
+  </div>
+
+  <div class="title-logo">Education Evolution &<br/>Reform Dynamics Simulator</div>
+  <div class="title-sub">Long-Term Educational Future Modeling Platform</div>
+
+  <div class="author-card">
+    <img src="author.jpg" alt="Mateen Yousuf" class="author-photo" onerror="this.style.display='none'"/>
+    <div class="author-info">
+      <div class="author-name">Mateen Yousuf</div>
+      <div class="author-role">Teacher · School Education Department, Kashmir</div>
+    </div>
+  </div>
+
+  <div class="nav-grid">
+    <button class="nav-btn" onclick="showScreen('screen-lifecycle')">
+      <span class="nav-btn-icon">🔄</span>
+      <div class="nav-btn-title">Reform Lifecycle Lab</div>
+      <div class="nav-btn-desc">Simulate reform stages, adoption rates & collapse probability</div>
+    </button>
+    <button class="nav-btn" onclick="showScreen('screen-projection')">
+      <span class="nav-btn-icon">📈</span>
+      <div class="nav-btn-title">Start Evolution Simulation</div>
+      <div class="nav-btn-desc">20–50 year projection engine for curriculum & assessment models</div>
+    </button>
+    <button class="nav-btn" onclick="showScreen('screen-societal')">
+      <span class="nav-btn-icon">🌐</span>
+      <div class="nav-btn-title">Societal Impact Projection</div>
+      <div class="nav-btn-desc">Model innovation, equity, cohesion & democratic engagement</div>
+    </button>
+    <button class="nav-btn" onclick="showScreen('screen-foundations')">
+      <span class="nav-btn-icon">📚</span>
+      <div class="nav-btn-title">Framework & Historical Theory</div>
+      <div class="nav-btn-desc">20 deep academic pages on reform history & systemic theory</div>
+    </button>
+  </div>
+</div>
+
+<!-- ==================== SCREEN: LIFECYCLE ==================== -->
+<div id="screen-lifecycle" class="screen inner-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="showScreen('screen-title')">← Back</button>
+      <span class="topbar-title">Reform Lifecycle Lab</span>
+    </div>
+    <span class="topbar-badge">NEP 2020</span>
+  </div>
+  <div class="content-area">
+    <div class="section-header">
+      <div class="section-label">Section 2</div>
+      <div class="section-title">Reform Lifecycle Simulator</div>
+      <div class="section-desc">Adjust parameters to model reform adoption, resistance, and institutionalization across six systemic stages.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">⚙️ Reform Parameters</div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Reform Intensity</span><span class="slider-value" id="val-intensity">65</span></div>
+        <input type="range" min="10" max="100" value="65" id="sl-intensity" oninput="updateSlider('intensity')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Stakeholder Alignment</span><span class="slider-value" id="val-alignment">55</span></div>
+        <input type="range" min="10" max="100" value="55" id="sl-alignment" oninput="updateSlider('alignment')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Budget Capacity</span><span class="slider-value" id="val-budget">50</span></div>
+        <input type="range" min="10" max="100" value="50" id="sl-budget" oninput="updateSlider('budget')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Cultural Readiness</span><span class="slider-value" id="val-cultural">45</span></div>
+        <input type="range" min="10" max="100" value="45" id="sl-cultural" oninput="updateSlider('cultural')"/>
+      </div>
+      <button class="simulate-btn" onclick="runLifecycle()">▶ Run Lifecycle Simulation</button>
+    </div>
+
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value" id="m-adopt" style="color:var(--success)">—</div>
+        <div class="metric-label">Adoption Rate</div>
+        <div class="metric-bar"><div class="metric-fill" id="mb-adopt" style="background:var(--success);width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-resist" style="color:var(--warning)">—</div>
+        <div class="metric-label">Resistance Index</div>
+        <div class="metric-bar"><div class="metric-fill" id="mb-resist" style="background:var(--warning);width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-collapse" style="color:var(--danger)">—</div>
+        <div class="metric-label">Collapse Risk</div>
+        <div class="metric-bar"><div class="metric-fill" id="mb-collapse" style="background:var(--danger);width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-instit" style="color:var(--accent-glow)">—</div>
+        <div class="metric-label">Institutionalization</div>
+        <div class="metric-bar"><div class="metric-fill" id="mb-instit" style="background:var(--accent-glow);width:0%"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🔢 Analytics Formulas</div>
+      <div class="formula-box">AdoptionRate = (Alignment × 0.4 + Budget × 0.35 + Cultural × 0.25) × (1 - ResistancePenalty)</div>
+      <div class="formula-box">ResistanceIndex = ((100 - Cultural) × 0.5 + (100 - Alignment) × 0.3 + Intensity × 0.2) / 100</div>
+      <div class="formula-box">CollapseProbability = MAX(0, ResistanceIndex × 1.2 - AdoptionRate × 0.8)</div>
+      <div class="formula-box">InstitutionalizationScore = AdoptionRate × (1 - CollapseProbability) × (Budget / 100)</div>
+    </div>
+
+    <div class="card" id="lifecycle-stages" style="display:none">
+      <div class="card-title">📊 Reform Stage Pipeline</div>
+      <div class="stage-pipeline" id="stage-list"></div>
+    </div>
+
+    <div class="chart-wrap" id="lifecycle-chart-wrap" style="display:none">
+      <div class="chart-title">Reform Trajectory Over Time</div>
+      <canvas id="lifecycle-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN: PROJECTION ==================== -->
+<div id="screen-projection" class="screen inner-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="showScreen('screen-title')">← Back</button>
+      <span class="topbar-title">Evolution Simulation</span>
+    </div>
+    <span class="topbar-badge">20–50 Year Engine</span>
+  </div>
+  <div class="content-area">
+    <div class="section-header">
+      <div class="section-label">Section 3 + 5 + 6 + 7</div>
+      <div class="section-title">Long-Term Projection Engine</div>
+      <div class="section-desc">Set educational models and investment parameters to simulate 10, 20, and 50-year national outcomes.</div>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('proj','params')">Parameters</button>
+      <button class="tab-btn" onclick="switchTab('proj','fatigue')">Fatigue Model</button>
+      <button class="tab-btn" onclick="switchTab('proj','equity')">Equity Model</button>
+      <button class="tab-btn" onclick="switchTab('proj','generation')">Generations</button>
+    </div>
+
+    <div id="proj-params" class="tab-content active">
+      <div class="card">
+        <div class="card-title">🎓 Curriculum & Assessment Model</div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Competency Focus (vs Content)</span><span class="slider-value" id="val-comp">60</span></div>
+          <input type="range" min="0" max="100" value="60" id="sl-comp" oninput="updateSlider('comp')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Assessment: Holistic (vs Marks-based)</span><span class="slider-value" id="val-assess">55</span></div>
+          <input type="range" min="0" max="100" value="55" id="sl-assess" oninput="updateSlider('assess')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Teacher Investment Level</span><span class="slider-value" id="val-teacher">65</span></div>
+          <input type="range" min="10" max="100" value="65" id="sl-teacher" oninput="updateSlider('teacher')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Equity Focus Strength</span><span class="slider-value" id="val-equity">50</span></div>
+          <input type="range" min="10" max="100" value="50" id="sl-equity" oninput="updateSlider('equity')"/>
+        </div>
+        <button class="simulate-btn" onclick="runProjection()">▶ Generate 50-Year Projection</button>
+      </div>
+
+      <div id="proj-results" style="display:none">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-value" id="p-ic" style="color:var(--success)">—</div>
+            <div class="metric-label">Intellectual Capital</div>
+            <div class="metric-bar"><div class="metric-fill" id="pb-ic" style="background:var(--success);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="p-eq" style="color:var(--accent-glow)">—</div>
+            <div class="metric-label">Equity Progression</div>
+            <div class="metric-bar"><div class="metric-fill" id="pb-eq" style="background:var(--accent-glow);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="p-rs" style="color:var(--warning)">—</div>
+            <div class="metric-label">Reform Stability</div>
+            <div class="metric-bar"><div class="metric-fill" id="pb-rs" style="background:var(--warning);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="p-nci" style="color:var(--accent-gold)">—</div>
+            <div class="metric-label">Natl. Competency Index</div>
+            <div class="metric-bar"><div class="metric-fill" id="pb-nci" style="background:var(--accent-gold);width:0%"></div></div>
+          </div>
+        </div>
+        <div class="chart-wrap">
+          <div class="chart-title">Multi-Decade Growth Curves</div>
+          <canvas id="projection-chart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div id="proj-fatigue" class="tab-content">
+      <div class="card">
+        <div class="card-title">😓 Reform Fatigue & Resilience Model</div>
+        <div class="card-body" style="margin-bottom:16px">Excessive policy churn and teacher attrition erode public trust and implementation capacity.</div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Policy Changes per Decade</span><span class="slider-value" id="val-pchange">4</span></div>
+          <input type="range" min="1" max="15" value="4" id="sl-pchange" oninput="updateSlider('pchange')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Teacher Turnover Rate (%)</span><span class="slider-value" id="val-turnover">25</span></div>
+          <input type="range" min="5" max="60" value="25" id="sl-turnover" oninput="updateSlider('turnover')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Public Trust Level</span><span class="slider-value" id="val-trust">55</span></div>
+          <input type="range" min="10" max="100" value="55" id="sl-trust" oninput="updateSlider('trust')"/>
+        </div>
+        <button class="simulate-btn" onclick="runFatigue()">▶ Calculate Fatigue Scores</button>
+      </div>
+      <div id="fatigue-results" style="display:none">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-value" id="f-fatigue" style="color:var(--danger)">—</div>
+            <div class="metric-label">Reform Fatigue Score</div>
+            <div class="metric-bar"><div class="metric-fill" id="fb-fatigue" style="background:var(--danger);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="f-resilience" style="color:var(--success)">—</div>
+            <div class="metric-label">Resilience Capacity</div>
+            <div class="metric-bar"><div class="metric-fill" id="fb-resilience" style="background:var(--success);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="f-trust" style="color:var(--accent-glow)">—</div>
+            <div class="metric-label">Policy Trust Index</div>
+            <div class="metric-bar"><div class="metric-fill" id="fb-trust" style="background:var(--accent-glow);width:0%"></div></div>
+          </div>
+        </div>
+        <div class="formula-box">FatigueScore = (PolicyChanges × 5 + Turnover × 0.8) / (Trust × 0.5 + 10)</div>
+        <div class="formula-box">ResilienceCapacity = Trust × 0.6 + (100 - Turnover) × 0.3 + 10</div>
+        <div class="formula-box">PolicyTrustIndex = Trust × 0.7 × (1 - FatigueScore/100) × (1 - PolicyChanges/30)</div>
+      </div>
+    </div>
+
+    <div id="proj-equity" class="tab-content">
+      <div class="card">
+        <div class="card-title">⚖️ Equity Evolution Model</div>
+        <div class="card-body" style="margin-bottom:16px">Allocate long-term investment to reduce systemic educational disparities.</div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Rural Infrastructure Investment</span><span class="slider-value" id="val-rural">55</span></div>
+          <input type="range" min="10" max="100" value="55" id="sl-rural" oninput="updateSlider('rural')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Teacher Quality Programs</span><span class="slider-value" id="val-tqual">60</span></div>
+          <input type="range" min="10" max="100" value="60" id="sl-tqual" oninput="updateSlider('tqual')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Digital Access Expansion</span><span class="slider-value" id="val-digital">50</span></div>
+          <input type="range" min="10" max="100" value="50" id="sl-digital" oninput="updateSlider('digital')"/>
+        </div>
+        <div class="slider-group">
+          <div class="slider-label"><span class="slider-name">Foundational Learning Focus</span><span class="slider-value" id="val-found">65</span></div>
+          <input type="range" min="10" max="100" value="65" id="sl-found" oninput="updateSlider('found')"/>
+        </div>
+        <button class="simulate-btn" onclick="runEquity()">▶ Project Equity Outcomes</button>
+      </div>
+      <div id="equity-results" style="display:none">
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="metric-value" id="eq-gap" style="color:var(--success)">—</div>
+            <div class="metric-label">Gap Reduction Rate</div>
+            <div class="metric-bar"><div class="metric-fill" id="eqb-gap" style="background:var(--success);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="eq-incl" style="color:var(--accent-glow)">—</div>
+            <div class="metric-label">Inclusion Index</div>
+            <div class="metric-bar"><div class="metric-fill" id="eqb-incl" style="background:var(--accent-glow);width:0%"></div></div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="eq-mob" style="color:var(--accent-gold)">—</div>
+            <div class="metric-label">Social Mobility</div>
+            <div class="metric-bar"><div class="metric-fill" id="eqb-mob" style="background:var(--accent-gold);width:0%"></div></div>
+          </div>
+        </div>
+        <div class="formula-box">GapReduction = (Rural × 0.35 + Digital × 0.25 + Foundational × 0.4) × TQual/100</div>
+        <div class="formula-box">InclusionIndex = (Rural + Digital + TQual + Foundational) / 4</div>
+        <div class="formula-box">SocialMobility = InclusionIndex × 0.7 + GapReduction × 0.3</div>
+      </div>
+    </div>
+
+    <div id="proj-generation" class="tab-content">
+      <div class="card">
+        <div class="card-title">🧬 Generational Competency Continuum</div>
+        <div class="card-body">Simulate how competency shifts accumulate across three successive generations exposed to reformed education systems.</div>
+      </div>
+      <div class="gen-grid" id="gen-grid"></div>
+      <div class="chart-wrap" style="margin-top:20px">
+        <div class="chart-title">Generational Competency Shift</div>
+        <canvas id="gen-chart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN: SOCIETAL ==================== -->
+<div id="screen-societal" class="screen inner-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="showScreen('screen-title')">← Back</button>
+      <span class="topbar-title">Societal Impact Projection</span>
+    </div>
+    <span class="topbar-badge">System Dashboard</span>
+  </div>
+  <div class="content-area">
+    <div class="section-header">
+      <div class="section-label">Section 4 + 8</div>
+      <div class="section-title">Societal Impact & Stability Dashboard</div>
+      <div class="section-desc">Model education's cascading effects on national innovation, social cohesion, and democratic health.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🌍 Societal Variables</div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Competency Education Level</span><span class="slider-value" id="val-scomp">65</span></div>
+        <input type="range" min="10" max="100" value="65" id="sl-scomp" oninput="updateSlider('scomp')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Equity Achievement Level</span><span class="slider-value" id="val-seq">55</span></div>
+        <input type="range" min="10" max="100" value="55" id="sl-seq" oninput="updateSlider('seq')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">System Reform Stability</span><span class="slider-value" id="val-sstab">60</span></div>
+        <input type="range" min="10" max="100" value="60" id="sl-sstab" oninput="updateSlider('sstab')"/>
+      </div>
+      <div class="slider-group">
+        <div class="slider-label"><span class="slider-name">Long-Term Investment Duration (yrs)</span><span class="slider-value" id="val-sdur">20</span></div>
+        <input type="range" min="5" max="50" value="20" id="sl-sdur" oninput="updateSlider('sdur')"/>
+      </div>
+      <button class="simulate-btn" onclick="runSocietal()">▶ Project Societal Impact</button>
+    </div>
+
+    <div id="societal-results" style="display:none">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-value" id="s-innov" style="color:var(--success)">—</div>
+          <div class="metric-label">Innovation Capacity</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-innov" style="background:var(--success);width:0%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="s-crit" style="color:var(--accent-glow)">—</div>
+          <div class="metric-label">Critical Thinking</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-crit" style="background:var(--accent-glow);width:0%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="s-econ" style="color:var(--warning)">—</div>
+          <div class="metric-label">Economic Adaptability</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-econ" style="background:var(--warning);width:0%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="s-cohes" style="color:var(--accent-gold)">—</div>
+          <div class="metric-label">Social Cohesion</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-cohes" style="background:var(--accent-gold);width:0%"></div></div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="s-demo" style="color:var(--success)">—</div>
+          <div class="metric-label">Democratic Engagement</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-demo" style="background:var(--success);width:0%"></div></div>
+        </div>
+        <div class="metric-card" style="border-color:var(--border-bright); background:rgba(201,168,76,0.05)">
+          <div class="metric-value" id="s-sdci" style="color:var(--accent-gold)">—</div>
+          <div class="metric-label">Societal Dev. Composite</div>
+          <div class="metric-bar"><div class="metric-fill" id="sb-sdci" style="background:var(--accent-gold);width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="chart-wrap">
+        <div class="chart-title">Stability Radar Map</div>
+        <div class="radar-wrap"><canvas id="radar-chart" width="340" height="320"></canvas></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚠️ System Risk Assessment</div>
+        <div id="risk-list"></div>
+      </div>
+    </div>
+
+    <!-- FORMULA REFERENCE -->
+    <div class="card" style="margin-top:24px">
+      <div class="card-title">🔢 Societal Formula Reference</div>
+      <div class="formula-box">InnovationCapacity = CompetencyLevel × 0.5 + Equity × 0.3 + Stability × 0.2</div>
+      <div class="formula-box">CriticalThinking = CompetencyLevel × 0.6 + Duration/50 × 20 + Equity × 0.2</div>
+      <div class="formula-box">EconomicAdaptability = (InnovationCapacity + CriticalThinking) / 2 × 0.9</div>
+      <div class="formula-box">SocialCohesion = Equity × 0.55 + Stability × 0.3 + CompetencyLevel × 0.15</div>
+      <div class="formula-box">DemocraticEngagement = (CriticalThinking × 0.4 + SocialCohesion × 0.4 + Equity × 0.2)</div>
+      <div class="formula-box">SDCI = (Innovation + CritThink + EconAdapt + SocCohes + DemoEngage) / 5</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SCREEN: FOUNDATIONS ==================== -->
+<div id="screen-foundations" class="screen inner-screen">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="back-btn" onclick="showScreen('screen-title')">← Back</button>
+      <span class="topbar-title">Framework & Historical Theory</span>
+    </div>
+    <button class="export-btn" onclick="exportReport()">⬇ Export Report</button>
+  </div>
+  <div class="content-area">
+    <div class="section-header">
+      <div class="section-label">Section 1 — 20 Academic Pages</div>
+      <div class="section-title">Historical & Systemic Foundations</div>
+      <div class="section-desc">Deep academic content on education reform theory, historical movements, and long-term systemic thinking.</div>
+    </div>
+
+    <div class="page-nav">
+      <button class="page-nav-btn" id="prev-btn" onclick="changePage(-1)" disabled>◀ Previous</button>
+      <span class="page-indicator" id="page-ind">Page 1 of 20</span>
+      <button class="page-nav-btn" id="next-btn" onclick="changePage(1)">Next ▶</button>
+    </div>
+
+    <div class="card page-content" id="page-content"></div>
+
+    <div class="page-nav" style="margin-top:0; margin-bottom:40px">
+      <button class="page-nav-btn" id="prev-btn2" onclick="changePage(-1)" disabled>◀ Previous</button>
+      <span class="page-indicator" id="page-ind2">Page 1 of 20</span>
+      <button class="page-nav-btn" id="next-btn2" onclick="changePage(1)">Next ▶</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== STARS ==========
+(function(){
+  const s = document.getElementById('stars');
+  for(let i=0;i<80;i++){
+    const d=document.createElement('div');
+    d.className='star';
+    const sz=Math.random()*2+0.5;
+    d.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-delay:${Math.random()*5}s;animation-duration:${2+Math.random()*4}s`;
+    s.appendChild(d);
+  }
+})();
+
+// ========== SCREEN NAVIGATION ==========
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='screen-foundations') renderPage();
+  if(id==='screen-projection') renderGeneration();
+}
+
+// ========== SLIDER UPDATE ==========
+function updateSlider(k) {
+  const el=document.getElementById('sl-'+k);
+  document.getElementById('val-'+k).textContent=el.value;
+}
+
+// ========== TAB SWITCH ==========
+function switchTab(prefix, tab) {
+  const tabs=document.querySelectorAll(`#screen-${prefix==='proj'?'projection':'societal'} .tab-btn`);
+  const contents=document.querySelectorAll(`#screen-${prefix==='proj'?'projection':'societal'} .tab-content`);
+  tabs.forEach(t=>t.classList.remove('active'));
+  contents.forEach(c=>c.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(prefix+'-'+tab).classList.add('active');
+  if(tab==='generation') renderGeneration();
+}
+
+// ========== LIFECYCLE SIMULATION ==========
+function runLifecycle(){
+  const intensity=+document.getElementById('sl-intensity').value;
+  const alignment=+document.getElementById('sl-alignment').value;
+  const budget=+document.getElementById('sl-budget').value;
+  const cultural=+document.getElementById('sl-cultural').value;
+
+  const resistance = Math.min(100, ((100-cultural)*0.5 + (100-alignment)*0.3 + intensity*0.2));
+  const adoptionRaw = (alignment*0.4 + budget*0.35 + cultural*0.25);
+  const resistPenalty = resistance/200;
+  const adoption = Math.max(0, Math.min(100, adoptionRaw*(1-resistPenalty)));
+  const collapse = Math.max(0, Math.min(100, resistance*1.2 - adoption*0.8));
+  const instit = Math.max(0, Math.min(100, adoption*(1-collapse/100)*(budget/100)));
+
+  animMetric('m-adopt','mb-adopt',adoption,'%');
+  animMetric('m-resist','mb-resist',resistance,'%');
+  animMetric('m-collapse','mb-collapse',collapse,'%');
+  animMetric('m-instit','mb-instit',instit,'%');
+
+  // Stages
+  const stages=[
+    {name:'Policy Announcement',pct:Math.min(100,adoption*0.4+20)},
+    {name:'Early Adoption',pct:Math.min(100,adoption*0.6)},
+    {name:'Implementation Resistance',pct:Math.min(100,resistance*0.8)},
+    {name:'Stabilization',pct:Math.min(100,instit*1.2)},
+    {name:'Institutionalization',pct:Math.min(100,instit)},
+    {name:'Evolution or Collapse',pct:collapse<30?Math.min(100,instit*1.1):collapse}
+  ];
+  const colors=['var(--accent-glow)','var(--success)','var(--danger)','var(--warning)','var(--accent-blue)','var(--accent-gold)'];
+  const sl=document.getElementById('stage-list');
+  sl.innerHTML=stages.map((s,i)=>`
+    <div class="stage-item ${i===3?'active-stage':''}">
+      <div class="stage-num" style="background:${colors[i]}">${i+1}</div>
+      <div class="stage-info">
+        <div class="stage-name">${s.name}</div>
+        <div class="stage-status">${s.pct>60?'High Activity':'Moderate'} · ${s.pct.toFixed(0)}% completion</div>
+        <div class="stage-bar"><div class="stage-fill" style="width:${s.pct}%;background:${colors[i]}"></div></div>
+      </div>
+      <div class="stage-pct" style="color:${colors[i]}">${s.pct.toFixed(0)}%</div>
+    </div>`).join('');
+
+  document.getElementById('lifecycle-stages').style.display='block';
+  document.getElementById('lifecycle-chart-wrap').style.display='block';
+
+  // Chart
+  const years=Array.from({length:21},(_,i)=>2025+i*1);
+  const adoptCurve=years.map((_,i)=>Math.min(100,adoption*(1-Math.exp(-i*0.3))));
+  const resistCurve=years.map((_,i)=>Math.max(0,resistance*Math.exp(-i*0.15)));
+  drawLineChart('lifecycle-chart',years.map(y=>y.toString()),
+    [{label:'Adoption Rate',data:adoptCurve,color:'#3ddc97'},
+     {label:'Resistance Index',data:resistCurve,color:'#f0b429'},
+     {label:'Collapse Risk',data:years.map((_,i)=>Math.max(0,collapse*Math.exp(-i*0.2))),color:'#e05a4e'}]);
+
+  saveToStorage('lastLifecycle',{adoption,resistance,collapse,instit,timestamp:Date.now()});
+}
+
+// ========== PROJECTION ==========
+function runProjection(){
+  const comp=+document.getElementById('sl-comp').value;
+  const assess=+document.getElementById('sl-assess').value;
+  const teacher=+document.getElementById('sl-teacher').value;
+  const equity=+document.getElementById('sl-equity').value;
+
+  const ic=Math.min(100,(comp*0.35+assess*0.25+teacher*0.3+equity*0.1));
+  const eq=Math.min(100,(equity*0.6+teacher*0.25+comp*0.15));
+  const rs=Math.min(100,(teacher*0.4+equity*0.3+comp*0.2+assess*0.1));
+  const nci=Math.min(100,(ic*0.4+eq*0.3+rs*0.3));
+
+  animMetric('p-ic','pb-ic',ic,'%');
+  animMetric('p-eq','pb-eq',eq,'%');
+  animMetric('p-rs','pb-rs',rs,'%');
+  animMetric('p-nci','pb-nci',nci,'%');
+  document.getElementById('proj-results').style.display='block';
+
+  const years=Array.from({length:51},(_,i)=>2025+i);
+  const icCurve=years.map((_,i)=>Math.min(100,ic*(1-Math.exp(-i/15))));
+  const eqCurve=years.map((_,i)=>Math.min(100,eq*(1-Math.exp(-i/20))));
+  const rsCurve=years.map((_,i)=>Math.min(100,rs*(1-Math.exp(-i/10))));
+  drawLineChart('projection-chart',years.map(y=>y.toString()),
+    [{label:'Intellectual Capital',data:icCurve,color:'#3ddc97'},
+     {label:'Equity Progression',data:eqCurve,color:'#4a9eff'},
+     {label:'Reform Stability',data:rsCurve,color:'#f0b429'}]);
+
+  saveToStorage('lastProjection',{ic,eq,rs,nci,timestamp:Date.now()});
+}
+
+// ========== FATIGUE ==========
+function runFatigue(){
+  const pc=+document.getElementById('sl-pchange').value;
+  const to=+document.getElementById('sl-turnover').value;
+  const trust=+document.getElementById('sl-trust').value;
+
+  const fatigue=Math.min(100,(pc*5+to*0.8)/(trust*0.05+1));
+  const resilience=Math.min(100,trust*0.6+(100-to)*0.3+10);
+  const pti=Math.min(100,trust*0.7*(1-fatigue/100)*(1-pc/30));
+
+  animMetric('f-fatigue','fb-fatigue',fatigue,'%');
+  animMetric('f-resilience','fb-resilience',resilience,'%');
+  animMetric('f-trust','fb-trust',pti,'%');
+  document.getElementById('fatigue-results').style.display='block';
+}
+
+// ========== EQUITY ==========
+function runEquity(){
+  const rural=+document.getElementById('sl-rural').value;
+  const tq=+document.getElementById('sl-tqual').value;
+  const dig=+document.getElementById('sl-digital').value;
+  const found=+document.getElementById('sl-found').value;
+
+  const gap=Math.min(100,(rural*0.35+dig*0.25+found*0.4)*tq/100);
+  const incl=Math.min(100,(rural+dig+tq+found)/4);
+  const mob=Math.min(100,incl*0.7+gap*0.3);
+
+  animMetric('eq-gap','eqb-gap',gap,'%');
+  animMetric('eq-incl','eqb-incl',incl,'%');
+  animMetric('eq-mob','eqb-mob',mob,'%');
+  document.getElementById('equity-results').style.display='block';
+}
+
+// ========== SOCIETAL ==========
+function runSocietal(){
+  const comp=+document.getElementById('sl-scomp').value;
+  const eq=+document.getElementById('sl-seq').value;
+  const stab=+document.getElementById('sl-sstab').value;
+  const dur=+document.getElementById('sl-sdur').value;
+  const durFactor=Math.min(1,dur/50);
+
+  const innov=Math.min(100,comp*0.5+eq*0.3+stab*0.2);
+  const crit=Math.min(100,comp*0.6+durFactor*20+eq*0.2);
+  const econ=Math.min(100,(innov+crit)/2*0.9);
+  const cohes=Math.min(100,eq*0.55+stab*0.3+comp*0.15);
+  const demo=Math.min(100,crit*0.4+cohes*0.4+eq*0.2);
+  const sdci=Math.min(100,(innov+crit+econ+cohes+demo)/5);
+
+  animMetric('s-innov','sb-innov',innov,'%');
+  animMetric('s-crit','sb-crit',crit,'%');
+  animMetric('s-econ','sb-econ',econ,'%');
+  animMetric('s-cohes','sb-cohes',cohes,'%');
+  animMetric('s-demo','sb-demo',demo,'%');
+  animMetric('s-sdci','sb-sdci',sdci,'%');
+  document.getElementById('societal-results').style.display='block';
+
+  // Radar
+  drawRadar('radar-chart',['Innovation','Critical Thinking','Econ. Adapt','Social Cohesion','Democratic Engmt'],[innov,crit,econ,cohes,demo]);
+
+  // Risk
+  const risks=[
+    {label:'Innovation Stagnation Risk',val:100-innov},
+    {label:'Democratic Erosion Risk',val:100-demo},
+    {label:'Social Fragmentation Risk',val:100-cohes},
+    {label:'Economic Volatility Risk',val:100-econ}
+  ];
+  document.getElementById('risk-list').innerHTML=risks.map(r=>`
+    <div class="risk-gauge">
+      <span class="risk-label">${r.label}</span>
+      <span class="risk-level ${r.val<30?'risk-low':r.val<60?'risk-med':'risk-high'}">${r.val<30?'LOW':r.val<60?'MEDIUM':'HIGH'} — ${r.val.toFixed(0)}%</span>
+    </div>`).join('');
+
+  saveToStorage('lastSocietal',{innov,crit,econ,cohes,demo,sdci,timestamp:Date.now()});
+}
+
+// ========== GENERATIONS ==========
+function renderGeneration(){
+  const comp=+document.getElementById('sl-comp')?.value||60;
+  const gens=[
+    {icon:'👴',title:'Generation 1 — Transitional',flex:comp*0.4,div:comp*0.3,adapt:comp*0.35,desc:'Mixed exposure to old and new systems'},
+    {icon:'👨',title:'Generation 2 — Stabilizing',flex:comp*0.65,div:comp*0.55,adapt:comp*0.6,desc:'Partial competency framework adoption'},
+    {icon:'🧒',title:'Generation 3 — Competency Native',flex:comp*0.9,div:comp*0.85,adapt:comp*0.88,desc:'Full NEP 2020 system alignment'}
+  ];
+  const colors=['var(--warning)','var(--accent-glow)','var(--success)'];
+  document.getElementById('gen-grid').innerHTML=gens.map((g,i)=>`
+    <div class="gen-card">
+      <div class="gen-icon">${g.icon}</div>
+      <div class="gen-title">${g.title}</div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:12px">${g.desc}</div>
+      ${['Cognitive Flexibility','Skill Diversity','Adaptability Quotient'].map((l,j)=>`
+      <div class="gen-bar-wrap">
+        <div class="gen-bar-label"><span>${l}</span><span style="color:${colors[i]}">${[g.flex,g.div,g.adapt][j].toFixed(0)}%</span></div>
+        <div class="gen-bar"><div class="gen-fill" style="width:${[g.flex,g.div,g.adapt][j]}%;background:${colors[i]}"></div></div>
+      </div>`).join('')}
+    </div>`).join('');
+
+  drawLineChart('gen-chart',['Gen 1','Gen 2','Gen 3'],
+    [{label:'Cognitive Flexibility',data:gens.map(g=>g.flex),color:'#f0b429'},
+     {label:'Skill Diversity',data:gens.map(g=>g.div),color:'#4a9eff'},
+     {label:'Adaptability Quotient',data:gens.map(g=>g.adapt),color:'#3ddc97'}]);
+}
+
+// ========== CHART HELPERS ==========
+function drawLineChart(canvasId, labels, datasets){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth||600;
+  canvas.height=240;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  const pad={t:20,r:20,b:40,l:45};
+  const W=canvas.width-pad.l-pad.r;
+  const H=canvas.height-pad.t-pad.b;
+  const maxVal=100;
+
+  // Grid
+  ctx.strokeStyle='rgba(168,184,208,0.08)';
+  ctx.lineWidth=1;
+  for(let i=0;i<=5;i++){
+    const y=pad.t+H*(1-i/5);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+W,y);ctx.stroke();
+    ctx.fillStyle='rgba(168,184,208,0.4)';
+    ctx.font='10px Rajdhani,sans-serif';
+    ctx.textAlign='right';
+    ctx.fillText((i*20)+'%',pad.l-6,y+4);
+  }
+
+  // X Labels
+  ctx.fillStyle='rgba(168,184,208,0.5)';
+  ctx.font='10px Rajdhani,sans-serif';
+  ctx.textAlign='center';
+  const step=Math.max(1,Math.floor(labels.length/8));
+  labels.forEach((l,i)=>{
+    if(i%step===0){
+      const x=pad.l+W*(i/(labels.length-1||1));
+      ctx.fillText(l,x,canvas.height-pad.b+14);
+    }
+  });
+
+  // Lines
+  datasets.forEach(ds=>{
+    ctx.strokeStyle=ds.color;
+    ctx.lineWidth=2;
+    ctx.shadowColor=ds.color;
+    ctx.shadowBlur=4;
+    ctx.beginPath();
+    ds.data.forEach((v,i)=>{
+      const x=pad.l+W*(i/(ds.data.length-1||1));
+      const y=pad.t+H*(1-v/maxVal);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke();
+    ctx.shadowBlur=0;
+
+    // Dots (sparse)
+    ds.data.forEach((v,i)=>{
+      if(i%(Math.floor(ds.data.length/5)+1)===0||i===ds.data.length-1){
+        const x=pad.l+W*(i/(ds.data.length-1||1));
+        const y=pad.t+H*(1-v/maxVal);
+        ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+        ctx.fillStyle=ds.color;ctx.fill();
+      }
+    });
+  });
+
+  // Legend
+  let lx=pad.l;
+  const ly=canvas.height-4;
+  datasets.forEach(ds=>{
+    ctx.fillStyle=ds.color;
+    ctx.fillRect(lx,ly-8,12,3);
+    ctx.font='9px Rajdhani,sans-serif';
+    ctx.fillText(ds.label,lx+16,ly);
+    lx+=ds.label.length*5+30;
+  });
+}
+
+function drawRadar(canvasId, labels, values){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const cx=canvas.width/2, cy=canvas.height/2, r=Math.min(cx,cy)-50;
+  const n=labels.length;
+  const angleStep=Math.PI*2/n;
+
+  // Grid
+  [0.2,0.4,0.6,0.8,1].forEach(f=>{
+    ctx.strokeStyle=`rgba(168,184,208,${0.08})`;
+    ctx.lineWidth=1;
+    ctx.beginPath();
+    labels.forEach((_,i)=>{
+      const a=-Math.PI/2+i*angleStep;
+      const x=cx+r*f*Math.cos(a), y=cy+r*f*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.closePath();ctx.stroke();
+  });
+
+  // Axes
+  labels.forEach((_,i)=>{
+    const a=-Math.PI/2+i*angleStep;
+    ctx.strokeStyle='rgba(168,184,208,0.15)';
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));ctx.stroke();
+  });
+
+  // Data
+  ctx.fillStyle='rgba(74,158,255,0.15)';
+  ctx.strokeStyle='rgba(74,158,255,0.8)';
+  ctx.lineWidth=2;
+  ctx.beginPath();
+  values.forEach((v,i)=>{
+    const a=-Math.PI/2+i*angleStep;
+    const f=v/100;
+    const x=cx+r*f*Math.cos(a), y=cy+r*f*Math.sin(a);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();ctx.fill();ctx.stroke();
+
+  // Dots + Labels
+  labels.forEach((l,i)=>{
+    const a=-Math.PI/2+i*angleStep;
+    const f=values[i]/100;
+    ctx.beginPath();ctx.arc(cx+r*f*Math.cos(a),cy+r*f*Math.sin(a),4,0,Math.PI*2);
+    ctx.fillStyle='var(--accent-glow)';ctx.fill();
+    ctx.fillStyle='rgba(168,184,208,0.8)';
+    ctx.font='11px Rajdhani,sans-serif';ctx.textAlign='center';
+    const lx=cx+(r+20)*Math.cos(a), ly=cy+(r+20)*Math.sin(a);
+    ctx.fillText(l,lx,ly+4);
+  });
+}
+
+// ========== ANIMATE METRIC ==========
+function animMetric(id,barId,val,suffix){
+  const el=document.getElementById(id);
+  const bar=document.getElementById(barId);
+  let cur=0;
+  const target=Math.round(val);
+  const step=Math.max(1,Math.floor(target/40));
+  const iv=setInterval(()=>{
+    cur=Math.min(cur+step,target);
+    el.textContent=cur+(suffix||'');
+    if(bar) bar.style.width=cur+'%';
+    if(cur>=target) clearInterval(iv);
+  },20);
+}
+
+// ========== STORAGE ==========
+function saveToStorage(key,data){
+  try{localStorage.setItem('edu_sim_'+key,JSON.stringify(data));}catch(e){}
+}
+
+// ========== PAGES CONTENT ==========
+const pages=[
+  {
+    title:"Page 1: Education as a Civilizational Engine",
+    content:`<h2>Education as a Civilizational Engine</h2>
+    <p>Education is not merely a social institution — it is the foundational engine of civilizational continuity, transformation, and advancement. From the Vedic gurukul traditions of ancient India to the Socratic academies of Greece, every enduring civilization has structured its knowledge transmission systems in alignment with its deepest values, survival needs, and future aspirations.</p>
+    <p>Civilizations that invested deliberately and consistently in the intellectual development of their citizens have demonstrated remarkable resilience across centuries. The Islamic Golden Age, spanning the 8th to the 14th centuries, produced revolutionary advancements in mathematics, astronomy, medicine, and philosophy — not as accidents, but as the direct outcome of deliberate educational institutions such as the House of Wisdom in Baghdad, which aggregated, translated, and expanded upon the accumulated knowledge of multiple civilizations.</p>
+    <h3>Historical Evidence of Education–Civilization Correlation</h3>
+    <p>The Roman Empire's longevity owed much to its systematic approach to legal education and civic training. The Confucian examination system in China created bureaucratic meritocracy that sustained governance for over a millennium. In each case, education was not a peripheral social service but a central civilizational technology.</p>
+    <div class="diagram-box"><pre>
+CIVILIZATIONAL ENGINE MODEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Values & Vision → Educational Design
+       ↓
+Knowledge Production → Innovation
+       ↓
+Human Capital Formation → Economic Growth
+       ↓
+Institutional Stability → Civilizational Persistence
+       ↓
+(Feedback Loop back to Values & Vision)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>NEP 2020 in Civilizational Context</h3>
+    <p>India's National Education Policy 2020 represents precisely this kind of civilizational recalibration. By shifting from a colonial-era content-transmission model toward holistic competency development, India is realigning its educational DNA with both its ancient pedagogical traditions and modern development imperatives. The policy explicitly references India's role as a global knowledge society, signaling an understanding of education's civilizational function.</p>
+    <div class="insight-box"><strong>🔍 Leadership Reflection:</strong> Consider your own institution's relationship with broader civilizational purpose. Does your school's vision extend beyond examination results to the formation of capable, ethically grounded citizens? How can daily teaching practices embody a civilizational commitment?</div>
+    <h3>Long-Term Implications for Reform Design</h3>
+    <p>Understanding education as a civilizational engine has profound implications for how we design, evaluate, and sustain reform. Short-term metric obsession — the fixation on annual examination scores — represents a catastrophic misalignment between reform method and civilizational purpose. Civilizational contributions require generational timeframes for assessment. NEP 2020's emphasis on foundational literacy, multilingualism, and critical thinking can only be evaluated meaningfully over decades, not semesters.</p>`
+  },
+  {
+    title:"Page 2: Historical Education Reform Waves",
+    content:`<h2>Historical Education Reform Waves</h2>
+    <p>Education reform is not a modern phenomenon. Across history, societies have periodically reorganized their educational systems in response to external pressures, internal crises, or transformative ideological shifts. Understanding these historical reform waves provides essential context for navigating contemporary reform initiatives like NEP 2020.</p>
+    <h3>The Four Major Historical Waves</h3>
+    <p><strong>Wave 1 — Industrialization (1750–1900):</strong> The first major systemic reform wave emerged alongside industrial capitalism. Prussia pioneered compulsory mass schooling in the 1760s, a model rapidly adopted across Europe and North America. The goal was explicit: produce disciplined, literate factory workers and soldiers. This wave established the grammar of modern schooling — age-graded classrooms, standardized curricula, and centralized control — that persists, often dysfunctionally, into the 21st century.</p>
+    <p><strong>Wave 2 — Progressive Education (1890–1940):</strong> Reacting against industrial schooling's mechanistic nature, progressive reformers led by John Dewey proposed experience-centered, child-centered education. Dewey's Laboratory School at the University of Chicago demonstrated that children learn more effectively through active inquiry and meaningful projects than passive instruction. This wave planted seeds that NEP 2020 now harvests in its emphasis on experiential learning and competency development.</p>
+    <div class="diagram-box"><pre>
+REFORM WAVE TIMELINE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+1750–1900  Industrial Wave      → Mass Standardization
+1890–1940  Progressive Wave     → Child-Centered Learning
+1960–1990  Technocratic Wave    → Outcomes & Standards
+2000–Now   Competency Wave      → Holistic & NEP 2020
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>Wave 3 — The Standards Movement (1960–2000)</h3>
+    <p>The Soviet Union's 1957 Sputnik launch triggered a panic-driven reform wave in American education, spreading globally through OECD influence. The focus shifted to measurable outcomes, standardized testing, and curriculum alignment. This wave produced important accountability mechanisms but also narrowed schooling's purpose, subordinating creativity, ethics, and civic development to quantifiable metrics.</p>
+    <h3>Wave 4 — The Competency Revolution (2000–Present)</h3>
+    <p>The Fourth Industrial Revolution's disruptions — automation, AI, globalization — have made the competency revolution not merely desirable but existentially necessary. NEP 2020 is India's comprehensive response to this wave, emphasizing critical thinking, creativity, communication, and collaboration alongside foundational academic skills. Kashmir's School Education Department's implementation of NEP principles represents this wave's penetration into even geographically challenging contexts.</p>
+    <div class="insight-box"><strong>🔍 Foresight Exercise:</strong> What will Wave 5 look like? Given artificial intelligence's advancing capabilities, how must education evolve beyond competency frameworks toward wisdom cultivation and values-anchored judgment?</div>`
+  },
+  {
+    title:"Page 3: Content-Based vs Competency-Based Eras",
+    content:`<h2>Content-Based vs Competency-Based Educational Eras</h2>
+    <p>The tension between content-based and competency-based education represents one of the most consequential debates in educational theory and practice. Understanding this debate's historical roots, philosophical underpinnings, and practical implications is essential for any serious reform strategist navigating the NEP 2020 transition.</p>
+    <h3>The Content-Based Paradigm</h3>
+    <p>Content-based education operates on the premise that education's primary function is knowledge transmission — the reliable transfer of established facts, concepts, and disciplines from expert practitioners to novice learners. Its philosophical roots lie in the classical trivium and quadrivium, the Confucian examination canon, and the encyclopedic ambitions of Enlightenment education.</p>
+    <p>In practice, content-based systems prioritize curriculum coverage, textbook fidelity, examination performance, and subject-domain mastery. India's post-colonial education system inherited a particularly rigid content-based framework from the British colonial model, designed explicitly to produce clerks and administrators rather than innovators and leaders.</p>
+    <h3>The Competency-Based Alternative</h3>
+    <p>Competency-based education shifts the fundamental question from "What does the student know?" to "What can the student do with what they know?" A competency is an integrated bundle of knowledge, skills, attitudes, and values that enables effective performance in authentic contexts.</p>
+    <div class="diagram-box"><pre>
+PARADIGM COMPARISON
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             Content-Based   Competency-Based
+Goal         Knowledge       Performance
+Assessment   Recall tests    Portfolio + Tasks
+Timeline     Annual          Ongoing
+Teacher role Information     Facilitator
+             transmitter
+Success      Marks scored    Competency achieved
+metric
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>NEP 2020 and the Hybrid Imperative</h3>
+    <p>NEP 2020 wisely resists a simplistic binary. It recognizes that competency development requires content — one cannot think critically about nothing, create meaningfully without knowledge, or collaborate effectively without subject matter. The policy advocates a hybrid model: rich disciplinary content organized around competency development rather than coverage alone.</p>
+    <div class="insight-box"><strong>🔍 Classroom Application:</strong> Audit a recent lesson you taught. What percentage of time was devoted to knowledge transmission versus competency practice? What adjustments might shift the balance toward NEP 2020 ideals without sacrificing content richness?</div>`
+  },
+  {
+    title:"Page 4: Assessment-Driven Societies",
+    content:`<h2>Assessment-Driven Societies: The Double-Edged Legacy</h2>
+    <p>Perhaps no dimension of education reform is more politically charged and pedagogically consequential than assessment. Assessment systems do not merely measure learning — they define learning. In assessment-driven societies, what gets tested becomes what gets taught, and what goes untested goes untaught.</p>
+    <h3>The Rise of High-Stakes Testing Culture</h3>
+    <p>Modern high-stakes assessment culture emerged from two sources: the Confucian civil service examination tradition, which demonstrated that standardized tests could serve meritocratic functions over dynastically organized aristocracy, and the scientific management movement of the early 20th century, which applied industrial quality-control metrics to educational output measurement.</p>
+    <p>The combination produced globally influential models like the UK's O-Level and A-Level systems — from which India's board examination structure directly descends — and the American SAT, which RAND Corporation analysis has repeatedly shown to measure socioeconomic advantage as much as academic aptitude.</p>
+    <h3>India's Assessment Pathology</h3>
+    <p>India presents a particularly acute case of assessment-driven pathology. The JEE and NEET examination systems attract millions of aspirants annually, generating a shadow coaching industry estimated at ₹58,000 crore and consuming learning years that could develop holistic human capacity. Students routinely spend Classes 11 and 12 — formative intellectual years — in coaching institutes rather than schools, receiving mechanistic drill training optimized for a single examination day.</p>
+    <div class="diagram-box"><pre>
+ASSESSMENT IMPACT ON LEARNING CULTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+High-Stakes Testing → Teaching to Test
+                    → Narrowed Curriculum
+                    → Anxiety & Mental Health Impact
+                    → Reduced Creativity Space
+                    → Socioeconomic Stratification
+                    → Knowledge Without Wisdom
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>NEP 2020's Assessment Revolution</h3>
+    <p>NEP 2020 proposes a fundamental reconceptualization of assessment. The policy advocates for formative assessment throughout the learning process rather than summative judgment at isolated examination moments. It envisions competency-based progression, portfolios of achievement, and diagnostic assessment that guides learning rather than merely grades it. PARAKH — the national assessment center — represents the institutional infrastructure for this transformation.</p>
+    <div class="insight-box"><strong>🔍 Reform Challenge:</strong> What would a school look like where assessment served learning rather than selection? How would teacher professional development need to change to support authentic, ongoing assessment practices?</div>`
+  },
+  {
+    title:"Page 5: Institutional Inertia Theory",
+    content:`<h2>Institutional Inertia Theory: Why Schools Resist Change</h2>
+    <p>Every reform strategist eventually confronts a puzzling phenomenon: reform-resistant institutions do not resist change because they are irrational. They resist change because they are systematically rational within their own operational logic. Understanding institutional inertia theory is essential for designing reforms that actually penetrate and transform entrenched systems.</p>
+    <h3>Theoretical Foundations</h3>
+    <p>Institutional inertia theory draws from multiple disciplinary streams. Organizational theorists Paul DiMaggio and Walter Powell described "isomorphic pressures" — the tendency of institutions to converge toward similar forms through regulatory compliance, normative professional pressures, and mimicry of apparently successful models. These pressures create powerful structural conservation forces.</p>
+    <p>Sociologist David Tyack and historian Larry Cuban coined the concept of "the grammar of schooling" — the deep structural regularities (age-graded classrooms, subject-divided curricula, teacher-centered instruction, report-card grading) that persist across reform eras because they have become constitutive of what school "is" in the social imagination.</p>
+    <div class="diagram-box"><pre>
+INERTIA FORCE MODEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+STRUCTURAL INERTIA SOURCES:
+• Established routines & timetables
+• Examination system pressures
+• Parental expectations
+• Teacher preparation systems
+• Physical infrastructure
+• Regulatory compliance demands
+
+REFORM PENETRATION BARRIERS:
+• Grammar of schooling
+• Professional identity protection
+• Resource constraint realities
+• Implementation knowledge gaps
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>The Three Faces of Institutional Resistance</h3>
+    <p><strong>Active resistance</strong> is visible and often articulate — teachers unions, parent associations, and political actors openly opposing specific reform elements. This form of resistance, though frustrating, is actually the most manageable because it reveals itself for engagement.</p>
+    <p><strong>Passive resistance</strong> is far more common and considerably more dangerous. It manifests as surface compliance with reform mandates while maintaining unchanged core practices. Teachers may adopt new terminology while continuing traditional instruction; schools may display NEP 2020 posters while running unchanged examination-preparation routines.</p>
+    <p><strong>Structural resistance</strong> operates at the system level, independent of individual agency. Even reform-committed teachers may find that examination timetables, textbook constraints, and class sizes make genuine pedagogical transformation impossible without structural changes that individual schools cannot independently implement.</p>
+    <div class="insight-box"><strong>🔍 Strategic Implication:</strong> Map the inertia forces operating in your school context. Which are addressable at the classroom level, which require school-level intervention, and which require systemic change? This diagnostic clarity is the foundation of strategic reform leadership.</div>`
+  },
+  {
+    title:"Page 6: Reform Fatigue & Policy Cycles",
+    content:`<h2>Reform Fatigue & Policy Cycles: The Exhaustion Paradox</h2>
+    <p>One of educational reform's most cruel paradoxes is that the very act of pursuing improvement can, if poorly managed, produce fatigue so severe that it permanently impairs an institution's capacity for genuine transformation. Reform fatigue — the progressive demoralization, cynicism, and resistance that accumulates through repeated cycles of incomplete, inconsistent, or poorly supported reform — represents perhaps the greatest threat to sustained educational improvement.</p>
+    <h3>The Policy Churn Problem</h3>
+    <p>Educational research consistently identifies policy churn — the rapid succession of reform initiatives without adequate implementation time or evaluation — as a primary driver of teacher demoralization and student outcome stagnation. Andy Hargreaves and Michael Fullan's longitudinal research in Ontario documented how districts with more than three simultaneous reform priorities consistently outperformed those pursuing greater numbers of initiatives, paradoxically achieving more by demanding less.</p>
+    <h3>India's Reform History and Fatigue Accumulation</h3>
+    <p>India's post-independence education history includes four National Education Policies (1948, 1968, 1986/1992, and 2020), each representing significant reform ambitions, each generating substantial implementation burdens on an already stretched teaching force. Teachers who experienced the shift from the 1986 policy's district primary education program to the Right to Education Act's implementation framework, followed immediately by Continuous and Comprehensive Evaluation mandates and now NEP 2020 restructuring, carry accumulated reform trauma that shapes their response to every new initiative.</p>
+    <div class="diagram-box"><pre>
+REFORM FATIGUE CYCLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+New Reform Announced
+       ↓
+Initial Enthusiasm & Compliance Efforts
+       ↓
+Implementation Difficulties Emerge
+       ↓
+Support Resources Prove Insufficient
+       ↓
+Superficial Compliance Adopted
+       ↓
+Next Reform Announced Before Stabilization
+       ↓
+Accumulated Cynicism & Resistance
+       ↓ (cycle accelerates)
+Reform Fatigue — Institutional Paralysis
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Recovery Strategy:</strong> Before launching any new initiative, assess your institution's reform fatigue level. High-fatigue institutions need consolidation, celebration of existing wins, and visible completion of unfinished initiatives before new demands can be productively introduced. What recovery actions might precede NEP 2020 implementation in your context?</div>`
+  },
+  {
+    title:"Page 7: Cultural Resistance in Education",
+    content:`<h2>Cultural Resistance in Education: The Hidden Reform Frontier</h2>
+    <p>Technical and structural reforms frequently fail not because they are poorly designed but because they collide with cultural patterns deeply embedded in communities, families, and teachers. Cultural resistance to educational reform operates at levels far deeper than rational argument can easily reach — it is woven into identity, tradition, aspiration patterns, and social trust networks that define what "good education" means in a particular community.</p>
+    <h3>The Cultural Dimensions of Educational Belief</h3>
+    <p>Every community holds implicit theories about education — what it is for, how it works, who deserves it, and what constitutes success. In many Indian communities, particularly in rural and semi-urban contexts, education is fundamentally conceived as a pathway to government employment — a reasonable historical adaptation to colonial-era economic structures that persists as a cultural frame long after economic realities have diversified dramatically.</p>
+    <p>This employment-pathway conception of education generates specific behavioral patterns: prioritizing subjects tested in competitive examinations, devaluing vocational and technical education, resisting assessment models that don't produce comparative rank scores, and measuring school quality primarily through the number of students achieving government positions.</p>
+    <h3>Kashmir's Specific Cultural Context</h3>
+    <p>Kashmir's educational culture carries distinctive characteristics that shape reform dynamics. Strong family investment in children's educational achievement, high parental aspiration levels, and a deep community respect for learning and teachers create favorable preconditions for NEP 2020 implementation. However, examination-culture intensity, geographic isolation in many areas, and the particular stresses of the regional context create equally distinctive implementation challenges.</p>
+    <div class="diagram-box"><pre>
+CULTURAL RESISTANCE MAPPING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Source               Manifestation          Strategy
+─────────────────────────────────────────────────
+Employment frame     Resist non-exam content  Show employability link
+Gender norms         Differential access     Community dialogues
+Language identity    Script/medium concerns  Multilingual approaches  
+Caste/class          Aspirational resistance Equity demonstration
+Religious tradition  Curriculum suspicion    Value alignment work
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Cultural Mapping Exercise:</strong> Identify three cultural beliefs in your school community that facilitate NEP 2020 implementation and three that resist it. For each resistant belief, design a reform communication strategy that honors the belief's underlying value while expanding its expression toward NEP goals.</div>`
+  },
+  {
+    title:"Page 8: Generational Learning Shifts",
+    content:`<h2>Generational Learning Shifts: Continuity and Rupture</h2>
+    <p>Education reform does not transform individuals — it transforms generations. Understanding how learning patterns, cognitive orientations, and educational expectations shift across generational cohorts is essential for modeling the long-term trajectory of any reform initiative and for maintaining realistic timelines for systemic change.</p>
+    <h3>Generational Theory in Educational Context</h3>
+    <p>Sociologists William Strauss and Neil Howe's generational theory, while culturally specific in its original American formulation, has broader applicability in describing how historical conditions shape cohort-level psychological and social orientations. Generation Z — today's school students — has grown up with ubiquitous digital connectivity, algorithmically personalized information environments, and the constant awareness of global challenges including climate change and economic precarity.</p>
+    <h3>The Three-Generation Reform Horizon</h3>
+    <p>NEP 2020's most profound impacts will be visible not in the generation currently entering school, but in the grandchildren of today's students. This is not pessimism — it is an accurate reading of how deep cultural and cognitive shifts propagate through populations.</p>
+    <p>Generation 1 (Transitional, 2020–2035): Students currently in school experience NEP 2020's early implementation, benefiting from some reformed practices while still navigating legacy examination systems and partially adapted teacher capacities. Their cognitive profiles will reflect this transitional experience — some competency development alongside persistent content-recall orientations.</p>
+    <p>Generation 2 (Stabilizing, 2035–2050): Students educated by NEP 2020-trained teachers in fully restructured curriculum frameworks will develop more consistently competency-oriented cognitive profiles. The examination systems will have been substantially reformed, reducing the distorting effect of high-stakes testing on educational culture.</p>
+    <p>Generation 3 (Competency-Native, 2050+): Students for whom NEP 2020's philosophy is simply the natural order of schooling — who have never experienced its alternative — will demonstrate the policy's full civilizational promise in their innovation capacity, collaborative effectiveness, and ethical reasoning quality.</p>
+    <div class="diagram-box"><pre>
+GENERATIONAL SHIFT TRAJECTORY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+             2025    2035    2050    2075
+Critical     ███     █████   ███████ █████████
+Thinking     30%     55%     75%     90%
+
+Collaboration ██     ████    ██████  █████████
+              25%    50%     72%     88%
+
+Creativity    ██     ████    ███████ █████████
+              22%    48%     78%     92%
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Generational Patience Practice:</strong> Reflect on a reform element you have implemented in your classroom. What evidence of impact might be visible in 5 years? In 20 years? In 50 years? Cultivating this temporal perspective is essential for sustaining reform commitment through the inevitable short-term uncertainties of systemic change.</div>`
+  },
+  {
+    title:"Page 9: Intellectual Capital Formation",
+    content:`<h2>Intellectual Capital Formation: Education's Hidden Economic Engine</h2>
+    <p>While education's economic benefits are widely acknowledged, the specific mechanisms through which educational systems generate intellectual capital — the aggregated creative, analytical, and innovative capacity of a population — remain insufficiently understood by policy designers and educational leaders. This understanding gap produces reforms that optimize for human capital (credential production) rather than intellectual capital (genuine cognitive capacity development).</p>
+    <h3>Defining Intellectual Capital in Educational Terms</h3>
+    <p>Intellectual capital, in an educational context, encompasses three interlocking dimensions. Human intellectual capital refers to individual cognitive capabilities — reasoning quality, knowledge depth, creative synthesis ability, and metacognitive sophistication. Social intellectual capital refers to the collaborative intelligence that emerges when highly capable individuals work within trust-rich networks and shared inquiry cultures. Structural intellectual capital refers to the institutions, systems, and cultural practices that capture, organize, and deploy human and social intellectual capital productively.</p>
+    <h3>The Long Accumulation Curve</h3>
+    <p>Intellectual capital formation follows an exponential accumulation logic that requires sustained investment before significant returns materialize. East Asia's educational success stories — South Korea, Singapore, Taiwan — reflect investment decisions made in the 1960s and 1970s whose economic consequences became visible only in the 1990s and 2000s. Finland's internationally admired educational quality reflects 40 years of consistent investment in teacher quality and educational philosophy, not a single policy breakthrough.</p>
+    <div class="diagram-box"><pre>
+INTELLECTUAL CAPITAL FORMATION CURVE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+100%│                              ****
+ 80%│                         *****
+ 60%│                    *****
+ 40%│               *****
+ 20%│          *****
+  5%│*****─────
+    └─────────────────────────────────→
+     Yr0  Yr10  Yr20  Yr30  Yr40  Yr50
+
+Investment period ≫ Visible return period
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Strategic Insight:</strong> India's demographic dividend — the large youth population entering productive years — will be an economic liability rather than an asset unless educational systems rapidly shift from credential production to genuine intellectual capital formation. NEP 2020's competency framework is precisely calibrated to make this shift. How is your school contributing to this national intellectual capital project?</div>`
+  },
+  {
+    title:"Page 10: Human Development & Education",
+    content:`<h2>Human Development & Education: Beyond Economic Instrumentalism</h2>
+    <p>The dominant discourse on education's purpose has become dangerously economistic — reducing education to a human capital investment whose return on investment is measured in salary premiums and GDP contributions. While these economic dimensions are real and important, they capture only a fraction of education's contribution to human flourishing. A comprehensive theory of education's purpose must engage with the full breadth of human development.</p>
+    <h3>Amartya Sen's Capability Approach</h3>
+    <p>Nobel laureate Amartya Sen's capability approach offers the most philosophically sophisticated framework for understanding education's relationship to human development. Sen argues that human wellbeing should be assessed not in terms of resources owned or utilities experienced but in terms of capabilities — the real freedoms individuals have to live lives they have reason to value.</p>
+    <p>Education's primary contribution to human development, on this account, is capability expansion: building the cognitive, social, and practical abilities that enable people to exercise genuine agency in their lives. This framework transcends the economic instrumentalism that reduces education to job preparation, while also transcending romantic notions of education as pure cultural enrichment divorced from material realities.</p>
+    <h3>NEP 2020 and Human Development</h3>
+    <p>NEP 2020 explicitly embraces a human development conception of education. Its vision of "holistic development" — encompassing cognitive, emotional, physical, social, and ethical dimensions of the person — represents a significant philosophical advance over previous policies dominated by economic and administrative rationales.</p>
+    <div class="diagram-box"><pre>
+HUMAN DEVELOPMENT DIMENSIONS IN NEP 2020
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Cognitive       → Critical thinking, creativity, analysis
+Emotional       → Self-awareness, empathy, resilience
+Social          → Collaboration, communication, citizenship
+Physical        → Health literacy, sports, movement
+Ethical         → Values, integrity, social responsibility
+Vocational      → Practical skills, livelihood competencies
+Cultural        → Arts, heritage, multilingualism
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Classroom Practice:</strong> Design a lesson that explicitly develops capabilities across at least three of the human development dimensions listed above. How does this multi-dimensional design change student engagement and learning depth compared to single-dimension instruction?</div>`
+  },
+  {
+    title:"Page 11: Education and Economic Growth",
+    content:`<h2>Education and Economic Growth: The Evidence Base</h2>
+    <p>The relationship between education and economic growth is empirically robust but considerably more complex than popular discourse suggests. Understanding this relationship's nuances is essential for making the case for sustained educational investment — particularly investments in educational quality rather than mere credential expansion.</p>
+    <h3>The Quantity–Quality Distinction</h3>
+    <p>Economic research by Eric Hanushek and Ludger Woessmann demonstrates conclusively that it is educational quality — measured by actual cognitive skill development — rather than educational quantity (years of schooling or graduation rates) that drives long-term economic growth. This finding has profound implications: India's dramatic expansion of school enrollment over the past two decades, while commendable for equity, will not generate predicted economic returns unless accompanied by proportionate improvements in learning quality.</p>
+    <h3>The ASER Evidence Problem</h3>
+    <p>Annual Status of Education Reports have documented a troubling paradox: India's enrollment rates approach universality while fundamental learning outcomes remain alarmingly low. A 2023 ASER survey found that nearly half of rural Grade 5 students cannot read a Grade 2 text or solve basic arithmetic. This enrollment-without-learning pattern represents precisely the educational quantity without quality pattern that Hanushek and Woessmann identify as economically sterile.</p>
+    <div class="diagram-box"><pre>
+EDUCATION → ECONOMIC GROWTH PATHWAYS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Quality Education
+    ↓
+Skilled Workforce ──────────────→ Productivity Growth
+    ↓
+Innovation Capacity ────────────→ Technological Advance
+    ↓
+Institutional Quality ──────────→ Governance Improvement
+    ↓
+Equity Achievement ─────────────→ Market Expansion
+    ↓                             Social Stability
+Long-Term GDP Growth
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Policy Implication:</strong> NEP 2020's Foundational Literacy and Numeracy mission is not merely a pedagogical aspiration — it is an economic intervention of the highest order. Ensuring that every Indian child achieves genuine literacy and numeracy by Grade 3 would, according to World Bank estimates, unlock economic returns exceeding any alternative public investment of comparable scale.</div>`
+  },
+  {
+    title:"Page 12: Teacher Ecosystem Stability",
+    content:`<h2>Teacher Ecosystem Stability: The Foundation of Sustainable Reform</h2>
+    <p>All educational reform ultimately lives or dies in the 45-minute classroom interaction between teacher and student. No curriculum redesign, assessment innovation, or technology deployment can substitute for the quality of this relationship and the pedagogical intelligence teachers bring to it. Yet educational reform discourse consistently underestimates teacher ecosystem stability as a precondition for sustainable improvement.</p>
+    <h3>What Teacher Ecosystem Stability Means</h3>
+    <p>Teacher ecosystem stability is a multi-dimensional construct encompassing: adequate and reliably delivered compensation; professional recognition and social status; meaningful career progression pathways; ongoing, high-quality professional development; manageable workloads and realistic administrative demands; collaborative professional communities; and alignment between teaching conditions and pedagogical ideals.</p>
+    <h3>The Finland-India Contrast</h3>
+    <p>Finland's repeatedly celebrated educational outcomes rest on a specific teacher ecosystem: highly selective teacher education programs accepting the top 10% of graduates, master's degree preparation for all teachers, high social status equivalent to physicians and lawyers, significant professional autonomy, collaborative working cultures, and minimal standardized testing pressure. This ecosystem stability allows Finnish teachers to implement sophisticated pedagogy with confidence and consistency.</p>
+    <p>India's teacher ecosystem presents a dramatically different profile: large proportions of contract teachers with uncertain employment and inadequate compensation; chronic under-investment in professional development; heavy administrative burdens including election duty, census work, and data collection; examination-driven workloads that constrain pedagogical creativity; and significant urban-rural variation in working conditions and resources.</p>
+    <div class="diagram-box"><pre>
+TEACHER ECOSYSTEM HEALTH INDICATORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Indicator            Ideal    India Current
+─────────────────────────────────────────
+Compensation level   High     Variable/Low
+Social status        High     Declining
+Prof. development    40h/yr   Irregular
+Workload balance     Managed  Excessive
+Autonomy level       High     Constrained
+Attrition rate       <5%/yr   15-25%/yr
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Reform Priority:</strong> NEP 2020's ambitious pedagogical vision cannot be realized without corresponding investment in teacher ecosystem stability. What three concrete improvements to teacher professional conditions in your school are within your authority as a school leader to implement immediately?</div>`
+  },
+  {
+    title:"Page 13: Technology Adoption Waves",
+    content:`<h2>Technology Adoption Waves in Education: Promises and Realities</h2>
+    <p>The history of educational technology is, in significant measure, a history of inflated promises meeting institutional realities. From radio to television, from computer labs to MOOCs, each technology wave has arrived with transformative rhetoric and departed with partial, uneven impacts. Understanding this pattern is essential for navigating the current AI-driven wave with appropriate ambition and realistic sobriety.</p>
+    <h3>The Adoption Wave Pattern</h3>
+    <p>Educational technology adoption consistently follows a recognizable pattern that Gartner's Hype Cycle captures effectively. Initial enthusiastic adoption is followed by inflated expectations about transformation speed and depth, then a trough of disillusionment when classroom realities prove resistant, then a productivity plateau as institutions develop the professional and organizational capabilities required for effective technology integration.</p>
+    <h3>Historical Technology Waves in Education</h3>
+    <p>Television's educational promise — Sesame Street's proven learning outcomes notwithstanding — never translated into systematic classroom transformation because the industrial grammar of schooling had no structural place for television-as-teacher. Computer labs of the 1990s improved typing and basic software skills while leaving core pedagogical practices unchanged. Interactive whiteboards replaced blackboards but rarely altered the teacher-centered instructional model. MOOCs achieved global reach while failing to demonstrate sustainable learning outcomes for populations without pre-existing academic skills.</p>
+    <div class="diagram-box"><pre>
+TECHNOLOGY ADOPTION HYPE CYCLE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Impact│      Peak of
+      │      Inflated
+      │    Expectations
+      │         ╱╲
+      │        ╱  ╲   Slope of
+      │       ╱    ╲  Enlightenment
+      │   Innov─────╲──────────── Plateau
+      │  Trigger     ╲    ╱
+      │               ╲  ╱
+      │          Trough ╲╱
+      └──────────────────────────→ Time
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>AI's Educational Moment</h3>
+    <p>Artificial intelligence represents education's most disruptive technological challenge since the printing press. Unlike previous technologies that offered new delivery mechanisms for existing pedagogical models, AI fundamentally challenges what unique value human teachers provide and what skills education must develop when AI can perform the cognitive tasks that credentialing systems currently certify. NEP 2020's competency and creativity emphasis positions India's educational philosophy correctly for this challenge, even if implementation infrastructure lags significantly behind the philosophical vision.</p>
+    <div class="insight-box"><strong>🔍 Integration Challenge:</strong> Rather than asking "How can technology support my current teaching?", ask "What aspects of learning require human presence, relationships, and co-construction that technology cannot replicate?" Design your technology integration around augmenting the irreplaceably human dimensions of education.</div>`
+  },
+  {
+    title:"Page 14: Equity Evolution Across Decades",
+    content:`<h2>Equity Evolution Across Decades: The Long March Toward Inclusion</h2>
+    <p>Educational equity — the systematic dismantling of barriers that prevent marginalized groups from accessing and benefiting from quality education — is simultaneously education's most urgent moral imperative and its most stubbornly resistant reform target. Understanding equity evolution requires both long-term historical perspective and clear-eyed analysis of the structural mechanisms through which inequality reproduces itself across generations.</p>
+    <h3>India's Equity Trajectory</h3>
+    <p>India's post-independence educational equity record is genuinely mixed. The dramatic expansion of primary schooling access over seven decades represents a real achievement — gross enrollment ratios have approached universality across most states and demographic groups. Constitutional provisions for reserved categories in educational institutions have created pathways for Dalit and Adivasi students that did not exist before independence.</p>
+    <p>Yet these access achievements mask persistent quality inequities that may be more consequential than access gaps. The quality chasm between well-resourced urban private schools and under-resourced rural government schools — often serving the same age cohorts in the same state — represents a form of educational apartheid that access statistics alone cannot reveal.</p>
+    <div class="diagram-box"><pre>
+EQUITY EVOLUTION MODEL — INDIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Phase 1 (1947-1980): Access Expansion
+  → Enrollment grows, quality varies widely
+Phase 2 (1980-2010): Rights Framework
+  → RTE, reservations, midday meal programs
+Phase 3 (2010-2020): Technology Access
+  → Digital India, e-learning initiatives
+Phase 4 (2020+): Quality Equity (NEP 2020)
+  → Competency-based, foundational focus
+  → FLN Mission, NIPUN Bharat
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Equity Audit:</strong> Map the equity dimensions operating in your school's catchment area. Which student groups face the greatest barriers — geographic, linguistic, economic, gender-based, disability-related? For each barrier, identify one high-leverage intervention that NEP 2020's framework enables and resources support.</div>`
+  },
+  {
+    title:"Page 15: Governance & Accountability Cycles",
+    content:`<h2>Governance & Accountability Cycles: The Political Economy of Educational Reform</h2>
+    <p>Educational reform does not occur in a political vacuum. Reform trajectories are shaped, accelerated, distorted, and sometimes destroyed by the political economy dynamics that determine who has power over educational decisions, whose interests those decisions serve, and how accountability for outcomes is structured and assigned.</p>
+    <h3>The Political Economy Framework</h3>
+    <p>Economists working in the tradition of public choice theory have documented how educational systems generate powerful interest groups — teacher unions, examination boards, textbook publishers, coaching institutes, bureaucratic agencies — whose organizational interests do not always align with student learning outcomes. These groups actively shape reform proposals through their political influence, implementation agency, and capacity to obstruct change that threatens their organizational positions.</p>
+    <h3>Accountability Architecture in Indian Education</h3>
+    <p>India's educational accountability architecture has historically been characterized by input accountability — measuring teacher attendance, infrastructure availability, and resource delivery — rather than outcome accountability — measuring actual student learning growth. This input focus creates perverse incentives: administrators invest in demonstrable input improvements (school buildings, textbooks, enrollment numbers) while learning outcomes remain untracked and unaddressed.</p>
+    <div class="diagram-box"><pre>
+ACCOUNTABILITY ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+WEAK ACCOUNTABILITY (Current)
+Government → Schools (Input mandates)
+Schools → Government (Compliance reports)
+Students → Schools (Examination performance)
+[No feedback from outcomes to policy]
+
+STRONG ACCOUNTABILITY (NEP Vision)
+Government → Schools (Outcome frameworks)
+Schools → Government + Communities (Progress data)
+Students → Schools + Families (Competency evidence)
+[Learning outcomes drive resource allocation]
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Accountability Design:</strong> Design an accountability system for your school that balances meaningful outcome measurement with protection of teachers' professional judgment and students' holistic development. What would you measure? How would results be used? Who would be held accountable for what?</div>`
+  },
+  {
+    title:"Page 16: Reform Collapse Case Patterns",
+    content:`<h2>Reform Collapse Case Patterns: Learning from Educational Failures</h2>
+    <p>The study of educational reform failure is at least as instructive as the study of reform success. Understanding the patterns through which promising reform initiatives collapse — the warning signs, the critical failure points, and the conditions that amplify or diminish collapse probability — equips reform leaders with the pattern recognition necessary to protect reforms in their most vulnerable phases.</p>
+    <h3>The Six Collapse Archetypes</h3>
+    <p><strong>The Underfunded Mandate:</strong> Reform is announced with ambitious goals but without commensurate resource allocation. Initial implementation enthusiasm wanes as resource constraints become apparent; schools revert to pre-reform practices that at least work within existing resource envelopes.</p>
+    <p><strong>The Political Reversal:</strong> Reform succeeds technically but becomes politically associated with a particular government or ideology; subsequent political transitions motivate reform cancellation for signaling value rather than educational merit. India's experience with textbook revisions across state government transitions illustrates this pattern acutely.</p>
+    <p><strong>The Implementation Gap:</strong> Reform design quality is high but teacher preparation and ongoing support are insufficient; the gap between reform vision and implementation capacity produces surface compliance masking substantive non-adoption.</p>
+    <p><strong>The Measurement Trap:</strong> Reform success is defined by metrics easily gamed or irrelevant to core aims; perverse optimization around these metrics produces documented "success" while genuine reform goals go unmet. England's National Literacy Strategy experience illustrates this pattern.</p>
+    <div class="diagram-box"><pre>
+COLLAPSE RISK INDICATORS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔴 HIGH RISK: Resource < Reform Scope
+🔴 HIGH RISK: Political Opposition > 40%
+🟡 MED RISK:  Teacher Buy-in < 60%
+🟡 MED RISK:  Implementation Support Weak
+🟢 LOW RISK:  Community Engagement High
+🟢 LOW RISK:  Evidence Loop Functioning
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Collapse Prevention:</strong> For each of the six collapse archetypes, identify whether your current reform context shows warning indicators. For each indicator present, name one specific protective action within your authority to implement.</div>`
+  },
+  {
+    title:"Page 17: Sustainable Reform Design",
+    content:`<h2>Sustainable Reform Design: Engineering for Longevity</h2>
+    <p>The vast majority of educational reform literature focuses on reform initiation — the diagnosis of problems, the design of solutions, and the politics of policy adoption. Considerably less attention has been paid to reform sustainability — the design features and implementation practices that allow reforms to persist, adapt, and deepen over the multi-decade timeframes required for genuine systemic transformation.</p>
+    <h3>The Sustainability Science of Educational Reform</h3>
+    <p>Michael Fullan's research on sustainable educational reform identifies several consistent characteristics of reforms that endure. Sustainable reforms build intrinsic professional motivation rather than relying on external mandates and monitoring. They develop distributed leadership capacity rather than depending on single charismatic champions. They create feedback loops that enable evidence-based adaptation. They balance "pressure and support" — maintaining high expectations while providing genuine capacity-building assistance.</p>
+    <h3>Design Principles for NEP 2020 Sustainability</h3>
+    <p>NEP 2020's sustainability will depend on several design features that go beyond the policy document itself. First, the policy must be owned rather than merely complied with — teachers, school leaders, and communities must understand and genuinely endorse the reform's values, not merely implement its mandates. Second, implementation must be sequenced realistically — attempting everything simultaneously guarantees nothing succeeds adequately.</p>
+    <div class="diagram-box"><pre>
+SUSTAINABLE REFORM DESIGN FRAMEWORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+VALUES CLARITY     → Shared mission & moral purpose
+EVIDENCE LOOPS     → Feedback → Adaptation cycles
+CAPACITY BUILDING  → Teacher & leader development
+DISTRIBUTED LEAD.  → Many champions, not just one
+COMMUNITY ROOTS    → Local ownership & accountability
+POLITICAL BUFFERS  → Cross-party support mechanisms
+RESOURCE ALIGNMENT → Funding matches ambition
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Sustainability Audit:</strong> Rate your school's reform sustainability on each of the seven dimensions above (1-10). Identify your two lowest-scoring dimensions and design specific improvement actions for each. Reform sustainability requires systematic attention to institutional infrastructure, not just program implementation.</div>`
+  },
+  {
+    title:"Page 18: National Identity & Education",
+    content:`<h2>National Identity & Education: The Civilizational Curriculum Question</h2>
+    <p>Every national education system makes choices — explicit or implicit — about what knowledge, values, stories, and identities its curriculum constructs and transmits. These choices are never educationally neutral; they reflect and reproduce particular visions of national identity, cultural belonging, and civilizational continuity. Understanding this dimension of educational politics is essential for navigating curriculum reform in contemporary India.</p>
+    <h3>The Curriculum as Nation-Building Technology</h3>
+    <p>Benedict Anderson's insight that nations are "imagined communities" — constructed through shared cultural practices rather than primordial ethnic bonds — applies directly to educational curriculum. Textbooks construct national imaginations: they determine whose history is taught, whose literature is valued, whose language is privileged, whose scientific contributions are recognized, and whose cultural practices are normalized as "Indian."</p>
+    <h3>NEP 2020's National Identity Framework</h3>
+    <p>NEP 2020 engages the national identity question through several specific commitments: the promotion of Indian Knowledge Systems alongside modern scientific disciplines; the emphasis on mother tongue and classical language learning; the three-language formula's accommodation of regional linguistic identities; and the explicit valorization of India's diverse cultural heritage as an educational resource rather than a curricular afterthought.</p>
+    <div class="diagram-box"><pre>
+NATIONAL IDENTITY IN NEP 2020
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Indian Knowledge Systems → Science & Philosophy
+Mother Tongue Education  → Linguistic Identity
+Three Language Formula   → Plurilingual citizenship
+Cultural Heritage        → Arts, music, craft
+Constitutional Values    → Democratic citizenship
+Global Citizenship       → International connectedness
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Identity Navigation:</strong> How does your school community's cultural identity relate to the national identity frameworks embedded in the curriculum? Where are there productive alignments, and where are there tensions requiring sensitive navigation? What does genuine respect for students' cultural identities look like in your specific school context?</div>`
+  },
+  {
+    title:"Page 19: Competency Shift Across Generations",
+    content:`<h2>Competency Shift Across Generations: Measuring What Matters</h2>
+    <p>Competency-based education's promise can only be realized if we develop robust, authentic methods for measuring competency development across generational cohorts. The technical and conceptual challenges of competency measurement are formidable — and failure to solve them risks allowing competency rhetoric to mask continuing content-recall practice.</p>
+    <h3>The Competency Measurement Challenge</h3>
+    <p>Traditional educational measurement theory — item response theory, classical test theory, standardized psychometrics — was designed to measure knowledge recall with high reliability and efficiency. These methods systematically underperform when applied to complex competencies like critical thinking, collaborative intelligence, creative synthesis, and ethical reasoning — precisely the competencies that NEP 2020 most values and that 21st-century economies most need.</p>
+    <h3>Emerging Assessment Technologies</h3>
+    <p>Several assessment approaches show promise for authentic competency measurement. Performance-based assessment presents students with complex, realistic tasks and evaluates competency demonstration through structured rubrics. Portfolio assessment accumulates evidence of competency development over time, capturing the trajectory of growth rather than a single-point achievement snapshot. Competency mapping frameworks — such as those being developed under PARAKH — create standardized but nuanced descriptors of competency levels that enable comparable measurement without reducing competency to recall.</p>
+    <div class="diagram-box"><pre>
+COMPETENCY SHIFT MEASUREMENT FRAMEWORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Competency Domain    Measurement Method
+─────────────────────────────────────────
+Critical Thinking    → Case analysis + Rubric
+Creativity           → Portfolio + Expert review
+Collaboration        → Group task + Observation
+Communication        → Presentation + Peer assess.
+Problem Solving      → Real-world task performance
+Cultural Literacy    → Project + Community engagement
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <div class="insight-box"><strong>🔍 Assessment Innovation:</strong> Design one authentic assessment task for your subject that could provide evidence of competency development rather than knowledge recall. What would "beginning," "developing," "proficient," and "advanced" competency look like in your task? Share this design with colleagues as a first step toward departmental competency assessment culture.</div>`
+  },
+  {
+    title:"Page 20: Modeling 50-Year Educational Futures",
+    content:`<h2>Modeling 50-Year Educational Futures: The Foresight Imperative</h2>
+    <p>The ultimate purpose of this simulation platform is to support the kind of long-horizon, systems-level thinking that sustainable educational reform requires. As our final academic exploration, we examine the intellectual tools, conceptual frameworks, and imaginative disciplines required to model educational futures across the 50-year timeframes within which genuine systemic transformation becomes visible.</p>
+    <h3>Why 50 Years?</h3>
+    <p>The 50-year horizon is not arbitrary. It represents approximately two full generational cycles — sufficient time for reforms initiated today to propagate through an entire student cohort's educational experience, transform the professional culture of the teaching force trained under reformed systems, and begin demonstrating measurable effects on national intellectual capital, economic productivity, and social development indicators.</p>
+    <h3>Futures Modeling Methodologies</h3>
+    <p>Educational futures modeling draws from several disciplinary traditions. Scenario planning — developed by Royal Dutch Shell's strategic planning unit and extensively applied to social policy — creates multiple plausible future narratives rather than single-point predictions, enabling policy design that is robust across diverse possible developments. Systems dynamics modeling — pioneered by Jay Forrester at MIT — traces how feedback loops, delays, and nonlinear interactions produce counterintuitive long-term system behavior that linear extrapolation systematically misses.</p>
+    <div class="diagram-box"><pre>
+50-YEAR EDUCATIONAL FUTURES FRAMEWORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+2025-2035: FOUNDATION DECADE
+  → NEP 2020 structural implementation
+  → Teacher ecosystem transformation
+  → Assessment reform embedding
+
+2035-2045: STABILIZATION DECADE  
+  → Competency culture normalization
+  → First generation NEP graduates
+  → Innovation ecosystem emergence
+
+2045-2060: MATURATION DECADE
+  → Full intellectual capital returns
+  → Global knowledge economy participation
+  → Educational model export capacity
+
+2060-2075: CIVILIZATIONAL DIVIDEND
+  → Innovation-driven economy
+  → Social equity achievement
+  → Democratic culture deepening
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</pre></div>
+    <h3>The Reformer's Temporal Discipline</h3>
+    <p>The single most important quality for educational reform leaders is temporal discipline — the capacity to act with urgency in the present while maintaining commitment to outcomes visible only in the distant future. This is not a natural human cognitive orientation; our psychological systems are wired for near-term feedback and visible results. Cultivating the ability to invest deeply in reforms whose fruits you will not personally harvest is both the intellectual and ethical foundation of educational statesmanship.</p>
+    <div class="insight-box"><strong>🔍 Final Reflection — Your Reform Legacy:</strong> Imagine the educational landscape of Kashmir in 2075. What are students doing? What are teachers like? What is the relationship between schools and communities? What does learning look like? Now trace backward: what decisions and actions taken by educational leaders in 2025 made this future possible? What part of that causal chain do you personally commit to being?</div>
+    <p style="text-align:center;font-family:'Playfair Display',serif;color:var(--accent-gold);font-size:1.1rem;margin-top:24px;font-style:italic;">"The seeds of civilization are planted in classrooms. The harvest comes to generations not yet born." — Education as Long-Term Stewardship</p>`
+  }
+];
+
+let currentPage=0;
+function renderPage(){
+  const p=pages[currentPage];
+  document.getElementById('page-content').innerHTML=p.content;
+  document.getElementById('page-ind').textContent=`Page ${currentPage+1} of ${pages.length}`;
+  document.getElementById('page-ind2').textContent=`Page ${currentPage+1} of ${pages.length}`;
+  document.getElementById('prev-btn').disabled=currentPage===0;
+  document.getElementById('prev-btn2').disabled=currentPage===0;
+  document.getElementById('next-btn').disabled=currentPage===pages.length-1;
+  document.getElementById('next-btn2').disabled=currentPage===pages.length-1;
+  document.querySelector('.content-area').scrollTop=0;
+}
+function changePage(d){
+  currentPage=Math.max(0,Math.min(pages.length-1,currentPage+d));
+  renderPage();
+  window.scrollTo(0,0);
+}
+
+// ========== EXPORT REPORT ==========
+function exportReport(){
+  const data=[];
+  data.push('EDUCATION EVOLUTION SIMULATOR — ACADEMIC FOUNDATION REPORT');
+  data.push('Developed by Mateen Yousuf | School Education Department Kashmir');
+  data.push('Aligned with NEP 2020 | Generated: '+new Date().toLocaleDateString());
+  data.push('\n'+('='.repeat(60))+'\n');
+  pages.forEach((p,i)=>{
+    data.push(`Page ${i+1}: ${p.title}`);
+    const tmp=document.createElement('div');
+    tmp.innerHTML=p.content;
+    data.push(tmp.textContent.trim());
+    data.push('\n'+('-'.repeat(40))+'\n');
+  });
+  const blob=new Blob([data.join('\n')],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url; a.download='EduEvolution_Foundation_Report.txt';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ========== SERVICE WORKER ==========
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+  });
+}
+
+// ========== INIT ==========
+window.addEventListener('load', ()=>{
+  renderGeneration();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,1598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="theme-color" content="#1a2744"/>
+<meta name="description" content="Meta-Learning & Cognitive Development Architecture Lab — Offline PWA by Mateen Yousuf"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<title>Meta-Learning & Cognitive Development Architecture Lab</title>
+<link rel="manifest" href="manifest.json"/>
+<style>
+:root{
+  --bg:#0a0e1a;
+  --bg2:#0f1526;
+  --bg3:#141c35;
+  --card:#1a2540;
+  --card2:#1e2d4e;
+  --accent:#4a7fd4;
+  --accent2:#7c5cbf;
+  --accent3:#3ecfb2;
+  --gold:#c9a84c;
+  --text:#e8edf8;
+  --text2:#a8b8d8;
+  --text3:#6a80a8;
+  --border:#2a3a5e;
+  --danger:#e05555;
+  --warn:#e0a020;
+  --success:#3ecfb2;
+  --font-head:'Georgia',serif;
+  --font-body:'Palatino Linotype','Book Antiqua',Palatino,serif;
+  --font-ui:'Trebuchet MS',sans-serif;
+  --radius:12px;
+  --shadow:0 4px 24px rgba(0,0,0,0.4);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;overflow-x:hidden;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:var(--bg2);}
+::-webkit-scrollbar-thumb{background:var(--accent2);border-radius:3px;}
+
+/* UTILITY */
+.hidden{display:none!important;}
+.section-view{display:none;}
+.section-view.active{display:block;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border:none;border-radius:var(--radius);cursor:pointer;font-family:var(--font-ui);font-size:0.9rem;font-weight:600;transition:all 0.3s;text-decoration:none;}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(74,127,212,0.4);}
+.btn-secondary{background:transparent;color:var(--accent);border:1.5px solid var(--accent);}
+.btn-secondary:hover{background:var(--accent);color:#fff;}
+.btn-gold{background:linear-gradient(135deg,var(--gold),#a8813a);color:#fff;}
+.btn-success{background:var(--success);color:#0a0e1a;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:16px;}
+.card2{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+h1,h2,h3,h4{font-family:var(--font-head);letter-spacing:0.02em;}
+.tag{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-family:var(--font-ui);font-weight:600;background:rgba(74,127,212,0.15);color:var(--accent);border:1px solid rgba(74,127,212,0.3);}
+.tag-gold{background:rgba(201,168,76,0.15);color:var(--gold);border-color:rgba(201,168,76,0.3);}
+.tag-teal{background:rgba(62,207,178,0.12);color:var(--accent3);border-color:rgba(62,207,178,0.3);}
+
+/* NAV */
+#navbar{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:12px;}
+#navbar-brand{font-family:var(--font-head);font-size:0.9rem;color:var(--accent);font-weight:700;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#menu-btn{background:none;border:1px solid var(--border);color:var(--text2);border-radius:8px;padding:8px 12px;cursor:pointer;font-size:1.1rem;}
+#sidebar{position:fixed;top:0;left:-280px;width:280px;height:100vh;background:var(--bg2);border-right:1px solid var(--border);z-index:2000;transition:left 0.3s;overflow-y:auto;padding-bottom:40px;}
+#sidebar.open{left:0;}
+#sidebar-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1999;display:none;}
+#sidebar-overlay.open{display:block;}
+.sidebar-header{padding:20px 16px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.sidebar-header h3{font-size:0.9rem;color:var(--accent);}
+#close-sidebar{background:none;border:none;color:var(--text2);font-size:1.3rem;cursor:pointer;}
+.nav-section{padding:12px 16px 4px;font-size:0.7rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--text3);font-family:var(--font-ui);}
+.nav-item{display:flex;align-items:center;gap:10px;padding:11px 16px;cursor:pointer;color:var(--text2);font-family:var(--font-ui);font-size:0.85rem;transition:all 0.2s;border-left:3px solid transparent;}
+.nav-item:hover,.nav-item.active{background:rgba(74,127,212,0.1);color:var(--text);border-left-color:var(--accent);}
+.nav-item .icon{font-size:1rem;width:20px;text-align:center;}
+
+/* MAIN CONTENT */
+#main-content{padding-top:60px;min-height:100vh;}
+.page-container{max-width:800px;margin:0 auto;padding:24px 16px;}
+
+/* ===== HOME PAGE ===== */
+#home-header{text-align:center;padding:48px 24px 32px;background:linear-gradient(180deg,var(--bg2) 0%,var(--bg) 100%);border-bottom:1px solid var(--border);}
+.home-badge{display:inline-flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:24px;}
+.home-title{font-size:clamp(1.5rem,5vw,2.4rem);color:#fff;line-height:1.3;margin-bottom:8px;}
+.home-title span{color:var(--accent);}
+.home-subtitle{font-size:1rem;color:var(--text2);margin-bottom:16px;font-style:italic;}
+.home-dev{font-size:0.85rem;color:var(--text3);margin-bottom:32px;}
+.home-dev strong{color:var(--gold);}
+.home-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:420px;margin:0 auto 32px;}
+.home-btn{display:flex;flex-direction:column;align-items:center;gap:6px;padding:16px 12px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;transition:all 0.3s;color:var(--text);}
+.home-btn:hover{border-color:var(--accent);background:var(--card2);transform:translateY(-2px);box-shadow:var(--shadow);}
+.home-btn .hb-icon{font-size:1.8rem;}
+.home-btn .hb-label{font-size:0.8rem;font-family:var(--font-ui);font-weight:600;text-align:center;color:var(--text2);}
+.author-section{display:flex;align-items:center;gap:16px;padding:20px 24px;max-width:600px;margin:0 auto;background:var(--card);border-radius:var(--radius);border:1px solid var(--border);}
+.author-img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);}
+.author-info h4{font-size:0.95rem;color:var(--gold);}
+.author-info p{font-size:0.8rem;color:var(--text2);margin-top:2px;}
+.home-features{padding:32px 16px;max-width:800px;margin:0 auto;}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:16px;}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 12px;text-align:center;}
+.feat-card .f-icon{font-size:1.6rem;margin-bottom:8px;}
+.feat-card .f-title{font-size:0.8rem;font-family:var(--font-ui);font-weight:600;color:var(--text);}
+.feat-card .f-desc{font-size:0.72rem;color:var(--text3);margin-top:4px;}
+
+/* ===== LEARNING FOUNDATIONS ===== */
+.page-list{list-style:none;}
+.page-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:background 0.2s;}
+.page-item:hover{background:var(--card2);}
+.page-item .pi-num{min-width:32px;height:32px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;color:#fff;font-family:var(--font-ui);}
+.page-item .pi-title{flex:1;font-size:0.9rem;color:var(--text);}
+.page-item .pi-arrow{color:var(--text3);}
+.content-page{display:none;}
+.content-page.active{display:block;}
+.content-header{padding:24px 0 16px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.content-header .ch-num{font-size:0.75rem;font-family:var(--font-ui);color:var(--accent);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px;}
+.content-header h2{font-size:1.5rem;color:#fff;line-height:1.3;}
+.content-body p{line-height:1.8;color:var(--text2);margin-bottom:16px;font-size:0.95rem;}
+.content-body h3{color:var(--accent);font-size:1.1rem;margin:24px 0 10px;padding-left:12px;border-left:3px solid var(--accent);}
+.content-body h4{color:var(--gold);font-size:0.95rem;margin:16px 0 8px;}
+.content-body ul{padding-left:20px;margin-bottom:16px;}
+.content-body ul li{color:var(--text2);line-height:1.7;margin-bottom:6px;font-size:0.9rem;}
+.info-box{background:rgba(74,127,212,0.1);border:1px solid rgba(74,127,212,0.3);border-radius:var(--radius);padding:16px;margin:16px 0;}
+.info-box .ib-title{font-family:var(--font-ui);font-size:0.8rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;}
+.info-box p{color:var(--text2);font-size:0.88rem;margin:0;}
+.reflect-box{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.3);border-radius:var(--radius);padding:16px;margin:16px 0;}
+.reflect-box .rb-title{font-family:var(--font-ui);font-size:0.8rem;font-weight:700;color:var(--gold);margin-bottom:8px;}
+.reflect-box p{color:var(--text2);font-size:0.88rem;margin:0;}
+.practical-box{background:rgba(62,207,178,0.08);border:1px solid rgba(62,207,178,0.3);border-radius:var(--radius);padding:16px;margin:16px 0;}
+.practical-box .pb-title{font-family:var(--font-ui);font-size:0.8rem;font-weight:700;color:var(--accent3);margin-bottom:8px;}
+.nav-btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px;padding-top:16px;border-top:1px solid var(--border);}
+.progress-bar-wrap{background:var(--bg3);border-radius:4px;height:6px;margin-bottom:24px;}
+.progress-bar{height:6px;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent2));transition:width 0.5s;}
+
+/* ===== SIMULATORS ===== */
+.sim-form{display:grid;gap:16px;}
+.form-group label{display:block;font-size:0.8rem;font-family:var(--font-ui);font-weight:600;color:var(--text2);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.05em;}
+.form-group select,.form-group input[type=range],.form-group input[type=number],.form-group textarea{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;font-family:var(--font-ui);font-size:0.9rem;}
+.form-group select:focus,.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent);}
+.form-group input[type=range]{padding:6px 0;cursor:pointer;accent-color:var(--accent);}
+.range-labels{display:flex;justify-content:space-between;font-size:0.7rem;color:var(--text3);font-family:var(--font-ui);margin-top:4px;}
+.result-panel{background:var(--card2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-top:24px;}
+.result-panel h3{font-size:1.1rem;color:var(--accent);margin-bottom:16px;}
+.metric{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);}
+.metric:last-child{border-bottom:none;}
+.metric-label{font-size:0.85rem;color:var(--text2);font-family:var(--font-ui);}
+.metric-value{font-size:1.1rem;font-weight:700;font-family:var(--font-ui);}
+.meter-wrap{margin:16px 0;}
+.meter-label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text2);margin-bottom:6px;font-family:var(--font-ui);}
+.meter{height:12px;background:var(--bg3);border-radius:6px;overflow:hidden;}
+.meter-fill{height:100%;border-radius:6px;transition:width 0.8s ease;}
+.meter-low{background:linear-gradient(90deg,#3ecfb2,#2ea890);}
+.meter-mid{background:linear-gradient(90deg,#e0a020,#c07818);}
+.meter-high{background:linear-gradient(90deg,#e05555,#c03030);}
+.suggestion-list{margin-top:16px;list-style:none;}
+.suggestion-list li{padding:8px 12px;background:rgba(74,127,212,0.08);border-left:3px solid var(--accent);border-radius:0 6px 6px 0;margin-bottom:8px;font-size:0.85rem;color:var(--text2);}
+
+/* ===== CANVAS/CHART ===== */
+.chart-container{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:16px;}
+canvas{max-width:100%;display:block;}
+
+/* ===== METACOGNITION TRACKER ===== */
+.reflect-form{display:grid;gap:20px;}
+.reflect-form textarea{min-height:80px;resize:vertical;}
+.star-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+.star-btn{padding:8px 14px;background:var(--bg3);border:1.5px solid var(--border);border-radius:8px;color:var(--text2);cursor:pointer;font-family:var(--font-ui);font-size:0.85rem;transition:all 0.2s;}
+.star-btn.selected{background:var(--accent);border-color:var(--accent);color:#fff;}
+.radar-wrap{text-align:center;margin-top:16px;}
+.log-list{list-style:none;margin-top:16px;}
+.log-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:var(--bg3);border-radius:8px;margin-bottom:8px;font-size:0.82rem;color:var(--text2);font-family:var(--font-ui);}
+.log-score{font-weight:700;color:var(--accent3);}
+
+/* ===== STUDY OPTIMIZER ===== */
+.plan-output{margin-top:24px;}
+.plan-day{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+.plan-day-header{background:linear-gradient(135deg,var(--accent),var(--accent2));padding:10px 16px;display:flex;justify-content:space-between;align-items:center;}
+.plan-day-header .day-label{font-weight:700;font-size:0.9rem;color:#fff;font-family:var(--font-ui);}
+.plan-day-header .day-hrs{font-size:0.8rem;color:rgba(255,255,255,0.8);}
+.plan-day-body{padding:14px 16px;}
+.plan-activity{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.plan-activity:last-child{border-bottom:none;}
+.pa-badge{min-width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.85rem;background:rgba(74,127,212,0.2);}
+.pa-info .pa-name{font-size:0.85rem;color:var(--text);font-family:var(--font-ui);}
+.pa-info .pa-detail{font-size:0.75rem;color:var(--text3);}
+
+/* ===== DASHBOARD ===== */
+.dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.dash-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;text-align:center;}
+.dash-stat .ds-val{font-size:1.8rem;font-weight:700;font-family:var(--font-ui);color:var(--accent);}
+.dash-stat .ds-label{font-size:0.75rem;color:var(--text3);font-family:var(--font-ui);margin-top:4px;}
+.mastery-ladder{margin-top:8px;}
+.ladder-step{display:flex;align-items:center;gap:12px;padding:10px 14px;margin-bottom:6px;border-radius:8px;background:var(--bg3);}
+.ladder-step.achieved{background:rgba(62,207,178,0.1);border:1px solid rgba(62,207,178,0.3);}
+.ls-icon{font-size:1.2rem;}
+.ls-text{flex:1;font-size:0.85rem;font-family:var(--font-ui);color:var(--text2);}
+.ls-badge{font-size:0.7rem;padding:3px 8px;border-radius:12px;background:var(--accent3);color:#0a0e1a;font-weight:700;}
+
+/* ===== EDUCATOR MODE ===== */
+.workshop-grid{display:grid;gap:12px;}
+.workshop-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:all 0.3s;}
+.workshop-card:hover{border-color:var(--accent);transform:translateY(-2px);}
+.wc-icon{font-size:1.5rem;margin-bottom:8px;}
+.wc-title{font-size:0.95rem;font-family:var(--font-ui);font-weight:700;color:var(--text);margin-bottom:6px;}
+.wc-desc{font-size:0.82rem;color:var(--text3);}
+.educator-content{display:none;margin-top:16px;}
+.educator-content.active{display:block;}
+
+/* ===== THEORY PAGE ===== */
+.theory-section{margin-bottom:32px;}
+.theory-title{font-size:1.1rem;color:var(--accent);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+.theory-card{background:var(--card);border-left:4px solid var(--accent2);padding:16px;border-radius:0 var(--radius) var(--radius) 0;margin-bottom:10px;}
+.theory-card h4{color:var(--gold);font-size:0.9rem;margin-bottom:6px;}
+.theory-card p{color:var(--text2);font-size:0.85rem;line-height:1.6;}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:480px){
+  .home-btns{grid-template-columns:1fr 1fr;}
+  .dash-grid{grid-template-columns:1fr 1fr;}
+  .features-grid{grid-template-columns:repeat(2,1fr);}
+  .author-section{flex-direction:column;text-align:center;}
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.section-view.active{animation:fadeIn 0.35s ease;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.pulsing{animation:pulse 2s infinite;}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav id="navbar">
+  <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+  <span id="navbar-brand">🧠 Cognitive Lab</span>
+</nav>
+
+<!-- SIDEBAR OVERLAY -->
+<div id="sidebar-overlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-header">
+    <h3>🧠 Navigation</h3>
+    <button id="close-sidebar" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="nav-section">Main</div>
+  <div class="nav-item active" onclick="showSection('home')"><span class="icon">🏠</span>Home</div>
+  <div class="nav-section">Learn</div>
+  <div class="nav-item" onclick="showSection('foundations')"><span class="icon">📖</span>Learning Science (20 Pages)</div>
+  <div class="nav-item" onclick="showSection('theory')"><span class="icon">🔬</span>Frameworks & Theory</div>
+  <div class="nav-section">Simulators</div>
+  <div class="nav-item" onclick="showSection('cogload')"><span class="icon">⚙️</span>Cognitive Load Simulator</div>
+  <div class="nav-item" onclick="showSection('memory')"><span class="icon">🧬</span>Memory Consolidation</div>
+  <div class="nav-item" onclick="showSection('forgetting')"><span class="icon">📉</span>Forgetting Curve</div>
+  <div class="nav-item" onclick="showSection('transfer')"><span class="icon">🔄</span>Transfer of Learning</div>
+  <div class="nav-section">Trackers</div>
+  <div class="nav-item" onclick="showSection('metacog')"><span class="icon">🎯</span>Metacognition Tracker</div>
+  <div class="nav-item" onclick="showSection('optimizer')"><span class="icon">📅</span>Study Strategy Optimizer</div>
+  <div class="nav-item" onclick="showSection('dashboard')"><span class="icon">📊</span>Learning Profile Dashboard</div>
+  <div class="nav-section">Educator</div>
+  <div class="nav-item" onclick="showSection('educator')"><span class="icon">👩‍🏫</span>Educator Mode</div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+
+<!-- ===================== HOME ===================== -->
+<div id="home" class="section-view active">
+  <div id="home-header">
+    <div class="home-badge">
+      <span class="tag tag-gold">Aligned with NEP 2020</span>
+      <span class="tag">Learning Science</span>
+      <span class="tag tag-teal">Competency-Based Growth</span>
+    </div>
+    <h1 class="home-title">Meta-Learning &<br><span>Cognitive Development</span><br>Architecture Lab</h1>
+    <p class="home-subtitle">Understand how learning actually works — and master it.</p>
+    <p class="home-dev">Developed by <strong>Mateen Yousuf</strong> · Teacher, School Education Department Kashmir</p>
+    <div class="home-btns">
+      <div class="home-btn" onclick="showSection('foundations')">
+        <span class="hb-icon">📖</span>
+        <span class="hb-label">Explore How Learning Works</span>
+      </div>
+      <div class="home-btn" onclick="showSection('cogload')">
+        <span class="hb-icon">⚙️</span>
+        <span class="hb-label">Cognitive Simulation Studio</span>
+      </div>
+      <div class="home-btn" onclick="showSection('metacog')">
+        <span class="hb-icon">🎯</span>
+        <span class="hb-label">Metacognition Tracker</span>
+      </div>
+      <div class="home-btn" onclick="showSection('theory')">
+        <span class="hb-icon">🔬</span>
+        <span class="hb-label">Framework & Cognitive Theory</span>
+      </div>
+    </div>
+    <div class="author-section">
+      <img src="author.jpg" alt="Mateen Yousuf" class="author-img" onerror="this.style.display='none'"/>
+      <div class="author-info">
+        <h4>Mateen Yousuf</h4>
+        <p>Teacher · School Education Department Kashmir</p>
+        <p style="margin-top:4px;font-size:0.75rem;color:var(--accent3);">Cognitive Science Researcher · NEP 2020 Expert</p>
+      </div>
+    </div>
+  </div>
+  <div class="home-features">
+    <h2 style="font-size:1.1rem;margin-bottom:4px;">What You'll Discover</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:16px;">A complete offline system for mastering your own learning.</p>
+    <div class="features-grid">
+      <div class="feat-card"><div class="f-icon">🧠</div><div class="f-title">Memory Science</div><div class="f-desc">How memories form and consolidate</div></div>
+      <div class="feat-card"><div class="f-icon">⚡</div><div class="f-title">Cognitive Load</div><div class="f-desc">Optimize mental effort</div></div>
+      <div class="feat-card"><div class="f-icon">📈</div><div class="f-title">Retention Curves</div><div class="f-desc">Beat the forgetting curve</div></div>
+      <div class="feat-card"><div class="f-icon">🔁</div><div class="f-title">Spaced Learning</div><div class="f-desc">Evidence-based revision</div></div>
+      <div class="feat-card"><div class="f-icon">🎯</div><div class="f-title">Metacognition</div><div class="f-desc">Think about your thinking</div></div>
+      <div class="feat-card"><div class="f-icon">📅</div><div class="f-title">Study Optimizer</div><div class="f-desc">Personalized study plans</div></div>
+    </div>
+    <div class="card" style="margin-top:24px;text-align:center;">
+      <p style="font-size:0.82rem;color:var(--text3);">✅ Fully Offline · No Login · No Internet · Works on Low-End Devices · NEP 2020 Aligned</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FOUNDATIONS (20 PAGES) ===================== -->
+<div id="foundations" class="section-view">
+  <div class="page-container">
+    <div style="padding:16px 0 8px;">
+      <div class="tag" style="margin-bottom:8px;">Learning Science</div>
+      <h2 style="font-size:1.3rem;margin-bottom:4px;">Foundations of Learning Science</h2>
+      <p style="font-size:0.85rem;color:var(--text3);">20 research-grounded pages — tap any topic to read in depth</p>
+    </div>
+    <ul class="page-list" id="found-list"></ul>
+    <div id="found-content"></div>
+  </div>
+</div>
+
+<!-- ===================== COGNITIVE LOAD SIMULATOR ===================== -->
+<div id="cogload" class="section-view">
+  <div class="page-container">
+    <div class="tag" style="margin-bottom:8px;">Simulator</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Cognitive Load Simulator</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Calculate your cognitive load and get instructional recommendations.</p>
+    <div class="card">
+      <div class="sim-form">
+        <div class="form-group">
+          <label>Task Complexity</label>
+          <select id="cl-complexity">
+            <option value="1">Low — Simple facts, basic recall</option>
+            <option value="2" selected>Moderate — Conceptual understanding</option>
+            <option value="3">High — Multi-step reasoning, problem solving</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Prior Knowledge Level: <span id="cl-know-val">5</span>/10</label>
+          <input type="range" id="cl-knowledge" min="0" max="10" value="5" oninput="document.getElementById('cl-know-val').textContent=this.value"/>
+          <div class="range-labels"><span>Novice</span><span>Expert</span></div>
+        </div>
+        <div class="form-group">
+          <label>Time Pressure</label>
+          <select id="cl-time">
+            <option value="0">None — No deadline</option>
+            <option value="1" selected>Low — Days available</option>
+            <option value="2">Moderate — Few hours</option>
+            <option value="3">High — Immediate / Exam today</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="calcCogLoad()">⚙️ Calculate Cognitive Load</button>
+      </div>
+    </div>
+    <div class="result-panel hidden" id="cl-result">
+      <h3>📊 Cognitive Load Analysis</h3>
+      <div class="meter-wrap">
+        <div class="meter-label"><span>Cognitive Load Score</span><span id="cl-score-label">—</span></div>
+        <div class="meter"><div class="meter-fill" id="cl-meter" style="width:0%"></div></div>
+      </div>
+      <div class="metric"><span class="metric-label">Raw Load Score</span><span class="metric-value" id="cl-raw">—</span></div>
+      <div class="metric"><span class="metric-label">Overload Risk</span><span class="metric-value" id="cl-risk">—</span></div>
+      <div class="metric"><span class="metric-label">Optimal Strategy</span><span class="metric-value" id="cl-strategy" style="font-size:0.85rem">—</span></div>
+      <div class="card2" style="margin-top:16px;">
+        <p style="font-size:0.8rem;font-family:var(--font-ui);color:var(--text3);margin-bottom:8px;">FORMULA: Load = (Complexity × 2) − Prior Knowledge + Time Pressure</p>
+        <ul class="suggestion-list" id="cl-suggestions"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== MEMORY CONSOLIDATION ===================== -->
+<div id="memory" class="section-view">
+  <div class="page-container">
+    <div class="tag tag-teal" style="margin-bottom:8px;">Memory Model</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Memory Consolidation Model</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Project your retention over 7 and 30 days based on study strategy.</p>
+    <div class="card">
+      <div class="sim-form">
+        <div class="form-group">
+          <label>Study Strategy</label>
+          <select id="mm-strategy">
+            <option value="rereading">Re-reading</option>
+            <option value="retrieval" selected>Retrieval Practice</option>
+            <option value="spaced">Spaced Repetition</option>
+            <option value="mixed">Mixed Practice</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Study Session Length</label>
+          <select id="mm-length">
+            <option value="short">Short (15–30 min)</option>
+            <option value="medium" selected>Medium (45–60 min)</option>
+            <option value="long">Long (90+ min)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Topic Familiarity: <span id="mm-fam-val">4</span>/10</label>
+          <input type="range" id="mm-familiarity" min="1" max="10" value="4" oninput="document.getElementById('mm-fam-val').textContent=this.value"/>
+        </div>
+        <button class="btn btn-primary" onclick="calcMemory()">🧬 Project Retention</button>
+      </div>
+    </div>
+    <div class="result-panel hidden" id="mm-result">
+      <h3>📈 Retention Projection</h3>
+      <div class="metric"><span class="metric-label">Retention at Day 7</span><span class="metric-value" id="mm-day7" style="color:var(--accent3)">—</span></div>
+      <div class="metric"><span class="metric-label">Retention at Day 30</span><span class="metric-value" id="mm-day30" style="color:var(--gold)">—</span></div>
+      <div class="metric"><span class="metric-label">Mastery Index</span><span class="metric-value" id="mm-mastery">—</span></div>
+      <div class="chart-container" style="margin-top:16px;">
+        <canvas id="mm-chart" width="700" height="260"></canvas>
+      </div>
+      <div class="card2" style="margin-top:12px;">
+        <p style="font-size:0.85rem;color:var(--text2);" id="mm-advice"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== FORGETTING CURVE ===================== -->
+<div id="forgetting" class="section-view">
+  <div class="page-container">
+    <div class="tag" style="margin-bottom:8px;">Visualizer</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Forgetting Curve Visualizer</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">See how memory decays without revision vs. with spaced retrieval.</p>
+    <div class="card">
+      <div class="sim-form">
+        <div class="form-group">
+          <label>Initial Learning Strength: <span id="fc-strength-val">80</span>%</label>
+          <input type="range" id="fc-strength" min="50" max="100" value="80" oninput="document.getElementById('fc-strength-val').textContent=this.value"/>
+        </div>
+        <div class="form-group">
+          <label>Number of Revision Sessions (0–4)</label>
+          <input type="range" id="fc-revisions" min="0" max="4" value="2" oninput="document.getElementById('fc-rev-val').textContent=this.value"/>
+          <span style="font-size:0.85rem;color:var(--accent);" id="fc-rev-val">2</span> sessions
+        </div>
+        <button class="btn btn-primary" onclick="drawForgettingCurve()">📉 Visualize Forgetting Curve</button>
+      </div>
+    </div>
+    <div class="chart-container">
+      <canvas id="fc-chart" width="700" height="300"></canvas>
+    </div>
+    <div class="card2" style="margin-top:12px;">
+      <p style="font-size:0.85rem;color:var(--text2);">Ebbinghaus showed we forget ~70% within 24 hours without review. Each retrieval session strengthens the memory trace and resets the decay curve. This is the scientific basis for spaced repetition.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== TRANSFER OF LEARNING ===================== -->
+<div id="transfer" class="section-view">
+  <div class="page-container">
+    <div class="tag tag-gold" style="margin-bottom:8px;">Transfer Lab</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Transfer of Learning Lab</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Measure how well learning from one context applies to another.</p>
+    <div class="card">
+      <div class="sim-form">
+        <div class="form-group">
+          <label>Transfer Scenario</label>
+          <select id="tr-scenario">
+            <option value="near">Near Transfer — Same subject, new problem (e.g., algebra → algebra word problem)</option>
+            <option value="medium">Medium Transfer — Related subjects (e.g., algebra → physics equations)</option>
+            <option value="far">Far Transfer — Different domains (e.g., logical reasoning → essay arguments)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Conceptual Depth Practiced: <span id="tr-depth-val">5</span>/10</label>
+          <input type="range" id="tr-depth" min="1" max="10" value="5" oninput="document.getElementById('tr-depth-val').textContent=this.value"/>
+          <div class="range-labels"><span>Surface (memorize)</span><span>Deep (understand)</span></div>
+        </div>
+        <div class="form-group">
+          <label>Practice Variety</label>
+          <select id="tr-variety">
+            <option value="1">Blocked only (same type always)</option>
+            <option value="2" selected>Some interleaving (mixed practice)</option>
+            <option value="3">High variety (multiple contexts)</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="calcTransfer()">🔄 Calculate Transfer Readiness</button>
+      </div>
+    </div>
+    <div class="result-panel hidden" id="tr-result">
+      <h3>🔄 Transfer Readiness Report</h3>
+      <div class="metric"><span class="metric-label">Transfer Readiness Score</span><span class="metric-value" id="tr-score" style="color:var(--accent3)">—</span></div>
+      <div class="metric"><span class="metric-label">Conceptual Abstraction Level</span><span class="metric-value" id="tr-abstract">—</span></div>
+      <div class="metric"><span class="metric-label">Practice Depth Indicator</span><span class="metric-value" id="tr-depth-score">—</span></div>
+      <ul class="suggestion-list" id="tr-suggestions" style="margin-top:16px;"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== METACOGNITION TRACKER ===================== -->
+<div id="metacog" class="section-view">
+  <div class="page-container">
+    <div class="tag tag-teal" style="margin-bottom:8px;">Tracker</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Metacognition Tracker</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Reflect on your learning session and generate your metacognitive score.</p>
+    <div class="card">
+      <div class="reflect-form">
+        <div class="form-group">
+          <label>What did you understand well?</label>
+          <textarea id="mc-understood" placeholder="Describe concepts you grasped clearly..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>What confused you?</label>
+          <textarea id="mc-confused" placeholder="Topics, concepts, or steps that were unclear..."></textarea>
+        </div>
+        <div class="form-group">
+          <label>Confidence Level</label>
+          <div class="star-row" id="mc-confidence">
+            <button class="star-btn" onclick="selectConf(1)">1 — Very Low</button>
+            <button class="star-btn" onclick="selectConf(2)">2 — Low</button>
+            <button class="star-btn" onclick="selectConf(3)">3 — Moderate</button>
+            <button class="star-btn" onclick="selectConf(4)">4 — High</button>
+            <button class="star-btn" onclick="selectConf(5)">5 — Very High</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Strategy Used</label>
+          <div class="star-row" id="mc-strategy-used">
+            <button class="star-btn" onclick="selectStrat('Re-reading')">Re-reading</button>
+            <button class="star-btn" onclick="selectStrat('Practice Problems')">Practice Problems</button>
+            <button class="star-btn" onclick="selectStrat('Spaced Repetition')">Spaced Repetition</button>
+            <button class="star-btn" onclick="selectStrat('Teach Back')">Teach Back</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Accuracy Self-Check (how accurate do you think you are?)</label>
+          <div class="star-row" id="mc-accuracy">
+            <button class="star-btn" onclick="selectAccuracy(1)">Low</button>
+            <button class="star-btn" onclick="selectAccuracy(2)">Medium</button>
+            <button class="star-btn" onclick="selectAccuracy(3)">High</button>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="calcMetacog()">🎯 Generate Metacognitive Report</button>
+      </div>
+    </div>
+    <div class="result-panel hidden" id="mc-result">
+      <h3>🎯 Metacognitive Analysis</h3>
+      <div class="metric"><span class="metric-label">Metacognitive Awareness Score</span><span class="metric-value" id="mc-aware-score" style="color:var(--accent)">—</span></div>
+      <div class="metric"><span class="metric-label">Self-Regulation Index</span><span class="metric-value" id="mc-reg-score">—</span></div>
+      <div class="metric"><span class="metric-label">Confidence–Accuracy Alignment</span><span class="metric-value" id="mc-align-score" style="color:var(--accent3)">—</span></div>
+      <div class="radar-wrap"><canvas id="mc-radar" width="280" height="280"></canvas></div>
+      <div class="card2" style="margin-top:12px;"><p id="mc-advice" style="font-size:0.85rem;color:var(--text2);"></p></div>
+    </div>
+    <div style="margin-top:24px;">
+      <h3 style="font-size:1rem;margin-bottom:8px;">📋 Reflection Log</h3>
+      <ul class="log-list" id="mc-log"></ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== STUDY OPTIMIZER ===================== -->
+<div id="optimizer" class="section-view">
+  <div class="page-container">
+    <div class="tag tag-gold" style="margin-bottom:8px;">Optimizer</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Study Strategy Optimizer</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Generate a personalized evidence-based study plan.</p>
+    <div class="card">
+      <div class="sim-form">
+        <div class="form-group">
+          <label>Days Until Exam</label>
+          <select id="so-days">
+            <option value="3">3 days</option>
+            <option value="7" selected>1 week</option>
+            <option value="14">2 weeks</option>
+            <option value="21">3 weeks</option>
+            <option value="30">1 month</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Daily Study Hours Available</label>
+          <select id="so-hours">
+            <option value="1">1 hour</option>
+            <option value="2" selected>2 hours</option>
+            <option value="3">3 hours</option>
+            <option value="4">4+ hours</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Weak Topics (comma-separated)</label>
+          <textarea id="so-topics" placeholder="e.g., Photosynthesis, Algebra equations, Essay writing..." style="min-height:60px;resize:vertical;background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:10px 14px;width:100%;font-family:var(--font-ui);font-size:0.9rem;"></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="generatePlan()">📅 Generate Study Plan</button>
+      </div>
+    </div>
+    <div class="plan-output hidden" id="so-plan">
+      <h3 style="font-size:1rem;margin:24px 0 12px;">📅 Your Personalized Study Plan</h3>
+      <div id="so-plan-days"></div>
+      <div class="card2" style="margin-top:16px;">
+        <p style="font-size:0.8rem;color:var(--text3);">📌 This plan uses spaced repetition intervals, retrieval practice cycles, and interleaving patterns based on cognitive science research.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== DASHBOARD ===================== -->
+<div id="dashboard" class="section-view">
+  <div class="page-container">
+    <div class="tag" style="margin-bottom:8px;">Dashboard</div>
+    <h2 style="font-size:1.3rem;margin-bottom:16px;">Learning Profile Dashboard</h2>
+    <div class="dash-grid" id="dash-stats"></div>
+    <div class="card" style="margin-bottom:16px;">
+      <h3 style="font-size:0.95rem;margin-bottom:12px;">🏆 Mastery Ladder</h3>
+      <div class="mastery-ladder" id="mastery-ladder"></div>
+    </div>
+    <div class="card">
+      <h3 style="font-size:0.95rem;margin-bottom:12px;">📈 Retention & Engagement</h3>
+      <canvas id="dash-chart" width="700" height="200"></canvas>
+    </div>
+    <div class="card" style="margin-top:16px;">
+      <h3 style="font-size:0.95rem;margin-bottom:12px;">💾 Data Management</h3>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <button class="btn btn-secondary" onclick="exportData()">📥 Export Data</button>
+        <button class="btn btn-secondary" onclick="document.getElementById('import-file').click()">📤 Import Data</button>
+        <button class="btn" style="background:rgba(224,85,85,0.2);color:var(--danger);border:1px solid var(--danger);" onclick="clearData()">🗑️ Clear All Data</button>
+        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(event)"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== EDUCATOR MODE ===================== -->
+<div id="educator" class="section-view">
+  <div class="page-container">
+    <div class="tag tag-gold" style="margin-bottom:8px;">Educator Mode</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Educator Resource Centre</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Tools and resources for teachers to explain cognitive science in the classroom.</p>
+    <div class="workshop-grid">
+      <div class="workshop-card" onclick="showWorkshop('principles')">
+        <div class="wc-icon">🧠</div>
+        <div class="wc-title">Cognitive Principles for Teachers</div>
+        <div class="wc-desc">Core ideas from cognitive science that every teacher should know</div>
+      </div>
+      <div class="workshop-card" onclick="showWorkshop('workshop')">
+        <div class="wc-icon">🛠️</div>
+        <div class="wc-title">Study Skills Workshop Guide</div>
+        <div class="wc-desc">A complete workshop plan for teaching study strategies to students</div>
+      </div>
+      <div class="workshop-card" onclick="showWorkshop('nep')">
+        <div class="wc-icon">📋</div>
+        <div class="wc-title">NEP 2020 & NCF 2023 Alignment</div>
+        <div class="wc-desc">How cognitive science aligns with national education policy</div>
+      </div>
+      <div class="workshop-card" onclick="showWorkshop('strategies')">
+        <div class="wc-icon">📊</div>
+        <div class="wc-title">Strategy Comparison Guide</div>
+        <div class="wc-desc">Evidence rankings of all major study strategies</div>
+      </div>
+    </div>
+    <div id="educator-principles" class="educator-content card">
+      <h3 style="font-size:1rem;margin-bottom:16px;color:var(--accent);">🧠 Core Cognitive Principles for Educators</h3>
+      <div class="theory-card"><h4>1. Desirable Difficulties</h4><p>Learning that feels harder in the short term — retrieval practice, interleaving — produces stronger long-term retention than fluent re-reading. Teachers should welcome productive struggle.</p></div>
+      <div class="theory-card"><h4>2. The Expertise Reversal Effect</h4><p>Instructional methods effective for novices (worked examples, scaffolding) can actually hinder experts. Match teaching complexity to learner level.</p></div>
+      <div class="theory-card"><h4>3. Spaced Practice Superiority</h4><p>Distributing practice over time produces dramatically better retention than massed practice. Schedule review sessions days apart, not minutes apart.</p></div>
+      <div class="theory-card"><h4>4. Retrieval as a Learning Event</h4><p>Each time a student attempts to recall information — even unsuccessfully — the memory trace is strengthened. Testing teaches, not just assesses.</p></div>
+      <div class="theory-card"><h4>5. Metacognitive Calibration</h4><p>Students who accurately judge what they know and don't know perform significantly better. Teach students to test themselves rather than rely on recognition.</p></div>
+    </div>
+    <div id="educator-workshop" class="educator-content card">
+      <h3 style="font-size:1rem;margin-bottom:16px;color:var(--accent);">🛠️ Study Skills Workshop Plan (90 Minutes)</h3>
+      <div class="theory-card"><h4>Opening (10 min): The Illusion of Knowing</h4><p>Activity: Have students re-read a paragraph, then cover it and write what they remember. Shock revelation — they remember far less than they thought. Introduces why passive reading fails.</p></div>
+      <div class="theory-card"><h4>Module 1 (20 min): The Forgetting Curve</h4><p>Draw Ebbinghaus's curve on board. Show how each review session extends memory. Students calculate how many review sessions they need before their next exam.</p></div>
+      <div class="theory-card"><h4>Module 2 (20 min): Retrieval Practice Drills</h4><p>Practice: Flashcard creation, blank-page recall, student quizzes each other. Compare the feeling of retrieval (hard, effortful) vs. re-reading (easy, deceptive).</p></div>
+      <div class="theory-card"><h4>Module 3 (20 min): Building Your Spaced Schedule</h4><p>Using the study optimizer, students build a personal revision timetable for the next exam. Identify weak topics and assign spaced review sessions.</p></div>
+      <div class="theory-card"><h4>Reflection (20 min): Metacognitive Journaling</h4><p>Students use the metacognition tracker to rate their current learning habits and identify one concrete change to make starting today.</p></div>
+    </div>
+    <div id="educator-nep" class="educator-content card">
+      <h3 style="font-size:1rem;margin-bottom:16px;color:var(--accent);">📋 NEP 2020 & NCF 2023 Alignment</h3>
+      <div class="theory-card"><h4>Competency-Based Education (NEP 2020, Section 4.6)</h4><p>This app directly supports NEP 2020's shift from rote memorization to demonstrated competency. The cognitive load simulator and mastery tracker implement competency progression frameworks.</p></div>
+      <div class="theory-card"><h4>Experiential Learning (NCF 2023)</h4><p>NCF 2023 emphasizes learning by doing. The interactive simulators here embody this — students don't just read about cognitive load, they calculate and experience it for their own study situation.</p></div>
+      <div class="theory-card"><h4>Holistic Development</h4><p>The metacognition tracker develops self-awareness — a core 21st century skill highlighted in NEP 2020's five domains of holistic development including cognitive, social-emotional, ethical, and aesthetic development.</p></div>
+      <div class="theory-card"><h4>Critical Thinking & Inquiry</h4><p>Transfer of Learning Lab challenges students to think across domains — directly developing the critical thinking and higher-order reasoning skills central to both NEP 2020 and NCF 2023 pedagogical frameworks.</p></div>
+    </div>
+    <div id="educator-strategies" class="educator-content card">
+      <h3 style="font-size:1rem;margin-bottom:16px;color:var(--accent);">📊 Evidence Rankings: Study Strategies</h3>
+      <div class="theory-card" style="border-left-color:var(--accent3)"><h4>🥇 High Utility (Strongest Evidence)</h4><p><strong>Retrieval Practice:</strong> Consistently outperforms all other strategies in controlled experiments. Effect sizes d=0.5–0.8.<br><strong>Spaced Practice:</strong> Simply distributing sessions over time nearly doubles long-term retention.</p></div>
+      <div class="theory-card" style="border-left-color:var(--gold)"><h4>🥈 Moderate Utility (Good Evidence)</h4><p><strong>Elaborative Interrogation:</strong> Asking "why" and "how" deepens understanding.<br><strong>Interleaving:</strong> Mixing topics in practice improves ability to distinguish concepts and transfer knowledge.</p></div>
+      <div class="theory-card" style="border-left-color:var(--danger)"><h4>🥉 Low Utility (Weak Evidence)</h4><p><strong>Re-reading:</strong> Feels productive but provides minimal benefit beyond one initial reading.<br><strong>Highlighting/Underlining:</strong> No significant improvement over not highlighting at all.<br><strong>Summarizing:</strong> Moderate benefit only when students have strong paraphrasing skills.</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== THEORY ===================== -->
+<div id="theory" class="section-view">
+  <div class="page-container">
+    <div class="tag" style="margin-bottom:8px;">Theory</div>
+    <h2 style="font-size:1.3rem;margin-bottom:4px;">Frameworks & Cognitive Theory</h2>
+    <p style="font-size:0.85rem;color:var(--text3);margin-bottom:24px;">Core scientific frameworks behind this application.</p>
+    <div class="theory-section">
+      <div class="theory-title">🧠 Memory Theories</div>
+      <div class="theory-card"><h4>Atkinson–Shiffrin Multi-Store Model (1968)</h4><p>Proposes three memory stores: Sensory Register (seconds), Short-Term/Working Memory (20–30 sec, 7±2 items), and Long-Term Memory (potentially permanent). Information must be encoded through rehearsal and elaboration to pass through stores.</p></div>
+      <div class="theory-card"><h4>Baddeley's Working Memory Model (1974)</h4><p>Working memory has components: Central Executive (attention control), Phonological Loop (verbal/auditory), Visuospatial Sketchpad (spatial), and Episodic Buffer (integration). Cognitive load theory is built on this architecture.</p></div>
+      <div class="theory-card"><h4>Levels of Processing (Craik & Lockhart, 1972)</h4><p>Depth of processing determines memory strength. Shallow processing (appearance of words) creates weak traces; deep processing (meaning, associations) creates strong, durable memories.</p></div>
+    </div>
+    <div class="theory-section">
+      <div class="theory-title">⚙️ Cognitive Load Theory</div>
+      <div class="theory-card"><h4>Sweller's CLT (1988)</h4><p>Three types: Intrinsic load (inherent task complexity), Extraneous load (poor instructional design), Germane load (schema formation). Effective instruction minimizes extraneous load and optimizes germane load within working memory limits.</p></div>
+      <div class="theory-card"><h4>Schema Theory</h4><p>Experts chunk knowledge into schemas — organized mental structures — dramatically reducing cognitive load. Expert performance isn't just "knowing more" but knowing differently: hierarchically organized, richly connected knowledge.</p></div>
+    </div>
+    <div class="theory-section">
+      <div class="theory-title">📈 Learning & Forgetting</div>
+      <div class="theory-card"><h4>Ebbinghaus Forgetting Curve (1885)</h4><p>Memory retention follows a negative exponential decay: R = e^(−t/S) where t is time and S is memory strength. Each retrieval event resets the curve at a higher baseline and increases S (memory stability).</p></div>
+      <div class="theory-card"><h4>Bjork's New Theory of Disuse (1992)</h4><p>Memory has two components: Retrieval Strength (how easily available right now) and Storage Strength (how deeply consolidated). Spaced practice builds storage strength; massed practice only builds retrieval strength temporarily.</p></div>
+    </div>
+    <div class="theory-section">
+      <div class="theory-title">🎯 Metacognition</div>
+      <div class="theory-card"><h4>Flavell's Metacognition Model (1979)</h4><p>Metacognition has two dimensions: Metacognitive Knowledge (beliefs about learning, tasks, strategies) and Metacognitive Regulation (planning, monitoring, evaluating). Both are trainable and predict academic achievement.</p></div>
+      <div class="theory-card"><h4>Dunning–Kruger Effect</h4><p>Students with lowest competence are most likely to overestimate their performance. The metacognition tracker in this app specifically targets this by separating confidence ratings from accuracy self-checks, helping students calibrate.</p></div>
+    </div>
+    <div class="theory-section">
+      <div class="theory-title">📐 Analytical Formulas Used in This App</div>
+      <div class="card2">
+        <p style="font-size:0.82rem;font-family:monospace;color:var(--accent3);line-height:2;">
+          Cognitive Load = (Complexity × 2) − Prior Knowledge + Time Pressure<br>
+          Retention(day) = Base × Strategy_Weight × e^(−decay × day) + Floor<br>
+          Mastery Index = (Retention_7d × 0.4) + (Retention_30d × 0.6)<br>
+          Metacog Awareness = (Reflection_Depth × 0.4) + (Strategy_Quality × 0.3) + (Calibration × 0.3)<br>
+          Transfer Readiness = (Depth × 0.5) + (Variety × 0.3) − (Transfer_Distance × 0.2)<br>
+          Self-Regulation Score = (Monitoring × 0.4) + (Planning × 0.3) + (Evaluation × 0.3)
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end main-content -->
+
+<script>
+// ============================================================
+// NAVIGATION
+// ============================================================
+function toggleSidebar(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebar-overlay').classList.toggle('open');
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebar-overlay').classList.remove('open');
+}
+function showSection(id){
+  document.querySelectorAll('.section-view').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{
+    if(n.textContent.toLowerCase().includes(id.toLowerCase().replace('-',' '))) n.classList.add('active');
+  });
+  closeSidebar();
+  window.scrollTo(0,0);
+  if(id==='dashboard') renderDashboard();
+}
+
+// ============================================================
+// LOCAL STORAGE HELPERS
+// ============================================================
+const LS = {
+  get:(k)=>{ try{ return JSON.parse(localStorage.getItem(k)||'null'); }catch(e){return null;} },
+  set:(k,v)=>{ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} },
+  push:(k,v)=>{ const arr=LS.get(k)||[]; arr.push(v); LS.set(k,arr); }
+};
+
+// ============================================================
+// FOUNDATIONS — 20 PAGES DATA
+// ============================================================
+const PAGES = [
+  {
+    title:"What is Learning?",
+    content:`<h3>Defining Learning in Cognitive Science</h3>
+    <p>Learning is a relatively permanent change in knowledge, behaviour, or capability that results from experience. Unlike reflexes (which are innate) or fatigue (which is temporary), genuine learning alters the neural architecture of the brain in ways that persist over time. Cognitive scientists distinguish between <em>declarative learning</em> (knowing that: facts, concepts), <em>procedural learning</em> (knowing how: skills, habits), and <em>dispositional learning</em> (knowing when and why: metacognitive awareness and transfer).</p>
+    <p>The behaviourist tradition once defined learning as observable changes in behaviour — Pavlov's dogs salivating at bells, Skinner's pigeons pecking levers. While valuable, this view missed the rich internal cognitive activity driving behaviour. The cognitive revolution of the 1960s redirected attention to information processing: how stimuli are encoded, stored, transformed, and retrieved.</p>
+    <h3>The Information Processing View</h3>
+    <p>Psychologists like George Miller, Ulric Neisser, and later John Anderson proposed that the mind processes information like a computer: input enters through the senses, passes through working memory (the "desk" of conscious thought), and may be encoded into long-term memory (the vast "library" of consolidated knowledge). Learning, in this view, is successful long-term encoding — getting information off the temporary desk and into permanent storage.</p>
+    <p>But this metaphor has limits. Memories are not files stored verbatim; they are constructed, reconstructed, and deeply tied to context, emotion, and existing schemas. Every act of remembering is partly an act of creation.</p>
+    <h3>Neurobiological Foundations</h3>
+    <p>At the neural level, learning corresponds to synaptic change — the strengthening or creation of connections between neurons. Donald Hebb's 1949 principle — "neurons that fire together wire together" — captures this elegantly. Repeated activation of a neural pathway increases its efficiency: the connection becomes myelinated (insulated), neurotransmitters are released more reliably, and post-synaptic receptors become more sensitive. This process is called <em>Long-Term Potentiation (LTP)</em>, and it is the cellular basis of memory formation.</p>
+    <p>Sleep plays a crucial role: during slow-wave sleep, the hippocampus (a seahorse-shaped structure critical for new learning) "replays" recent experiences, transferring them to the neocortex for long-term consolidation. This is why "sleeping on it" genuinely helps — and why pulling all-nighters before exams is cognitively counterproductive.</p>
+    <h3>Types of Learning</h3>
+    <p>Cognitive science distinguishes several qualitatively different learning processes: <strong>Habituation</strong> (decreasing response to repeated harmless stimuli), <strong>Associative learning</strong> (linking stimuli or behaviours with outcomes), <strong>Observational learning</strong> (learning by watching others — Bandura's social learning theory), <strong>Insight learning</strong> (sudden reorganization of knowledge — the "aha!" moment), and <strong>Conceptual learning</strong> (building abstract mental models that generalize beyond specific instances).</p>
+    <p>Conceptual learning is the highest form and the target of deep education. It enables <em>transfer</em> — applying knowledge to new, unfamiliar situations — which is the hallmark of genuine understanding vs. surface memorization.</p>
+    <div class="info-box"><div class="ib-title">Key Insight</div><p>Learning is not the same as studying. Studying is the activity; learning is the outcome. Much studying produces little learning because it relies on passive, shallow strategies that create the illusion of understanding without building durable memory traces.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Think of something you learned deeply years ago and still remember — what made it stick?<br>2. Think of something you "studied" before an exam and forgot immediately after — what does that tell you about the difference?<br>3. How does your current definition of learning compare to what you do daily?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• After every study session, write 3 things you learned in your own words (not copied).<br>• Distinguish between re-reading (illusion of learning) and retrieval (real learning) in your daily study.<br>• Schedule a "consolidation sleep" of 7–8 hours after intense study sessions.</p></div>`
+  },
+  {
+    title:"Brain & Cognitive Processing Overview",
+    content:`<h3>The Brain as a Learning Organ</h3>
+    <p>The human brain contains approximately 86 billion neurons, each forming up to 10,000 synaptic connections with other neurons — creating a network of roughly 100 trillion synapses. This astonishing complexity is the biological substrate of all thought, memory, and learning. Understanding key brain structures helps educators and learners appreciate why certain strategies work and others fail.</p>
+    <h3>Key Structures for Learning</h3>
+    <p>The <strong>Prefrontal Cortex (PFC)</strong> — situated behind the forehead — orchestrates executive functions: planning, decision-making, impulse control, and working memory. It is the seat of deliberate, effortful learning and the last brain region to fully mature (not until the mid-20s). Adolescent students' sometimes erratic decision-making partly reflects still-developing PFC function.</p>
+    <p>The <strong>Hippocampus</strong>, embedded deep in the medial temporal lobe, is essential for forming new declarative memories. The famous patient H.M., who had his hippocampus surgically removed to control epilepsy, could no longer form any new long-term memories — though his existing memories and procedural skills remained intact. The hippocampus "tags" new experiences for later consolidation.</p>
+    <p>The <strong>Amygdala</strong>, adjacent to the hippocampus, processes emotional significance. Emotional memories are encoded more strongly — this is why we vividly remember our first day of school, a frightening accident, or a moment of deep joy. Positive emotional engagement during learning (curiosity, excitement) activates the amygdala in ways that strengthen hippocampal encoding.</p>
+    <p>The <strong>Cerebellum</strong>, the "little brain" at the back, handles procedural memory and skill automatization. When you first learn to ride a bicycle, the prefrontal cortex is heavily engaged. With practice, the skill migrates to the cerebellum, freeing up PFC resources for higher-order thought. This automatization is cognitive efficiency in action.</p>
+    <h3>Neural Pathways and Learning</h3>
+    <p>Information flows through the brain in characteristic pathways. Sensory information first hits primary cortices (visual cortex, auditory cortex), then moves to association areas where integration occurs, then to the hippocampus for preliminary encoding, and finally — during sleep — migrates to the neocortex for long-term storage. Disrupting any stage disrupts learning.</p>
+    <p>Stress is particularly damaging: cortisol (the stress hormone) impairs hippocampal function. Chronically stressed students — those under relentless exam pressure, poverty, or social difficulties — show measurably reduced hippocampal volume and memory performance. This is a critical insight for educators: psychological safety is not a "nice to have" but a neurobiological prerequisite for optimal learning.</p>
+    <div class="info-box"><div class="ib-title">Neuroplasticity in Brief</div><p>Until the 1990s, scientists believed the adult brain was essentially fixed. We now know the brain retains plasticity throughout life — new neurons can form in the hippocampus (neurogenesis), and synaptic connections are constantly remodelled by experience. Learning literally changes the brain's physical structure.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. How might stress in your learning environment be affecting your memory formation?<br>2. Can you identify skills you've automated (like typing or mental arithmetic) vs. ones still requiring conscious effort?<br>3. What emotional experiences made something stick in your memory long-term?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Create positive emotional associations with study topics (connect to personal stories, curiosity).<br>• Reduce chronic stress through brief mindfulness, adequate sleep, and planned breaks.<br>• Use physical activity — exercise triggers BDNF (brain-derived neurotrophic factor), which promotes hippocampal neurogenesis.</p></div>`
+  },
+  {
+    title:"Working Memory vs Long-Term Memory",
+    content:`<h3>The Two-Memory Architecture</h3>
+    <p>Cognitive psychology's most practically important insight may be the distinction between working memory and long-term memory. Understanding this distinction explains why students struggle with complex material, why certain study strategies fail, and how expertise is truly built.</p>
+    <h3>Working Memory: The Bottleneck</h3>
+    <p>Working memory is the cognitive workspace — where active thinking happens. George Miller's famous 1956 paper showed its capacity is limited to approximately 7 ± 2 chunks of information. Later research by Nelson Cowan revised this downward to about 4 chunks. Critically, information in working memory decays within 15–30 seconds without rehearsal.</p>
+    <p>Alan Baddeley's model (1974, revised 2000) showed working memory is not a single store but an architecture: the <strong>Central Executive</strong> directs attention and coordinates the other components; the <strong>Phonological Loop</strong> holds verbal and auditory information (the "inner voice" rehearsing a phone number); the <strong>Visuospatial Sketchpad</strong> holds visual and spatial information (the "mind's eye"); and the <strong>Episodic Buffer</strong> integrates information from these components with long-term memory.</p>
+    <p>When working memory is overwhelmed — when the number of elements to process exceeds its capacity — cognitive overload occurs. The learner cannot hold all necessary information in mind simultaneously, errors increase, and encoding into long-term memory fails. This is the core mechanism behind Sweller's Cognitive Load Theory.</p>
+    <h3>Long-Term Memory: The Vast Library</h3>
+    <p>Long-term memory, by contrast, has what appears to be unlimited capacity and potentially indefinite duration. Information stored there ranges from childhood episodic memories to procedural skills to semantic knowledge about the world. The challenge is not storage (there's room for everything) but retrieval — getting the right information back into working memory when needed.</p>
+    <p>Long-term memory has multiple subsystems: <strong>Declarative memory</strong> (explicit, conscious) includes <em>episodic memory</em> (personal events: "I visited Srinagar last summer") and <em>semantic memory</em> (general facts: "Srinagar is the summer capital of J&K"). <strong>Non-declarative memory</strong> (implicit) includes procedural memory (skills), priming (unconscious associations), and classical conditioning.</p>
+    <h3>The Critical Interaction</h3>
+    <p>The key insight for learning is that working memory can hold only 4 chunks — but a "chunk" for an expert is much larger than for a novice. An expert chess player sees "kingside castle with pawn pressure on the sixth rank" as a single chunk; a novice sees 15 individual pieces. Expertise is the process of packing more knowledge into fewer, larger chunks — this is schema formation. Education's job is to build schemas that expand the effective capacity of working memory.</p>
+    <div class="info-box"><div class="ib-title">Practical Implication</div><p>When teaching new material, every element the student must process simultaneously costs working memory capacity. Reduce extraneous load (confusing layout, irrelevant information) and build schemas gradually to make complex ideas manageable.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Have you ever felt "overloaded" trying to understand something — too many new pieces at once?<br>2. Can you identify a topic where you have such strong schemas that complex problems feel effortless?<br>3. How might you restructure your study to reduce working memory load (e.g., master prerequisites before advanced material)?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Build strong foundations before advancing — each prerequisite mastered reduces cognitive load on new material.<br>• Use worked examples when first learning a new concept (reduces load, allows schema formation).<br>• Practice retrieval to strengthen long-term memory and reduce the demand on working memory during tasks.</p></div>`
+  },
+  {
+    title:"Cognitive Load Theory",
+    content:`<h3>The Theory That Transformed Instructional Design</h3>
+    <p>Cognitive Load Theory (CLT), developed by John Sweller and colleagues from the late 1980s, is one of the most influential and empirically supported theories in educational psychology. Its central claim: learning fails not because students lack intelligence but because the design of instruction overwhelms limited working memory capacity.</p>
+    <h3>Three Types of Cognitive Load</h3>
+    <p><strong>Intrinsic load</strong> arises from the inherent complexity of the material itself — specifically, the number of interacting elements that must be held in mind simultaneously. Simple facts (the capital of France is Paris) have low intrinsic load. Multi-step mathematical proofs or solving simultaneous equations have high intrinsic load. Intrinsic load cannot be eliminated but can be managed through sequencing — first building component skills before integrating them.</p>
+    <p><strong>Extraneous load</strong> is imposed by poor instructional design — irrelevant information, confusing layouts, redundant explanations, split attention effects (when text and diagram must be mentally integrated because they're physically separated). Unlike intrinsic load, extraneous load can and should be minimized by good teachers and textbook designers. It consumes working memory without contributing to learning.</p>
+    <p><strong>Germane load</strong> was originally proposed as the mental effort devoted to schema formation — the "good" load of learning. Recent revisions to CLT de-emphasize this as a separate category, but the underlying idea remains: cognitive effort directed at building organized knowledge structures is the productive goal of instruction.</p>
+    <h3>The Additivity Principle</h3>
+    <p>CLT holds that all three loads are additive and together must not exceed working memory capacity. This predicts several counterintuitive findings: (1) <em>The Expertise Reversal Effect</em>: instructional supports helpful for novices (worked examples, guidance) become harmful for experts because they add extraneous load without benefit. (2) <em>The Split-Attention Effect</em>: when students must mentally integrate information from multiple sources (separate text and diagram), cognitive load increases unnecessarily. (3) <em>The Redundancy Effect</em>: presenting the same information in multiple formats simultaneously (reading text aloud while the student reads it visually) can hurt rather than help.</p>
+    <h3>CLT in the Classroom</h3>
+    <p>CLT-informed design principles include: worked examples before problem-solving; completion problems (partially solved problems) as transitions; reducing split-attention by integrating text into diagrams; fading scaffolds as expertise grows; using pre-training to build prerequisite schemas; and avoiding seductive but irrelevant details ("interesting facts" that don't connect to the learning goal).</p>
+    <div class="info-box"><div class="ib-title">The Four-Component Model</div><p>Total Load = Intrinsic Load + Extraneous Load + Germane Effort. Effective instruction minimizes extraneous load, respects intrinsic load limits, and channels available working memory capacity toward productive schema-building.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Think of a textbook or lecture that felt unnecessarily confusing — can you identify the extraneous load sources?<br>2. What prerequisites do you need to master to reduce the intrinsic load of a topic you currently find difficult?<br>3. How does using the Cognitive Load Simulator in this app change how you plan your study sessions?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Study prerequisites before advanced material to reduce intrinsic load.<br>• Avoid multitasking while studying — every distraction adds extraneous load.<br>• Use the cognitive load simulator before planning intensive study sessions to gauge optimal difficulty.</p></div>`
+  },
+  {
+    title:"Schema Formation",
+    content:`<h3>How Knowledge Organizes Itself</h3>
+    <p>A schema is a mental structure — an organized network of knowledge that represents a category, concept, procedure, or relationship. Schemas are not passive storage; they are dynamic frameworks that guide perception, interpretation, and memory. When you encounter new information, your schemas determine what you notice, what you remember, and what you infer.</p>
+    <p>Frederic Bartlett's landmark 1932 experiments showed that when people recall stories from unfamiliar cultures, they systematically distort the memory toward their existing schemas — filling gaps with what "should" be there. Memory is constructive, not reproductive. Schemas are the blueprints by which construction happens.</p>
+    <h3>Building Schemas Through Learning</h3>
+    <p>Schemas develop through two processes Piaget identified: <strong>Assimilation</strong> (fitting new information into existing schemas — "a bat is a kind of flying animal like a bird") and <strong>Accommodation</strong> (restructuring schemas when new information doesn't fit — "wait, bats are actually mammals, so my 'flying animal = bird' schema needs revision"). Deep learning occurs through accommodation; surface learning through assimilation alone.</p>
+    <p>Expert-novice differences are fundamentally differences in schema quality. Expert physicists organize physics knowledge around deep structural features (conservation laws, force principles); novices organize by surface features (problems with pulleys, problems with inclines). When given random physics problems to sort, experts group by principle; novices group by surface appearance. This explains why novices struggle to transfer — they can't see past surface features to underlying structure.</p>
+    <h3>Implications for Teaching</h3>
+    <p>Instruction should explicitly help students build organized schemas. Advance organizers (Ausubel) — brief frameworks provided before new material — activate relevant existing schemas and create hooks for new information. Concept maps externalize schema structure. Comparative analysis ("how is osmosis similar to and different from diffusion?") builds relational schemas. Worked examples provide schema templates for problem-solving procedures.</p>
+    <div class="info-box"><div class="ib-title">Schema Automation</div><p>With sufficient practice, schemas become automatic — activated without conscious effort. Reading words is automatic for fluent readers; chess positions are instantly recognized by experts. Automation frees working memory for higher-order thinking. This is why drill-and-practice of basic skills (arithmetic facts, spelling patterns) is cognitively justified — it builds the automatized schemas that free up capacity for reasoning.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. What schemas do you have for a subject you know well? How are they organized?<br>2. Can you recall an "accommodation" moment — when new information forced you to completely restructure your understanding?<br>3. How might you deliberately build better schemas in a subject you're currently studying?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Create concept maps of topics to externalize and refine your schemas.<br>• Always seek the underlying principle, not just the procedure.<br>• When studying new material, consciously ask: "How does this connect to what I already know?"</p></div>`
+  },
+  {
+    title:"Retrieval Practice Science",
+    content:`<h3>Testing as a Learning Tool</h3>
+    <p>Of all the insights from cognitive psychology, the "testing effect" — or retrieval practice effect — may be the most practically powerful and most underused. The core finding: retrieving information from memory is not merely a way to measure learning; it is itself one of the most powerful ways to strengthen memory.</p>
+    <p>When you try to recall something — even if you can't fully succeed — the act of retrieval strengthens the neural pathways supporting that memory more than simply studying the material again. This counterintuitive finding has been replicated hundreds of times across different age groups, subjects, and retention intervals.</p>
+    <h3>The Mechanism</h3>
+    <p>Why does retrieval strengthen memory? Current theories suggest several mechanisms: Retrieval forces the reconstruction of memory traces, strengthening the encoding; retrieval practice creates more and varied retrieval routes, making future access easier; failed retrieval attempts followed by feedback produce particularly strong encoding (the "hypercorrection effect"); and retrieval may trigger re-consolidation — essentially re-saving the memory in a more integrated form.</p>
+    <p>Henry Roediger and Jeffrey Karpicke's landmark 2006 study showed that students who retrieved information performed dramatically better on delayed tests than students who restudied the material — even though the restudiers felt more confident. This illustrates the dangerous gap between fluency (how easy something feels) and memory strength.</p>
+    <h3>Forms of Retrieval Practice</h3>
+    <p>Retrieval practice takes many forms: flashcards; free recall (blank page recall — write everything you know about a topic); practice tests; elaborative interrogation (answering "why" and "how" questions from memory); and the "brain dump" technique (before reviewing notes, write down everything you can remember). All share the core feature of active information retrieval rather than passive re-exposure.</p>
+    <div class="info-box"><div class="ib-title">Spacing + Retrieval = Maximum Retention</div><p>Retrieval practice is maximally powerful when combined with spacing. Retrieving information after a delay — when you've partially forgotten it — produces stronger reconsolidation than immediate testing. The "optimal forgetting" principle: wait until you're about to forget, then retrieve, to maximize memory strengthening.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. How much of your current studying involves retrieval vs. re-exposure?<br>2. When did you last test yourself on material before it came up in a formal test?<br>3. How would your study routine change if you replaced 50% of re-reading with active recall?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• After reading a section, close the book and write everything you can remember.<br>• Use flashcards for high-frequency facts, but make them active (no peeking before attempting recall).<br>• Take practice tests under realistic conditions — including time pressure.</p></div>`
+  },
+  {
+    title:"Spaced Repetition",
+    content:`<h3>The Spacing Effect: One of Psychology's Most Reliable Findings</h3>
+    <p>The spacing effect — the finding that distributed practice produces better long-term retention than massed practice — was first documented by Ebbinghaus in 1885 and has been replicated so consistently it is considered one of the most robust phenomena in learning science. Yet most students naturally use massed practice (cramming), precisely the strategy the science says is least effective for long-term retention.</p>
+    <h3>Why Spacing Works</h3>
+    <p>Several mechanisms explain the spacing advantage: <strong>Encoding variability</strong> — studying at different times and in different contexts creates multiple retrieval cues, making the memory more accessible. <strong>Deficient processing during massing</strong> — when material is immediately repeated, the brain treats it as already known and processes it more shallowly. <strong>Consolidation opportunities</strong> — gaps between sessions allow memory consolidation during sleep. <strong>Desirable difficulty</strong> — spaced practice is harder (you've partially forgotten), and this increased retrieval effort paradoxically strengthens memory more than easy immediate rehearsal.</p>
+    <h3>The Optimal Spacing Algorithm</h3>
+    <p>Research suggests expanding retrieval intervals: review first after 1 day, then 3 days, then 1 week, then 2 weeks, then 1 month. Each successful retrieval extends the next interval; failed retrieval resets it to a shorter interval. This is the basis of spaced repetition software (SRS) like Anki, which algorithmically calculates optimal review timing.</p>
+    <p>For exam preparation without software: after initial study, review material on day 1, day 3, day 7, and day 21. This simple schedule, compared to a single review session, can more than double retention on a delayed test. The Study Strategy Optimizer in this app implements this scheduling logic.</p>
+    <div class="info-box"><div class="ib-title">Cramming: Why It Fails</div><p>Cramming works — temporarily. The material is accessible for the exam the next day. But retention drops precipitously within days. Cramming builds retrieval strength (short-term accessibility) without building storage strength (consolidated long-term memory). The information was never truly learned in a durable sense.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Map your typical study schedule — is it spaced or massed? What would it look like to redistribute the same hours?<br>2. What topics from previous years could you retrieve right now? What does that suggest about how you studied them?<br>3. How could you build a spaced repetition habit into your daily routine?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Divide study material into cards/chunks and use a spaced review schedule (1, 3, 7, 21 days).<br>• Start exam preparation weeks in advance — even 15 minutes a day of spaced review beats a single 5-hour cram.<br>• Use the Study Optimizer in this app to generate a personalized spaced schedule for your next exam.</p></div>`
+  },
+  {
+    title:"Interleaving vs Blocked Practice",
+    content:`<h3>The Counterintuitive Power of Mixing</h3>
+    <p>Most students (and many teachers) assume that mastery of one skill should be achieved before moving to the next — this is <em>blocked practice</em>. Complete all algebra problems, then all geometry problems, then all calculus. Interleaved practice shuffles the order: algebra, geometry, calculus, algebra, geometry... The research consistently shows interleaving produces superior long-term learning, despite feeling harder and performing worse in the short term.</p>
+    <h3>The Discrimination Hypothesis</h3>
+    <p>Nate Kornell and Robert Bjork's research suggests interleaving works because it forces learners to discriminate between concepts and select the appropriate strategy for each problem — a skill crucial for real-world transfer. In blocked practice, you know each problem type before you begin; in interleaved practice, problem identification is itself a retrieval task. This discrimination training builds the kind of flexible knowledge that transfers to novel exams.</p>
+    <p>A striking demonstration: students practice painting techniques in either blocked (all Monet style, then all Braque style) or interleaved (alternating styles) format. In an immediate test, blocked learners perform better — they've just practiced those exact techniques. But on a delayed test with new exemplars, interleaved learners significantly outperform blocked learners. They learned the style, not just the examples.</p>
+    <h3>Subject-Specific Applications</h3>
+    <p>In mathematics: mix problem types within each study session rather than doing all problems of one type consecutively. In language learning: interleave vocabulary sets from different semantic categories rather than learning all body parts, then all food words. In science: alternate between topics in your study sessions. In reading: compare multiple texts on the same theme rather than reading one exhaustively before moving to the next.</p>
+    <div class="info-box"><div class="ib-title">The Illusion of Competence</div><p>Blocked practice feels productive because performance improves rapidly and errors decrease. But this fluency is partly illusion — performance in that session doesn't predict delayed retention. The discomfort of interleaving is a signal that productive cognitive work is happening. When studying feels easy, be suspicious.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Have you ever studied a math chapter intensively only to struggle with similar problems weeks later in a mixed exam? That's the blocked practice trap.<br>2. How could you restructure a current subject to interleave different topic types?<br>3. What signals would tell you that interleaving is working even when it feels harder?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• In mathematics, do 2–3 problems of each type before moving on, rather than completing all problems of one type.<br>• Create shuffled practice sets for exam preparation mixing all topics.<br>• Remind yourself when studying feels too easy: increase difficulty by interleaving or moving to more challenging problems.</p></div>`
+  },
+  {
+    title:"Deliberate Practice Model",
+    content:`<h3>What Separates Good from Great</h3>
+    <p>Anders Ericsson's research on expert performance transformed our understanding of skill acquisition. Analysing world-class musicians, chess players, athletes, and professionals, Ericsson found that the key differentiator was not innate talent but a specific type of practice — <em>deliberate practice</em> — that is fundamentally different from mere repetition.</p>
+    <h3>The Four Pillars of Deliberate Practice</h3>
+    <p><strong>1. Working at the edge of current ability.</strong> Deliberate practice operates in the "learning zone" — tasks just beyond current competence, where errors occur but mastery is achievable. Working on material you already know well (comfort zone) doesn't develop skill. Working on material impossibly beyond your level (panic zone) doesn't either. The productive zone requires constant calibration.</p>
+    <p><strong>2. Focused, concentrated effort.</strong> Deliberate practice is mentally exhausting. Ericsson found elite musicians rarely practice more than 4 hours per day of deliberate practice — not because they lack motivation but because intense focus can only be sustained for limited periods. Mindless repetition for 6 hours is far less valuable than 2 hours of fully engaged deliberate practice.</p>
+    <p><strong>3. Immediate, specific feedback.</strong> Practice without feedback is at best inefficient, at worst reinforces errors. Expert coaches, performance data, or self-monitoring all provide the informational loop that allows error correction and improvement direction. Feedback must be rapid enough to connect to the specific performance being evaluated.</p>
+    <p><strong>4. Systematic error correction.</strong> Deliberate practitioners specifically target weaknesses. Rather than performing what they already do well, they identify the specific sub-skills that are limiting overall performance and repeatedly practice those components. This is uncomfortable but maximally developmental.</p>
+    <h3>Mental Representations</h3>
+    <p>Ericsson argued that the goal of deliberate practice is building sophisticated <em>mental representations</em> — internal models of expert performance that allow self-monitoring, error detection, and strategic planning. Expert writers have rich representations of what good prose sounds like; expert scientists have representations of theoretical elegance. These representations are what make expert performance self-correcting in ways novice performance is not.</p>
+    <div class="info-box"><div class="ib-title">The 10,000-Hour Myth</div><p>Malcolm Gladwell popularized the "10,000-hour rule" from Ericsson's research, but Ericsson himself rejected this simplification. It's not any 10,000 hours but 10,000 hours of deliberate practice. Many people play piano for 10,000 hours without approaching expert level because they practice in the comfort zone, without feedback, or without targeting weaknesses.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Is your study in the learning zone (challenging but achievable) or the comfort zone (too easy)?<br>2. What specific sub-skills or knowledge gaps are limiting your performance in your key subject?<br>3. How do you get feedback on the accuracy of your learning? How could you get it faster?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Identify your top 3 weak areas in each subject and dedicate practice specifically to them.<br>• Set focused 25–50 minute practice blocks with a single clear goal, then rest.<br>• Seek feedback actively — self-test, work with a study partner who corrects your explanations.</p></div>`
+  },
+  {
+    title:"Growth Mindset & Neuroplasticity",
+    content:`<h3>The Belief That Changes Everything</h3>
+    <p>Carol Dweck's research on mindset has become one of the most cited and applied findings in educational psychology. Her central finding: students who believe intelligence is fixed (fixed mindset) behave fundamentally differently from students who believe ability can be developed through effort and strategy (growth mindset) — with profound consequences for learning, resilience, and achievement.</p>
+    <h3>The Two Mindsets in Behaviour</h3>
+    <p>Fixed mindset students interpret challenge as a threat to their identity ("if I struggle, it means I'm not smart"). They avoid challenges, give up easily when difficulties arise, view effort as suspicious (smart people shouldn't need to try hard), are threatened by others' success, and respond to failure by reducing effort or giving up. Growth mindset students interpret challenge as opportunity ("this is hard, which means I'm growing"). They embrace challenge, persist through setbacks, view effort as the path to mastery, and draw lessons from failure.</p>
+    <p>These mindsets are not just attitudes — they produce measurable differences in academic trajectories. In one famous study, students entering junior high with a growth mindset maintained and improved their grades over the transition; fixed-mindset students' grades declined. The mindset created self-fulfilling prophecies through changed behaviour.</p>
+    <h3>The Neuroplasticity Connection</h3>
+    <p>Growth mindset is not wishful thinking — it is neurobiologically accurate. The brain genuinely does change with experience. Neuroplasticity research shows: London taxi drivers have enlarged hippocampal regions due to intensive navigation practice; musicians have expanded motor cortex representations for their playing hand; stroke patients can regain lost functions through intensive rehabilitation that recruits alternative neural pathways. The brain is not fixed hardware; it is living tissue that responds to use.</p>
+    <p>Crucially, believing in plasticity affects how people engage with learning challenges. If you believe the brain can change, effort becomes logically sensible — you're literally building new neural pathways. If you believe intelligence is fixed, effort is pointless or even embarrassing. The belief shapes the behaviour; the behaviour shapes the brain.</p>
+    <div class="info-box"><div class="ib-title">Praise Wisely</div><p>Dweck found that praising effort ("you worked hard on that") promotes growth mindset; praising intelligence ("you're so smart") promotes fixed mindset. "You're smart" implies performance reflects a fixed trait; "you worked hard" implies performance reflects controllable effort. This distinction in feedback language has measurable effects on subsequent challenge-seeking and resilience.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. In which subjects do you have a fixed mindset? What beliefs are driving it?<br>2. Can you recall a time when persistence and effort led to a breakthrough in understanding?<br>3. How do you respond to feedback that reveals gaps in your knowledge — as threatening or informative?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Reframe difficulty: "I can't do this yet" instead of "I can't do this."<br>• Celebrate effort, strategy, and progress — not just outcomes.<br>• Deliberately choose challenge over comfort in practice tasks to build resilience alongside knowledge.</p></div>`
+  },
+  {
+    title:"Metacognition Explained",
+    content:`<h3>Thinking About Thinking</h3>
+    <p>Metacognition — "thinking about thinking" — is among the most powerful predictors of academic achievement yet one of the most rarely explicitly taught skills. John Flavell introduced the term in 1976, defining it as knowledge and regulation of one's own cognitive processes. Students with strong metacognitive skills don't just work harder; they work smarter — they plan, monitor, and adjust their learning strategies in response to ongoing feedback about their own comprehension.</p>
+    <h3>Components of Metacognition</h3>
+    <p><strong>Metacognitive Knowledge</strong> includes three types: <em>Person knowledge</em> (understanding your own strengths, weaknesses, and learning preferences); <em>Task knowledge</em> (understanding what different types of tasks demand — that memorization differs from application which differs from evaluation); and <em>Strategy knowledge</em> (knowing which strategies work for which tasks — and knowing how to implement them effectively).</p>
+    <p><strong>Metacognitive Regulation</strong> includes: <em>Planning</em> (selecting appropriate strategies before beginning); <em>Monitoring</em> (tracking comprehension during learning — noticing when you don't understand); and <em>Evaluating</em> (assessing outcomes after learning — were your strategies effective? Did you achieve your goals?). Students who monitor poorly often don't realize they haven't understood until a test reveals the gap.</p>
+    <h3>The Calibration Problem</h3>
+    <p>Research consistently shows students are poorly calibrated — they are overconfident about what they know (particularly for familiar-seeming material) and sometimes underconfident about what they have mastered. The Dunning-Kruger effect captures the extreme: those with least competence are most overconfident because they lack the meta-knowledge to recognize their own errors.</p>
+    <p>Re-reading creates particularly poor calibration. After re-reading, material feels familiar, which the brain (incorrectly) interprets as a sign of knowing. Retrieval practice corrects this by providing accurate feedback: if you can't recall it, you don't know it as well as you thought. This is why the Metacognition Tracker in this app separates confidence from accuracy self-check — building calibration is explicit.</p>
+    <div class="info-box"><div class="ib-title">Meta-Analysis Evidence</div><p>Hattie's synthesis of 800+ meta-analyses found metacognitive strategies have an effect size of d=0.69 — substantially above the average d=0.40 threshold for educational interventions. Students explicitly taught metacognitive strategies show dramatic improvements in reading comprehension, mathematics, and writing across all ages.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. After your last study session, could you have accurately predicted your score on a test of that material?<br>2. Do you change your study strategy based on how difficult the topic is, or do you study everything the same way?<br>3. When you notice you don't understand something while reading, what do you typically do?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• After each study session, rate your confidence — then immediately test yourself to check calibration.<br>• Before starting a task, explicitly plan: "What strategy will I use? Why? What are the success criteria?"<br>• Use the Metacognition Tracker in this app regularly to build the habit of structured self-reflection.</p></div>`
+  },
+  {
+    title:"Self-Regulated Learning",
+    content:`<h3>Taking Ownership of the Learning Process</h3>
+    <p>Self-Regulated Learning (SRL) is the process by which learners set goals, plan strategies, monitor progress, and adjust behaviour based on outcomes — all in service of achieving their own learning objectives. Barry Zimmerman's cyclical SRL model describes three phases: Forethought (goal-setting, planning, motivational beliefs), Performance (strategy use, self-monitoring, self-control), and Reflection (self-evaluation, causal attributions for outcomes, adaptive reactions).</p>
+    <p>SRL is not a personality trait — it is a set of learnable skills. Students who appear to be "naturally organized" or "disciplined" have typically either explicitly learned SRL strategies or developed them through fortunate environmental scaffolding. The skills can be taught, practiced, and automated.</p>
+    <h3>The Forethought Phase</h3>
+    <p>High-quality forethought involves setting specific, moderately challenging, process-oriented goals ("I will understand and be able to explain the three types of chemical bonds by the end of this session") rather than vague outcome goals ("I will study chemistry tonight"). Process goals direct attention to controllable behaviours; outcome goals create anxiety when outcomes are uncertain. Before beginning, SRL learners also activate prior knowledge, estimate difficulty, and select strategies based on task analysis.</p>
+    <h3>The Performance Phase</h3>
+    <p>During learning, SRL includes self-instruction (talking oneself through strategies), attention focusing (returning attention to the task when distracted), and self-monitoring (checking comprehension at regular intervals). Effective self-monitors use internal checkpoints: "Can I explain this in my own words? Can I give an example? Can I connect this to something I already know?" When these checks fail, they adjust — re-reading a section, seeking an alternative explanation, or flagging for later clarification.</p>
+    <h3>The Reflection Phase</h3>
+    <p>After learning, SRL includes comparing performance to goals, attributing outcomes appropriately (attributing failure to strategy rather than ability maintains motivation), and planning adaptations. Students who attribute poor performance to fixed ability stop trying; students who attribute it to strategy adjust their approach and try again.</p>
+    <div class="info-box"><div class="ib-title">SRL and Academic Achievement</div><p>SRL skills explain as much variance in academic achievement as general intelligence in many studies. Students taught explicit SRL strategies show persistent improvements across subjects and settings. The goal is self-sufficiency — students who can learn anything, not just students who know particular facts.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Do you set specific goals before study sessions, or do you just "start studying"?<br>2. When you get poor results, what do you typically attribute them to? Strategy, effort, or ability?<br>3. What is one SRL strategy you could implement starting with your next study session?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Write one specific goal at the top of your study session notes before beginning.<br>• Every 20–25 minutes, pause and ask: "Am I achieving my goal? Do I need to adjust my strategy?"<br>• After each study session, write one sentence on what worked well and one on what to change.</p></div>`
+  },
+  {
+    title:"Motivation & Attention",
+    content:`<h3>The Gateway to Learning</h3>
+    <p>No cognitive strategy produces learning in an unmotivated, inattentive learner. Motivation and attention are not peripheral to learning — they are the gateway. Without sustained attention, information never enters working memory; without motivation, the regulatory effort required for deliberate practice never materializes.</p>
+    <h3>Theories of Motivation</h3>
+    <p><strong>Self-Determination Theory (Deci & Ryan)</strong> proposes three fundamental psychological needs whose satisfaction drives intrinsic motivation: Autonomy (feeling in control of one's learning choices), Competence (experiencing growth and mastery), and Relatedness (feeling connected to others in the learning context). Instruction that satisfies these needs — offering choice, structuring tasks at appropriate challenge levels, building positive relationships — dramatically outperforms control-and-reward approaches in producing deep, lasting engagement.</p>
+    <p><strong>Expectancy-Value Theory (Eccles)</strong> predicts that motivation is a product of expectancy (believing success is achievable) × value (believing the task matters). Low expectancy ("I'm not a math person") or low value ("when will I ever use this?") each separately destroy motivation. Effective teaching addresses both: building genuine competence to raise expectancy, and connecting material to students' authentic goals and interests to raise value.</p>
+    <h3>Attention: The Cognitive Resource</h3>
+    <p>Attention is not a single capacity but a multi-component system. Selective attention filters the overwhelming sensory input stream, prioritizing task-relevant information. Sustained attention maintains focus over time. Executive attention resolves conflicts between competing demands. All are limited resources that deplete with use (attentional fatigue) and restore with rest.</p>
+    <p>The average adult's ability to sustain focused attention without decline degrades substantially after 20–25 minutes of continuous cognitive effort. This is the science behind the Pomodoro technique (25 min work, 5 min rest) and why lecture periods longer than 20 minutes without active engagement show dramatically reduced information retention in the final portions.</p>
+    <div class="info-box"><div class="ib-title">Flow State</div><p>Mihaly Csikszentmihalyi's concept of "flow" — deep, effortless absorption in a task — occurs at the intersection of high challenge and high skill. Flow produces optimal learning and intrinsic satisfaction simultaneously. Creating conditions for flow (appropriate challenge, clear goals, uninterrupted time) is a worthy instructional design goal.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. In which subjects do you feel intrinsically motivated? What satisfies your need for autonomy, competence, or relatedness in those subjects?<br>2. How long can you sustain focused attention before noticing decline? How do you currently manage this?<br>3. What environmental changes would most improve your ability to sustain attention during study?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Eliminate phones and notifications during focused study blocks — even the presence of a phone reduces available cognitive capacity.<br>• Connect study material to personal goals ("understanding this helps me...") to build genuine value.<br>• Use 25-minute focused blocks with 5-minute rest intervals to work with natural attention rhythms.</p></div>`
+  },
+  {
+    title:"Habit Formation in Study",
+    content:`<h3>Making Good Study Automatic</h3>
+    <p>Habits are automatic behaviour sequences triggered by contextual cues — they execute with minimal conscious deliberate processing. The goal of good study habit formation is to make productive learning behaviours automatic enough that motivation and willpower are no longer required for them to occur. BJ Fogg's Behavior Model and Charles Duhigg's habit loop research provide practical frameworks for understanding and deliberately constructing study habits.</p>
+    <h3>The Habit Loop</h3>
+    <p>Every habit has three components: <strong>Cue</strong> (the trigger that initiates the behaviour), <strong>Routine</strong> (the behaviour itself), and <strong>Reward</strong> (the outcome that reinforces the loop). To build a new study habit: identify a consistent cue (same time, same place, same preliminary action like making tea); execute a specific, minimal routine (5 minutes of flashcards); and immediately experience a reward (small satisfaction, physical sensation of completion, brief social recognition). Over time, the cue alone triggers the routine automatically.</p>
+    <p>The neuroscience: habits are encoded in the basal ganglia as "chunked" action sequences that execute automatically. Once encoded, habits are highly resistant to extinction — which is why breaking bad habits is so difficult. The most effective approach is not elimination but substitution: keep the cue and reward, change the routine.</p>
+    <h3>Implementation Intentions</h3>
+    <p>Peter Gollwitzer's research shows that converting abstract goals ("I will study more") into if-then implementation intentions ("If it is 7pm and I am at my desk, then I will open my notebook and do 25 minutes of retrieval practice") dramatically increases follow-through — by 200–300% in some studies. Implementation intentions pre-decide the action, removing the need for in-the-moment willpower.</p>
+    <div class="info-box"><div class="ib-title">Identity-Based Habits</div><p>James Clear argues that the most durable habits are anchored in identity ("I am someone who studies deliberately every day") rather than outcomes ("I want to pass this exam"). Identity-based motivation survives goal achievement — you continue after the exam because the behaviour reflects who you are, not just what you want.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. What study habits do you already have? What cues trigger them?<br>2. What is one specific, small study routine you could build starting this week?<br>3. Write an implementation intention for tomorrow's study session in exact if-then format.</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Start with "habit stacking" — attach a new study habit to an existing automatic behaviour (e.g., "after breakfast, I review yesterday's notes for 10 minutes").<br>• Keep the initial routine tiny to remove the resistance threshold (2 minutes is enough to start).<br>• Track your streak — the visible record of consecutive days activates loss aversion and motivates continuation.</p></div>`
+  },
+  {
+    title:"Forgetting Curve Explained",
+    content:`<h3>Ebbinghaus and the Science of Forgetting</h3>
+    <p>Hermann Ebbinghaus (1850–1909) was the first to study memory experimentally and systematically. Using himself as subject, he memorized lists of nonsense syllables and measured retention over varying delays. His forgetting curve — showing rapid initial decline followed by a more gradual levelling — remains one of the most replicated findings in all of psychology.</p>
+    <h3>The Mathematics of Forgetting</h3>
+    <p>Ebbinghaus's forgetting function follows a power law: R(t) = e^(−t/S), where R is retention (proportion remembered), t is time elapsed, and S is the memory stability (how resistant the trace is to decay). This equation predicts that within 20 minutes of learning, roughly 40% of information is lost; within 24 hours, about 67%; within a week, up to 77%.</p>
+    <p>The crucial variable is S — memory stability — which can be increased through: strong initial encoding (deeper processing, emotional significance, multiple connections); retrieval practice (each successful retrieval increases S); sleep consolidation; and prior related knowledge (new information hooking into rich schemas decays more slowly).</p>
+    <h3>The Spacing Effect as a Solution</h3>
+    <p>The genius of spaced repetition is that it times retrieval practice to just before the memory would be forgotten — when retention has dropped significantly but the memory is still recoverable. This "retrieval at the edge of forgetting" maximally strengthens memory stability S. Each successful retrieval at the right spacing roughly doubles the next interval before forgetting — exponentially extending memory durability.</p>
+    <p>Wozniak and Leitner independently developed manual spaced repetition systems before computers, and Piotr Wozniak later coded the first SRS algorithm (SuperMemo, 1987). Modern systems like Anki have refined these algorithms with decades of user data. But the core principle — review just before you forget — can be applied manually using the Study Optimizer in this app.</p>
+    <div class="info-box"><div class="ib-title">Savings Score</div><p>Ebbinghaus measured retention through the "savings score" — how many fewer repetitions are needed to relearn material compared to original learning. Forgetting is never complete; relearning is always faster than original learning. This means spaced review is efficient even when retention feels very low — you're rebuilding on structural foundations, not starting from scratch.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Use the Forgetting Curve Visualizer in this app to simulate what happens to a topic you studied last month without review.<br>2. Which of your study topics are most vulnerable to forgetting right now?<br>3. If you scheduled one review session per week for a topic, how does the Visualizer show retention changing?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Review any important material within 24 hours of first learning it to intercept the initial steep decline.<br>• Schedule your review calendar from the back: start with exam date and work backwards to determine spacing.<br>• Use the Forgetting Curve Visualizer with different revision session counts to motivate building a spaced review habit.</p></div>`
+  },
+  {
+    title:"Testing Effect",
+    content:`<h3>Tests Don't Just Measure Learning — They Create It</h3>
+    <p>The testing effect (also called the retrieval practice effect or test-enhanced learning) is the empirical finding that taking a test on material — actively trying to retrieve it — produces superior long-term retention compared to simply re-studying the material. This is true even when performance on the immediate test is poor, suggesting that the act of retrieval itself — not just the performance outcome — drives the learning benefit.</p>
+    <h3>The Landmark Research</h3>
+    <p>Roediger and Karpicke (2006) showed that students who studied a prose passage and then took three immediate recall tests retained 61% of the material one week later, compared to 40% for students who studied the passage four times without testing. Remarkably, the testing group performed worse on immediate test than the studying group — but dramatically outperformed on the delayed test. This reveals a fundamental truth: the metric that predicts real learning (delayed performance) is different from the metric that feels like learning (immediate fluency).</p>
+    <h3>Why Retrieval Enhances Retention</h3>
+    <p>Multiple mechanisms have been proposed: <strong>Elaborative retrieval</strong> — the effort of recall activates related knowledge in long-term memory, creating richer encoding; <strong>Re-encoding</strong> — retrieved memories are reconsolidated in a strengthened form; <strong>Retrieval practice specificity</strong> — practicing retrieval in formats similar to future tests builds test-specific retrieval pathways; <strong>Predictive feedback</strong> — failed retrieval followed by feedback produces particularly strong "hypercorrection" of errors.</p>
+    <p>The testing effect is robust across: content types (facts, concepts, procedures); test formats (free recall, cued recall, multiple choice — though free recall is most powerful); ages (children through elderly); and subjects (science, history, mathematics, language). It appears to be a general feature of human memory architecture, not a special-case phenomenon.</p>
+    <div class="info-box"><div class="ib-title">Formative vs Summative Testing</div><p>Educational policy often focuses on summative testing (high-stakes exams for accountability). But the testing effect is maximally valuable in formative, low-stakes testing — frequent retrieval practice that is not primarily evaluative but primarily developmental. The most effective use of testing in classrooms is not to measure but to teach.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. How often do you test yourself vs. re-read in your current study routine?<br>2. What study materials could you easily convert into self-testing formats (flashcards, practice questions, blank-page recall)?<br>3. How might you use the testing effect in a group study setting?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• After reading each section of a textbook, close it and write a brief summary from memory before re-opening.<br>• Create practice tests from your notes — answer them before reviewing the source material.<br>• Study with a partner: quiz each other rather than reviewing material together passively.</p></div>`
+  },
+  {
+    title:"Transfer of Learning",
+    content:`<h3>The Highest Goal of Education</h3>
+    <p>Transfer of learning — the ability to apply knowledge learned in one context to new, different situations — is arguably the ultimate goal of education. Mere fact recall can be tested by recognition; genuine understanding is demonstrated by transfer. A student who has truly learned algebra can recognize algebraic structure in physics problems; a student who only memorized algebra procedures cannot.</p>
+    <h3>Near vs Far Transfer</h3>
+    <p><strong>Near transfer</strong> occurs between highly similar contexts — applying multiplication to slightly different multiplication problems. It is relatively easy to achieve and requires mainly retrieval and application of intact procedures. <strong>Far transfer</strong> occurs between different domains — applying logical reasoning from mathematics to argument evaluation in history. It is much harder to achieve and requires abstracted, flexible mental representations rather than context-bound procedures.</p>
+    <p>Research reveals a sobering pattern: near transfer is common; far transfer is rare. Most instruction, even successful instruction, produces learning that is tightly bound to the specific context in which it was acquired. The challenge is designing instruction that deliberately breaks this binding — developing knowledge that is explicitly recognized as applicable beyond its original domain.</p>
+    <h3>Conditions That Promote Transfer</h3>
+    <p>Several instructional conditions reliably improve transfer: <strong>Deep conceptual understanding</strong> vs. surface procedure memorization (understanding why works better than knowing how); <strong>Multiple contexts</strong> during initial learning (encountering the same principle in multiple different situations builds context-independent representation); <strong>Explicit abstraction</strong> (prompting students to formulate the general principle, not just work the specific example); <strong>Analogical reasoning</strong> (comparing cases that share deep structure helps identify the underlying principle); and <strong>Varied practice</strong> (interleaving, as discussed in Chapter 8, prevents context-binding).</p>
+    <div class="info-box"><div class="ib-title">Preparation for Future Learning</div><p>A surprising finding: even failed transfer attempts that don't produce correct answers prepare students to learn from subsequent instruction more effectively. Being challenged to apply knowledge in new contexts — even unsuccessfully — creates cognitive frameworks that make later instruction more effective. Struggle before instruction is a "desirable difficulty."</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Pick a concept you know well — can you identify three different contexts outside your subject where the same principle applies?<br>2. When you learn a procedure in class, do you understand why it works, or just how to execute it?<br>3. How might you deliberately practice far transfer in your current subjects?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• After learning a principle, challenge yourself to find analogies in two unrelated fields.<br>• Explicitly identify the underlying principle after solving each problem ("the key here was...conservation of energy / proportional reasoning / causal inference").<br>• Use the Transfer Lab in this app to simulate and measure transfer readiness for different learning scenarios.</p></div>`
+  },
+  {
+    title:"Deep vs Surface Learning",
+    content:`<h3>Two Approaches That Lead to Very Different Places</h3>
+    <p>Ference Marton and Roger Säljö's 1976 landmark study identified two qualitatively distinct approaches students take to learning: <em>deep processing</em> (focusing on what the text means, connecting to prior knowledge, critically evaluating ideas) and <em>surface processing</em> (focusing on reproducing the text, memorizing details, completing tasks as compliance). These approaches produce fundamentally different outcomes — not just in retention but in the kind of knowledge built.</p>
+    <h3>Surface Learning: The Seductive Trap</h3>
+    <p>Surface learning feels productive. Highlighting, re-reading, and taking verbatim notes create the illusion of active engagement. The material becomes familiar. Performance on immediate recall tests may be adequate. But surface learning builds brittle, context-bound knowledge — facts without connections, procedures without principles, answers without understanding. Under time pressure or in unfamiliar application contexts, surface knowledge rapidly reveals its limits.</p>
+    <p>Surface learning is often not the student's fault — it is a rational response to an educational environment that assesses surface recall. When exams only test whether students can reproduce specific facts in familiar formats, surface learning is an efficient strategy. Educational reform requires assessment reform: if we want deep learning, we must assess deep learning.</p>
+    <h3>Deep Learning: Effortful But Durable</h3>
+    <p>Deep learning involves seeking meaning: How does this connect to what I already know? Why does this principle work? What are the implications? Where might this be wrong? What examples illustrate this? Deep learners are not passive recipients but active constructors — building elaborate knowledge networks rather than storing isolated items. They ask questions, generate examples, seek applications, and evaluate evidence.</p>
+    <p>Deep learning is more effortful, more time-consuming, and subjectively more difficult than surface learning. But it produces knowledge that transfers, that remains accessible months later, that builds on itself. One hour of deep study produces more durable, flexible learning than three hours of surface study.</p>
+    <div class="info-box"><div class="ib-title">SOLO Taxonomy</div><p>Biggs and Collis's SOLO taxonomy (Structure of Observed Learning Outcomes) provides a useful hierarchy: Prestructural (irrelevant responses) → Unistructural (one relevant element) → Multistructural (multiple elements without integration) → Relational (integrated understanding) → Extended Abstract (generalization beyond the topic). Most surface learning operates at Multistructural; deep learning aims for Relational and Extended Abstract.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. For your most important subject, what percentage of your study is deep vs. surface? What would a shift toward deeper processing look like?<br>2. Can you identify a topic you understand deeply? What does that depth feel like — how does it differ from a topic you've memorized superficially?<br>3. How would you redesign your study sessions to promote deep processing?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• For every new concept, ask and answer in writing: "Why does this work? What would happen if it were different? Where else does this apply?"<br>• After reading, write a one-paragraph explanation as if teaching someone who knows nothing about the topic.<br>• Critique what you read — identify assumptions, consider alternatives, find the limits of applicability.</p></div>`
+  },
+  {
+    title:"Learning Misconceptions",
+    content:`<h3>What We Think We Know About Learning — That Is Wrong</h3>
+    <p>A number of widespread beliefs about learning are empirically false — and following them actively harms learning outcomes. Examining these misconceptions is not merely academic; it is practically urgent. Students and teachers spending significant effort on strategies that research shows are ineffective (or actively counterproductive) are paying an enormous opportunity cost.</p>
+    <h3>Misconception 1: Learning Styles</h3>
+    <p>The "learning styles" hypothesis — that students are visual, auditory, or kinesthetic learners and perform best when instruction matches their style — is one of the most prevalent and most thoroughly debunked theories in educational psychology. Dozens of rigorous studies have found no evidence that matching instruction style to learning style preference improves outcomes. Students should be taught using the modality best suited to the content (diagrams for spatial information, prose for arguments, demonstrations for procedures) — not the modality that feels comfortable to them.</p>
+    <h3>Misconception 2: Multitasking</h3>
+    <p>Humans do not multitask — they switch between tasks rapidly, with significant cognitive cost at each switch. Research shows apparent multitaskers perform each component task worse than those doing it with full attention. Studying while monitoring social media, texting, or watching video produces dramatically reduced learning per unit of study time. The perceived efficiency of multitasking is an illusion produced by the rapid nature of switching.</p>
+    <h3>Misconception 3: "I'm Not a Math/Science/Language Person"</h3>
+    <p>Domain-specific self-concepts — beliefs that one lacks the innate capacity for certain subjects — are almost always inaccurate and deeply harmful. Research shows aptitude differences in most academic domains are far smaller than effort and strategy differences. The belief that one cannot succeed at mathematics, for example, becomes self-fulfilling through avoidance, reduced effort, and negative emotional associations that impair working memory function.</p>
+    <h3>Misconception 4: More Hours = Better Learning</h3>
+    <p>Time spent studying is a poor predictor of learning. Strategy quality, not quantity, predicts retention and transfer. Two hours of deliberate, retrieval-based, spaced study consistently outperforms six hours of passive re-reading. "Studying harder" (more hours of the same ineffective strategy) is less effective than "studying smarter" (fewer hours of evidence-based strategy).</p>
+    <div class="info-box"><div class="ib-title">The Fluency Illusion</div><p>Perhaps the most dangerous misconception: the feeling of understanding during passive study (reading a clear explanation, watching a smooth lecture) is not a reliable signal of durable memory encoding. Fluency — how easy processing feels — is systematically misread as learning. Only retrieval performance — can I produce this without re-exposure? — accurately measures what has been learned.</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. Which of these misconceptions have influenced your own study behaviour? What would change if you adopted the evidence-based view?<br>2. Have you ever claimed to be "not a [subject] person"? What evidence is this claim actually based on?<br>3. What is the highest-leverage change you could make to your study strategy based on what you've learned in this section?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Audit your study habits: for each activity, ask "What does the evidence say about this strategy?"<br>• Run an experiment: for one month, replace re-reading with retrieval practice and compare your test performance.<br>• Share these misconceptions with classmates — the collective shift in study culture can be significant.</p></div>`
+  },
+  {
+    title:"Designing Competency-Based Mastery",
+    content:`<h3>From Knowledge Transmission to Demonstrated Competency</h3>
+    <p>Traditional education measures time (students advance after completing a year's curriculum) and knowledge recall (tests of specific facts and procedures). Competency-based education (CBE) measures demonstrated ability — students progress when they show mastery of defined competencies, regardless of time taken. NEP 2020 explicitly advocates this shift, recognizing that years in school do not equal learning, and that knowledge recall in exams does not equal genuine understanding.</p>
+    <h3>The Mastery Learning Model</h3>
+    <p>Benjamin Bloom's mastery learning model (1968) showed that when students are allowed to take the time they need, 90%+ can achieve what only 30% achieve under fixed-time conditions. The key change: failed assessment leads to additional instruction and re-assessment, not permanent failure and advancement. Error is diagnosis, not judgment. Bloom's synthesis of research found mastery learning produces effect sizes of d=0.83 — one of the largest in educational research.</p>
+    <h3>Competency Frameworks and NEP 2020</h3>
+    <p>NEP 2020's Learning Outcomes Framework defines competencies across three domains: Cognitive (conceptual understanding, application, analysis, synthesis, evaluation); Psychomotor (practical skills, performances); and Affective (dispositions, values, attitudes). The shift from marks-based to competency-based assessment requires defining these outcomes clearly and designing assessments that genuinely measure demonstrated ability, not proxy measures.</p>
+    <p>NCF 2023 operationalizes this through Curricular Goals, Competencies, and Learning Outcomes in a hierarchical structure: broad Curricular Goals break into specific Competencies, which manifest in observable Learning Outcomes. This architecture enables assessment to be targeted, specific, and genuinely diagnostic rather than summative and final.</p>
+    <h3>Building Mastery: Practical Architecture</h3>
+    <p>A mastery-oriented study system has five components: (1) Clear specification of what "mastery" means for each competency; (2) Diagnostic assessment to identify current status; (3) Targeted instruction addressing specific gaps; (4) Practice with feedback until mastery criteria are met; (5) Transfer assessment demonstrating the competency applies beyond practice conditions. The Learning Profile Dashboard in this app models this architecture for metacognitive and retention competencies.</p>
+    <div class="info-box"><div class="ib-title">From Grades to Competency Evidence</div><p>The most profound shift in CBE is philosophical: from "how many points did the student earn?" to "what can the student actually do?" This reorients feedback (from judgment to guidance), motivation (from performance goals to mastery goals), and assessment design (from norm-referenced ranking to criterion-referenced demonstration).</p></div>
+    <div class="reflect-box"><div class="rb-title">Reflection Prompts</div><p>1. For your key subjects, can you articulate what "mastery" actually looks like beyond getting a certain percentage on a test?<br>2. How would your approach to a subject change if you could take as much time as needed to demonstrate mastery, rather than being graded after a fixed period?<br>3. How does the Learning Profile Dashboard in this app support a mastery-oriented approach to learning science competencies?</p></div>
+    <div class="practical-box"><div class="pb-title">Practical Suggestions</div><p>• Define mastery criteria for each topic before studying: "I will know this when I can explain it from memory, apply it to new examples, and connect it to related concepts."<br>• Use the metacognition tracker regularly to honestly assess where you currently stand relative to mastery.<br>• Treat failed tests as diagnostic data, not verdicts — they tell you exactly what to study next.</p></div>`
+  }
+];
+
+// ============================================================
+// BUILD FOUNDATIONS LIST
+// ============================================================
+function buildFoundations(){
+  const list = document.getElementById('found-list');
+  const content = document.getElementById('found-content');
+  list.innerHTML='';
+  PAGES.forEach((p,i)=>{
+    const li = document.createElement('li');
+    li.className='page-item';
+    li.innerHTML=`<div class="pi-num">${i+1}</div><span class="pi-title">${p.title}</span><span class="pi-arrow">›</span>`;
+    li.onclick=()=>openPage(i);
+    list.appendChild(li);
+  });
+}
+
+function openPage(idx){
+  const p = PAGES[idx];
+  const el = document.getElementById('found-list');
+  el.style.display='none';
+  const content = document.getElementById('found-content');
+  content.innerHTML=`
+    <div class="progress-bar-wrap"><div class="progress-bar" style="width:${((idx+1)/PAGES.length*100).toFixed(0)}%"></div></div>
+    <div class="content-header">
+      <div class="ch-num">Page ${idx+1} of ${PAGES.length} · Learning Science</div>
+      <h2>${p.title}</h2>
+    </div>
+    <div class="content-body">${p.content}</div>
+    <div class="nav-btns">
+      ${idx>0?`<button class="btn btn-secondary" onclick="openPage(${idx-1})">← Previous</button>`:''}
+      <button class="btn btn-secondary" onclick="closePage()">📋 All Topics</button>
+      ${idx<PAGES.length-1?`<button class="btn btn-primary" onclick="openPage(${idx+1})">Next →</button>`:''}
+    </div>
+  `;
+  content.style.display='block';
+  window.scrollTo(0,0);
+  // Save progress
+  const prog = LS.get('foundProgress')||{};
+  prog[idx]=true;
+  LS.set('foundProgress',prog);
+}
+
+function closePage(){
+  document.getElementById('found-list').style.display='block';
+  document.getElementById('found-content').innerHTML='';
+  document.getElementById('found-content').style.display='none';
+}
+
+// ============================================================
+// COGNITIVE LOAD SIMULATOR
+// ============================================================
+function calcCogLoad(){
+  const complexity = parseInt(document.getElementById('cl-complexity').value);
+  const knowledge = parseInt(document.getElementById('cl-knowledge').value);
+  const time = parseInt(document.getElementById('cl-time').value);
+  const raw = (complexity*2) - (knowledge/10*5) + time;
+  const maxPossible = 9; // (3*2) - 0 + 3
+  const score = Math.min(Math.max((raw/maxPossible)*100,5),100).toFixed(0);
+  const el = document.getElementById('cl-result');
+  el.classList.remove('hidden');
+  document.getElementById('cl-score-label').textContent = score+'%';
+  document.getElementById('cl-raw').textContent = raw.toFixed(1);
+  const meter = document.getElementById('cl-meter');
+  meter.style.width = score+'%';
+  let risk, strategy, suggestions=[], meterClass;
+  if(score<35){risk='Low ✅';strategy='Challenge yourself — add complexity';meterClass='meter-low';suggestions=['Increase problem complexity to stay in the learning zone','Add time constraints to keep engagement high','Try elaboration: ask "why?" for every new fact'];}
+  else if(score<65){risk='Moderate ⚠️';strategy='Current difficulty is optimal';meterClass='meter-mid';suggestions=['This is your learning zone — stay here','Use worked examples to support complex new concepts','Take a 5-min break after each 25-min block to consolidate'];}
+  else{risk='High ⛔';strategy='Reduce complexity or increase support';meterClass='meter-high';suggestions=['Break the task into smaller, sequential components','Build prerequisite knowledge before advancing','Use worked examples and guided practice rather than independent problem solving','Reduce time pressure by working ahead of deadlines'];}
+  meter.className='meter-fill '+meterClass;
+  document.getElementById('cl-risk').textContent=risk;
+  document.getElementById('cl-risk').style.color = score<35?'var(--accent3)':score<65?'var(--warn)':'var(--danger)';
+  document.getElementById('cl-strategy').textContent=strategy;
+  const sl=document.getElementById('cl-suggestions');
+  sl.innerHTML=suggestions.map(s=>`<li>💡 ${s}</li>`).join('');
+  // Save
+  LS.push('cogLoadSessions',{date:Date.now(),score:parseInt(score),complexity,knowledge,time});
+}
+
+// ============================================================
+// MEMORY CONSOLIDATION MODEL
+// ============================================================
+const strategyData = {
+  rereading:  {base:65, weight:0.55, decay:0.08, floor:12, label:'Re-reading',color:'#e05555'},
+  retrieval:  {base:80, weight:0.85, decay:0.045,floor:28, label:'Retrieval Practice',color:'#4a7fd4'},
+  spaced:     {base:85, weight:0.92, decay:0.035,floor:35, label:'Spaced Repetition',color:'#3ecfb2'},
+  mixed:      {base:78, weight:0.88, decay:0.04, floor:30, label:'Mixed Practice',color:'#c9a84c'}
+};
+const lengthMod={short:0.85,medium:1.0,long:1.08};
+
+function retention(base,weight,decay,floor,fam,length,day){
+  const famBonus = fam/10 * 8;
+  const effectiveBase = Math.min(base+famBonus,98)*lengthMod[length];
+  return Math.max(effectiveBase*weight*Math.exp(-decay*day)+floor,floor).toFixed(1);
+}
+
+function calcMemory(){
+  const strat = document.getElementById('mm-strategy').value;
+  const length = document.getElementById('mm-length').value;
+  const fam = parseInt(document.getElementById('mm-familiarity').value);
+  const d = strategyData[strat];
+  const r7 = retention(d.base,d.weight,d.decay,d.floor,fam,length,7);
+  const r30 = retention(d.base,d.weight,d.decay,d.floor,fam,length,30);
+  const mastery = ((parseFloat(r7)*0.4+parseFloat(r30)*0.6)/100*100).toFixed(0);
+  document.getElementById('mm-day7').textContent = r7+'%';
+  document.getElementById('mm-day30').textContent = r30+'%';
+  document.getElementById('mm-result').classList.remove('hidden');
+  const lvl = strat==='rereading'?'Re-reading produces the weakest retention. The material may feel familiar but cannot be retrieved reliably under exam conditions. Switch to retrieval practice for a dramatic improvement.':
+    strat==='retrieval'?'Retrieval practice significantly outperforms re-reading, creating strong and durable memory traces. Combine with spaced intervals for maximum effect.':
+    strat==='spaced'?'Spaced repetition produces the strongest and most durable retention of any strategy. Memory stabilizes at a high floor even after 30 days.':
+    'Mixed practice combines the benefits of multiple strategies. The variety of retrieval cues and contexts creates flexible, transferable memory.';
+  document.getElementById('mm-advice').textContent = '📊 Strategy Analysis: '+lvl;
+  document.getElementById('mm-mastery').textContent = mastery+'%';
+  drawMemoryChart(strat,length,fam);
+  LS.push('retentionSessions',{date:Date.now(),strategy:strat,r7:parseFloat(r7),r30:parseFloat(r30),mastery:parseInt(mastery)});
+}
+
+function drawMemoryChart(strat,length,fam){
+  const canvas=document.getElementById('mm-chart');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth*2||700;
+  canvas.height=260;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const W=canvas.width,H=canvas.height,pad=40;
+  ctx.fillStyle='#141c35';
+  ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(42,58,94,0.6)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=pad+(H-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();}
+  // Labels
+  ctx.fillStyle='#6a80a8';ctx.font='22px sans-serif';ctx.textAlign='right';
+  [100,75,50,25,0].forEach((v,i)=>{ctx.fillText(v+'%',pad-6,pad+(H-2*pad)*i/4+7);});
+  ctx.textAlign='center';
+  [0,5,10,15,20,25,30].forEach(d=>{ctx.fillText('D'+d,pad+(W-2*pad)*d/30,H-pad+18);});
+  // Draw all strategies dimmed, chosen highlighted
+  const allStrats=Object.keys(strategyData);
+  allStrats.forEach(s=>{
+    const sd=strategyData[s];
+    const active=s===strat;
+    ctx.strokeStyle=active?sd.color:'rgba(255,255,255,0.12)';
+    ctx.lineWidth=active?4:1.5;
+    ctx.beginPath();
+    for(let d=0;d<=30;d++){
+      const r=retention(sd.base,sd.weight,sd.decay,sd.floor,fam,length,d);
+      const x=pad+(W-2*pad)*d/30;
+      const y=H-pad-(H-2*pad)*r/100;
+      d===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.stroke();
+    if(active){
+      // Label
+      const r0=retention(sd.base,sd.weight,sd.decay,sd.floor,fam,length,2);
+      const x0=pad+(W-2*pad)*2/30;
+      const y0=H-pad-(H-2*pad)*r0/100-18;
+      ctx.fillStyle=sd.color;ctx.font='bold 22px sans-serif';ctx.textAlign='left';
+      ctx.fillText(sd.label,x0,y0);
+    }
+  });
+}
+
+// ============================================================
+// FORGETTING CURVE
+// ============================================================
+function drawForgettingCurve(){
+  const strength = parseInt(document.getElementById('fc-strength').value);
+  const revisions = parseInt(document.getElementById('fc-revisions').value);
+  const canvas = document.getElementById('fc-chart');
+  const ctx = canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth*2||700;
+  canvas.height=300;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const W=canvas.width,H=canvas.height,pad=44;
+  ctx.fillStyle='#0f1526';ctx.fillRect(0,0,W,H);
+  // Grid
+  ctx.strokeStyle='rgba(42,58,94,0.5)';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){const y=pad+(H-2*pad)*i/4;ctx.beginPath();ctx.moveTo(pad,y);ctx.lineTo(W-pad,y);ctx.stroke();}
+  ctx.fillStyle='#6a80a8';ctx.font='22px sans-serif';
+  ctx.textAlign='right';
+  [100,75,50,25,0].forEach((v,i)=>ctx.fillText(v+'%',pad-6,pad+(H-2*pad)*i/4+7));
+  ctx.textAlign='center';
+  [0,7,14,21,28].forEach(d=>ctx.fillText('D'+d,pad+(W-2*pad)*d/28,H-pad+18));
+
+  const decay=0.1;
+  // No revision curve
+  ctx.strokeStyle='#e05555';ctx.lineWidth=3;ctx.beginPath();
+  for(let d=0;d<=28;d++){
+    const r=Math.max(strength*Math.exp(-decay*d),5);
+    const x=pad+(W-2*pad)*d/28;
+    const y=H-pad-(H-2*pad)*r/100;
+    d===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+  ctx.fillStyle='#e05555';ctx.font='bold 22px sans-serif';ctx.textAlign='left';
+  ctx.fillText('No revision',pad+10,pad+30);
+
+  // With revisions
+  if(revisions>0){
+    const revDays = [1,3,7,14].slice(0,revisions);
+    let currentStrength=strength;
+    let segments=[];
+    let prev=0;
+    revDays.forEach(rd=>{segments.push({from:prev,to:rd,s:currentStrength});prev=rd;currentStrength=Math.min(currentStrength*1.35+15,98);});
+    segments.push({from:prev,to:28,s:currentStrength});
+    ctx.strokeStyle='#3ecfb2';ctx.lineWidth=3;ctx.beginPath();
+    let started=false;
+    segments.forEach(seg=>{
+      const initDecay=seg.s;
+      for(let d=seg.from;d<=seg.to;d++){
+        const elapsed=d-seg.from;
+        const r=Math.max(initDecay*Math.exp(-decay*elapsed*0.6),8);
+        const x=pad+(W-2*pad)*d/28;
+        const y=H-pad-(H-2*pad)*r/100;
+        if(!started){ctx.moveTo(x,y);started=true;}else{ctx.lineTo(x,y);}
+      }
+    });
+    ctx.stroke();
+    // Mark revision points
+    revDays.forEach(rd=>{
+      const x=pad+(W-2*pad)*rd/28;
+      ctx.strokeStyle='rgba(62,207,178,0.5)';ctx.lineWidth=1.5;ctx.setLineDash([6,4]);
+      ctx.beginPath();ctx.moveTo(x,pad);ctx.lineTo(x,H-pad);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle='#3ecfb2';ctx.font='bold 22px sans-serif';ctx.textAlign='center';
+      ctx.fillText('Review',x,pad-6);
+    });
+    ctx.fillStyle='#3ecfb2';ctx.font='bold 22px sans-serif';ctx.textAlign='left';
+    const lx=pad+(W-2*pad)*24/28;
+    ctx.fillText('With spaced review',pad+10,pad+60);
+  }
+}
+
+// ============================================================
+// TRANSFER OF LEARNING
+// ============================================================
+function calcTransfer(){
+  const scenario=document.getElementById('tr-scenario').value;
+  const depth=parseInt(document.getElementById('tr-depth').value);
+  const variety=parseInt(document.getElementById('tr-variety').value);
+  const distMap={near:1,medium:2,far:3};
+  const dist=distMap[scenario];
+  const raw=(depth*0.5+variety*1.2*0.3-(dist*0.8));
+  const score=Math.min(Math.max(Math.round(raw*18+25),10),95);
+  const abstractLevel=depth<4?'Surface':depth<7?'Procedural':depth<9?'Conceptual':'Principled';
+  const depthScore=depth<4?'Low':depth<7?'Developing':depth<9?'Strong':'Mastery-Level';
+  document.getElementById('tr-result').classList.remove('hidden');
+  document.getElementById('tr-score').textContent=score+'%';
+  document.getElementById('tr-score').style.color=score>65?'var(--accent3)':score>40?'var(--warn)':'var(--danger)';
+  document.getElementById('tr-abstract').textContent=abstractLevel;
+  document.getElementById('tr-depth-score').textContent=depthScore;
+  const sug=[];
+  if(dist===3) sug.push('Far transfer requires explicit abstraction — after each problem, write out the general principle in one sentence.');
+  if(depth<7) sug.push('Increase conceptual depth: study the why behind each procedure, not just the how.');
+  if(variety<3) sug.push('Practice more variety of problem types — interleaving across contexts builds flexible transfer.');
+  if(score<50) sug.push('Focus on near transfer first: master within-domain application before attempting across-domain transfer.');
+  sug.push('Use analogy mapping: identify structural similarities between new problems and solved ones.');
+  document.getElementById('tr-suggestions').innerHTML=sug.map(s=>`<li>💡 ${s}</li>`).join('');
+}
+
+// ============================================================
+// METACOGNITION TRACKER
+// ============================================================
+let mcConf=0, mcStrat='', mcAccuracy=0;
+function selectConf(v){
+  mcConf=v;
+  document.querySelectorAll('#mc-confidence .star-btn').forEach((b,i)=>b.classList.toggle('selected',i+1<=v));
+}
+function selectStrat(s){
+  mcStrat=s;
+  document.querySelectorAll('#mc-strategy-used .star-btn').forEach(b=>b.classList.toggle('selected',b.textContent===s));
+}
+function selectAccuracy(v){
+  mcAccuracy=v;
+  document.querySelectorAll('#mc-accuracy .star-btn').forEach((b,i)=>b.classList.toggle('selected',i===v-1));
+}
+
+function calcMetacog(){
+  const understood=document.getElementById('mc-understood').value.trim();
+  const confused=document.getElementById('mc-confused').value.trim();
+  if(!understood){alert('Please describe what you understood.');return;}
+  const reflDepth=Math.min((understood.length+confused.length)/200*10,10);
+  const stratQ=mcStrat?({'Re-reading':4,'Practice Problems':7,'Spaced Repetition':9,'Teach Back':10}[mcStrat]||5):3;
+  const confVal=mcConf*2;
+  const accVal=mcAccuracy*3.3;
+  const calibration=100-Math.abs(confVal*10-accVal*10)*2;
+  const awareness=Math.min((reflDepth*0.4+stratQ*0.3+(mcConf/5)*3)*10,100).toFixed(0);
+  const regScore=Math.min((stratQ*0.5+reflDepth*0.3+mcConf*0.2)*10,100).toFixed(0);
+  const alignScore=Math.max(Math.min(calibration,100),30).toFixed(0);
+  document.getElementById('mc-result').classList.remove('hidden');
+  document.getElementById('mc-aware-score').textContent=awareness+'%';
+  document.getElementById('mc-reg-score').textContent=regScore+'%';
+  document.getElementById('mc-align-score').textContent=alignScore+'%';
+  const advice=parseInt(awareness)<50?'Your metacognitive awareness is developing. Focus on making reflection more detailed — write more about what specifically confused you and why.':
+    parseInt(awareness)<75?'Good metacognitive awareness. Your strategy choice shows engagement. Now focus on calibration — test yourself after study to verify your confidence matches actual retention.':
+    'Strong metacognitive skills. You reflect deeply and use evidence-based strategies. Focus on maintaining calibration and continuing to match strategy to task type.';
+  document.getElementById('mc-advice').textContent=advice;
+  drawRadar(parseInt(awareness),parseInt(regScore),parseInt(alignScore),(stratQ/10)*100,(mcConf/5)*100);
+  // Log
+  const entry={date:Date.now(),awareness:parseInt(awareness),regulation:parseInt(regScore),calibration:parseInt(alignScore),strategy:mcStrat};
+  LS.push('metacognitionLogs',entry);
+  renderMcLog();
+}
+
+function drawRadar(awareness,reg,calib,stratQ,conf){
+  const canvas=document.getElementById('mc-radar');
+  const ctx=canvas.getContext('2d');
+  const W=280,H=280;
+  canvas.width=W;canvas.height=H;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#141c35';ctx.fillRect(0,0,W,H);
+  const cx=W/2,cy=H/2,maxR=95;
+  const dims=['Awareness','Regulation','Calibration','Strategy','Confidence'];
+  const vals=[awareness,reg,calib,stratQ,conf].map(v=>Math.min(v/100,1));
+  const angles=dims.map((_,i)=>(-Math.PI/2+2*Math.PI*i/dims.length));
+  // Grid
+  [0.2,0.4,0.6,0.8,1.0].forEach(r=>{
+    ctx.strokeStyle='rgba(42,58,94,0.7)';ctx.lineWidth=1;ctx.beginPath();
+    angles.forEach((a,i)=>{const x=cx+maxR*r*Math.cos(a),y=cy+maxR*r*Math.sin(a);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+    ctx.closePath();ctx.stroke();
+  });
+  // Axes
+  angles.forEach(a=>{ctx.strokeStyle='rgba(42,58,94,0.8)';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+maxR*Math.cos(a),cy+maxR*Math.sin(a));ctx.stroke();});
+  // Data
+  ctx.fillStyle='rgba(74,127,212,0.2)';ctx.strokeStyle='#4a7fd4';ctx.lineWidth=2;ctx.beginPath();
+  vals.forEach((v,i)=>{const x=cx+maxR*v*Math.cos(angles[i]),y=cy+maxR*v*Math.sin(angles[i]);i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);});
+  ctx.closePath();ctx.fill();ctx.stroke();
+  // Labels
+  ctx.fillStyle='#a8b8d8';ctx.font='bold 20px sans-serif';ctx.textAlign='center';
+  dims.forEach((d,i)=>{
+    const r=maxR+16;
+    const x=cx+r*Math.cos(angles[i]);
+    const y=cy+r*Math.sin(angles[i])+5;
+    ctx.fillText(d,x,y);
+  });
+}
+
+function renderMcLog(){
+  const logs=(LS.get('metacognitionLogs')||[]).slice(-8).reverse();
+  const el=document.getElementById('mc-log');
+  if(!logs.length){el.innerHTML='<li style="color:var(--text3);font-size:0.85rem;padding:10px;">No reflections logged yet.</li>';return;}
+  el.innerHTML=logs.map(l=>`<li class="log-item"><span>${new Date(l.date).toLocaleDateString()}</span><span>${l.strategy||'—'}</span><span class="log-score">${l.awareness}%</span></li>`).join('');
+}
+
+// ============================================================
+// STUDY OPTIMIZER
+// ============================================================
+function generatePlan(){
+  const days=parseInt(document.getElementById('so-days').value);
+  const hours=parseInt(document.getElementById('so-hours').value);
+  const topicsRaw=document.getElementById('so-topics').value.trim();
+  const topics=topicsRaw?topicsRaw.split(',').map(t=>t.trim()).filter(Boolean):['General Review'];
+  const container=document.getElementById('so-plan-days');
+  container.innerHTML='';
+  const activities=['Retrieval Practice','Spaced Review','Interleaved Problems','Concept Mapping','Practice Test','Elaborative Questioning','Teach-Back Session','Error Analysis'];
+  const emojis={'Retrieval Practice':'🔄','Spaced Review':'📅','Interleaved Problems':'🔀','Concept Mapping':'🗺️','Practice Test':'📝','Elaborative Questioning':'❓','Teach-Back Session':'🎤','Error Analysis':'🔍'};
+  // Spaced intervals
+  const spacedTopics=[];
+  topics.forEach(t=>{
+    const firstDay=Math.max(1,Math.ceil(Math.random()*2));
+    const nextDay=firstDay+2;
+    const finalDay=Math.min(nextDay+4,days);
+    if(firstDay<=days) spacedTopics.push({topic:t,day:firstDay,type:'First Study'});
+    if(nextDay<=days) spacedTopics.push({topic:t,day:nextDay,type:'Spaced Review'});
+    if(finalDay<=days&&finalDay!==nextDay) spacedTopics.push({topic:t,day:finalDay,type:'Retrieval Test'});
+  });
+  for(let d=1;d<=Math.min(days,14);d++){
+    const dayActs=spacedTopics.filter(s=>s.day===d);
+    const numExtra=Math.max(0,hours-dayActs.length);
+    const extras=Array.from({length:numExtra},(_,i)=>({
+      topic:topics[i%topics.length],
+      type:activities[(d+i)%activities.length]
+    }));
+    const allActs=[...dayActs,...extras];
+    const div=document.createElement('div');
+    div.className='plan-day';
+    div.innerHTML=`<div class="plan-day-header"><span class="day-label">Day ${d}</span><span class="day-hrs">${hours} hrs</span></div>
+    <div class="plan-day-body">
+      ${allActs.map(a=>`<div class="plan-activity">
+        <div class="pa-badge">${emojis[a.type]||'📌'}</div>
+        <div class="pa-info"><div class="pa-name">${a.topic}</div><div class="pa-detail">${a.type}</div></div>
+      </div>`).join('')}
+    </div>`;
+    container.appendChild(div);
+  }
+  document.getElementById('so-plan').classList.remove('hidden');
+  LS.push('studyPlans',{date:Date.now(),days,hours,topics});
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function renderDashboard(){
+  const cogSessions=LS.get('cogLoadSessions')||[];
+  const retSessions=LS.get('retentionSessions')||[];
+  const mcLogs=LS.get('metacognitionLogs')||[];
+  const studyPlans=LS.get('studyPlans')||[];
+  const foundProg=LS.get('foundProgress')||{};
+  const pagesRead=Object.keys(foundProg).length;
+  const avgRet=retSessions.length?Math.round(retSessions.reduce((a,b)=>a+b.r7,0)/retSessions.length):0;
+  const avgAware=mcLogs.length?Math.round(mcLogs.reduce((a,b)=>a+b.awareness,0)/mcLogs.length):0;
+  const stats=[
+    {val:pagesRead,label:'Pages Studied'},
+    {val:mcLogs.length,label:'Reflections Logged'},
+    {val:avgRet+'%',label:'Avg Retention (7d)'},
+    {val:avgAware+'%',label:'Avg Metacog Score'}
+  ];
+  document.getElementById('dash-stats').innerHTML=stats.map(s=>`<div class="dash-stat"><div class="ds-val">${s.val}</div><div class="ds-label">${s.label}</div></div>`).join('');
+  // Mastery ladder
+  const steps=[
+    {icon:'📖',text:'Reading learning science content',achieved:pagesRead>0},
+    {icon:'⚙️',text:'Used cognitive load simulator',achieved:cogSessions.length>0},
+    {icon:'🧬',text:'Modelled memory retention',achieved:retSessions.length>0},
+    {icon:'🎯',text:'Completed metacognitive reflection',achieved:mcLogs.length>0},
+    {icon:'📅',text:'Generated study plan',achieved:studyPlans.length>0},
+    {icon:'🏆',text:'Read 10+ learning science pages',achieved:pagesRead>=10},
+    {icon:'🌟',text:'5+ metacognitive reflections',achieved:mcLogs.length>=5},
+  ];
+  document.getElementById('mastery-ladder').innerHTML=steps.map(s=>`<div class="ladder-step ${s.achieved?'achieved':''}"><span class="ls-icon">${s.icon}</span><span class="ls-text">${s.text}</span>${s.achieved?'<span class="ls-badge">✓</span>':''}</div>`).join('');
+  // Retention chart
+  drawDashChart(retSessions,mcLogs);
+}
+
+function drawDashChart(ret,mc){
+  const canvas=document.getElementById('dash-chart');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth*2||700;
+  canvas.height=200;
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(!ret.length&&!mc.length){
+    ctx.fillStyle='#6a80a8';ctx.font='28px sans-serif';ctx.textAlign='center';
+    ctx.fillText('No data yet — use the simulators to generate your profile',canvas.width/2,canvas.height/2);
+    return;
+  }
+  const W=canvas.width,H=canvas.height,pad=36;
+  ctx.fillStyle='#0f1526';ctx.fillRect(0,0,W,H);
+  // Bar chart of last 8 retention scores
+  const data=ret.slice(-8).map(r=>r.r7);
+  const barW=(W-2*pad)/(data.length*1.5);
+  ctx.fillStyle='rgba(74,127,212,0.15)';
+  for(let i=0;i<=4;i++){const y=pad+(H-2*pad)*i/4;ctx.fillRect(pad,y,W-2*pad,0.5);}
+  data.forEach((v,i)=>{
+    const x=pad+i*(barW*1.5)+barW*0.25;
+    const h=(H-2*pad)*v/100;
+    const y=H-pad-h;
+    const grad=ctx.createLinearGradient(0,y,0,H-pad);
+    grad.addColorStop(0,'#4a7fd4');grad.addColorStop(1,'rgba(74,127,212,0.2)');
+    ctx.fillStyle=grad;
+    ctx.beginPath();
+    ctx.roundRect?ctx.roundRect(x,y,barW,h,4):ctx.rect(x,y,barW,h);
+    ctx.fill();
+    ctx.fillStyle='#a8b8d8';ctx.font='22px sans-serif';ctx.textAlign='center';
+    ctx.fillText(Math.round(v)+'%',x+barW/2,y-8);
+  });
+  ctx.fillStyle='#6a80a8';ctx.font='22px sans-serif';ctx.textAlign='center';
+  ctx.fillText('Retention at Day 7 (last '+data.length+' sessions)',W/2,H-6);
+}
+
+// ============================================================
+// EDUCATOR MODE
+// ============================================================
+function showWorkshop(id){
+  document.querySelectorAll('.educator-content').forEach(e=>{e.classList.remove('active');e.style.display='none';});
+  const el=document.getElementById('educator-'+id);
+  el.classList.add('active');
+  el.style.display='block';
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ============================================================
+// DATA MANAGEMENT
+// ============================================================
+function exportData(){
+  const data={
+    cogLoadSessions:LS.get('cogLoadSessions')||[],
+    retentionSessions:LS.get('retentionSessions')||[],
+    metacognitionLogs:LS.get('metacognitionLogs')||[],
+    studyPlans:LS.get('studyPlans')||[],
+    foundProgress:LS.get('foundProgress')||{},
+    exportDate:new Date().toISOString(),
+    appName:'Meta-Learning & Cognitive Development Architecture Lab'
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='cognitive-lab-data-'+Date.now()+'.json';
+  a.click();
+}
+function importData(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const data=JSON.parse(ev.target.result);
+      if(data.cogLoadSessions) LS.set('cogLoadSessions',data.cogLoadSessions);
+      if(data.retentionSessions) LS.set('retentionSessions',data.retentionSessions);
+      if(data.metacognitionLogs) LS.set('metacognitionLogs',data.metacognitionLogs);
+      if(data.studyPlans) LS.set('studyPlans',data.studyPlans);
+      if(data.foundProgress) LS.set('foundProgress',data.foundProgress);
+      alert('✅ Data imported successfully!');
+      renderDashboard();
+    }catch(err){alert('❌ Invalid file format.');}
+  };
+  reader.readAsText(file);
+}
+function clearData(){
+  if(confirm('Clear all saved data? This cannot be undone.')){
+    ['cogLoadSessions','retentionSessions','metacognitionLogs','studyPlans','foundProgress'].forEach(k=>localStorage.removeItem(k));
+    alert('Data cleared.');
+    renderDashboard();
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+buildFoundations();
+renderMcLog();
+// Draw initial forgetting curve
+setTimeout(()=>{if(document.getElementById('fc-chart'))drawForgettingCurve();},100);
+
+// PWA Service Worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>

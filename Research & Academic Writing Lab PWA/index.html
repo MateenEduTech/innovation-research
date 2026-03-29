@@ -1,0 +1,2994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1a3a6b">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Research & Academic Writing Lab</title>
+<link rel="manifest" href="manifest.json">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root {
+    --navy: #0a1628;
+    --deep-blue: #1a3a6b;
+    --royal: #2855a0;
+    --accent: #c9a84c;
+    --accent-light: #e8c96b;
+    --white: #f8f5ef;
+    --grey: #b0b8c8;
+    --light-grey: #e8ecf2;
+    --text: #1e2a3a;
+    --card-bg: #ffffff;
+    --border: #d0d8e8;
+    --success: #2e7d52;
+    --danger: #c0392b;
+    --warning: #d4860a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ===== TITLE PAGE ===== */
+  #title-page {
+    min-height: 100vh;
+    background: linear-gradient(160deg, #0a1628 0%, #1a3a6b 50%, #0d2240 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #title-page::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  #title-page::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(40,85,160,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .title-header {
+    width: 100%;
+    background: linear-gradient(135deg, #0d2240 0%, #1a3a6b 100%);
+    border-bottom: 3px solid var(--accent);
+    padding: 20px 24px 16px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .title-header .author-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+
+  .author-photo {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    object-fit: cover;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+    flex-shrink: 0;
+  }
+
+  .author-info { text-align: left; }
+  .author-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent-light);
+  }
+  .author-title { font-size: 12px; color: var(--grey); letter-spacing: 0.05em; }
+
+  .title-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    color: var(--accent-light);
+    letter-spacing: 0.06em;
+    font-family: 'JetBrains Mono', monospace;
+    margin-top: 8px;
+  }
+
+  .main-title-section {
+    padding: 32px 20px 20px;
+    text-align: center;
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 520px;
+  }
+
+  .ornament {
+    font-size: 40px;
+    margin-bottom: 12px;
+    display: block;
+    filter: drop-shadow(0 0 12px rgba(201,168,76,0.5));
+  }
+
+  .main-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(26px, 7vw, 40px);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    margin-bottom: 8px;
+  }
+
+  .main-title span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 13px;
+    color: var(--grey);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .divider-ornament {
+    display: flex; align-items: center; gap: 12px;
+    margin: 16px auto;
+    width: 80%;
+  }
+  .divider-ornament::before, .divider-ornament::after {
+    content: ''; flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  }
+  .divider-ornament span { color: var(--accent); font-size: 16px; }
+
+  .nav-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 0 16px 20px;
+    width: 100%;
+    max-width: 520px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .nav-btn {
+    background: linear-gradient(135deg, rgba(26,58,107,0.9) 0%, rgba(13,34,64,0.95) 100%);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 12px;
+    padding: 16px 14px;
+    color: var(--white);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-btn::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+
+  .nav-btn:hover, .nav-btn:active {
+    background: linear-gradient(135deg, rgba(40,85,160,0.9) 0%, rgba(26,58,107,0.95) 100%);
+    border-color: rgba(201,168,76,0.6);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+  }
+  .nav-btn:hover::before { opacity: 1; }
+
+  .nav-btn-icon { font-size: 24px; }
+  .nav-btn-label {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent-light);
+    line-height: 1.2;
+  }
+  .nav-btn-desc { font-size: 11px; color: var(--grey); line-height: 1.3; }
+
+  /* ===== APP SHELL ===== */
+  #app-shell { display: none; min-height: 100vh; flex-direction: column; }
+  #app-shell.active { display: flex; }
+
+  .top-bar {
+    background: linear-gradient(90deg, var(--navy) 0%, var(--deep-blue) 100%);
+    border-bottom: 2px solid var(--accent);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .back-btn {
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 8px;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 18px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.3); }
+
+  .top-bar-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-light);
+    flex: 1;
+  }
+
+  .content-area {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--light-grey);
+    color: var(--text);
+  }
+
+  /* ===== SECTION MENU ===== */
+  .section-menu {
+    padding: 20px 16px;
+    background: var(--white);
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin-bottom: 4px;
+  }
+
+  .section-subtitle {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+
+  .menu-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .menu-item {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+
+  .menu-item:hover, .menu-item:active {
+    border-color: var(--royal);
+    background: rgba(40,85,160,0.05);
+    transform: translateX(4px);
+  }
+
+  .menu-icon {
+    width: 44px; height: 44px;
+    background: linear-gradient(135deg, var(--deep-blue), var(--royal));
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .menu-text { flex: 1; }
+  .menu-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--deep-blue);
+  }
+  .menu-desc { font-size: 12px; color: #666; margin-top: 2px; }
+  .menu-arrow { color: var(--royal); font-size: 16px; }
+
+  /* ===== POLICY PAGES ===== */
+  .policy-page {
+    padding: 20px 16px;
+    background: var(--white);
+    min-height: calc(100vh - 60px);
+  }
+
+  .page-header {
+    background: linear-gradient(135deg, var(--deep-blue), var(--royal));
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    color: white;
+  }
+
+  .page-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(255,255,255,0.6);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.25;
+    margin-bottom: 8px;
+  }
+
+  .page-intro {
+    font-size: 13px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.5;
+  }
+
+  .content-body h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--deep-blue);
+    margin: 20px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .content-body p {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #333;
+    margin-bottom: 14px;
+  }
+
+  .content-body ul {
+    margin: 10px 0 16px 20px;
+  }
+
+  .content-body li {
+    font-size: 14px;
+    line-height: 1.65;
+    color: #333;
+    margin-bottom: 6px;
+  }
+
+  .callout {
+    background: linear-gradient(135deg, rgba(26,58,107,0.08), rgba(40,85,160,0.05));
+    border-left: 4px solid var(--royal);
+    border-radius: 0 10px 10px 0;
+    padding: 14px 16px;
+    margin: 16px 0;
+  }
+
+  .callout-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--royal);
+    margin-bottom: 6px;
+  }
+
+  .callout p { font-size: 13px; color: var(--deep-blue); margin: 0; }
+
+  .reflection-box {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(201,168,76,0.05));
+    border: 1px solid rgba(201,168,76,0.4);
+    border-radius: 10px;
+    padding: 16px;
+    margin: 20px 0;
+  }
+
+  .reflection-box .rb-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--warning);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+
+  .reflection-box p, .reflection-box li {
+    font-size: 13px !important;
+    color: var(--text) !important;
+  }
+
+  .page-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 28px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .page-nav-btn {
+    background: var(--deep-blue);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s;
+    font-family: 'Source Serif 4', serif;
+  }
+  .page-nav-btn:hover { background: var(--royal); }
+  .page-nav-btn.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ===== INTERACTIVE TOOLS ===== */
+  .tool-section {
+    padding: 16px;
+    background: var(--white);
+  }
+
+  .tool-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+
+  .tool-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    color: var(--deep-blue);
+    margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: 0.02em;
+  }
+
+  select, input[type="text"], textarea {
+    width: 100%;
+    background: var(--light-grey);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: var(--text);
+    font-family: 'Source Serif 4', serif;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+    -webkit-appearance: none;
+  }
+
+  select:focus, input[type="text"]:focus, textarea:focus {
+    outline: none;
+    border-color: var(--royal);
+    background: white;
+  }
+
+  textarea { min-height: 90px; resize: vertical; }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--deep-blue), var(--royal));
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    width: 100%;
+    letter-spacing: 0.02em;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26,58,107,0.4); }
+
+  .btn-secondary {
+    background: white;
+    color: var(--deep-blue);
+    border: 1.5px solid var(--deep-blue);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-family: 'Source Serif 4', serif;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-block;
+    margin: 4px;
+  }
+  .btn-secondary:hover { background: rgba(26,58,107,0.05); }
+
+  .btn-danger {
+    background: white;
+    color: var(--danger);
+    border: 1.5px solid var(--danger);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-family: 'Source Serif 4', serif;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-danger:hover { background: rgba(192,57,43,0.08); }
+
+  .output-box {
+    background: linear-gradient(135deg, rgba(26,58,107,0.06), rgba(40,85,160,0.04));
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+    display: none;
+  }
+
+  .output-box.show { display: block; }
+
+  .output-box h4 {
+    font-family: 'Playfair Display', serif;
+    color: var(--deep-blue);
+    font-size: 15px;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .tag {
+    display: inline-block;
+    background: rgba(26,58,107,0.1);
+    color: var(--deep-blue);
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-size: 11px;
+    font-family: 'JetBrains Mono', monospace;
+    margin: 2px;
+  }
+
+  .score-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .score-good { background: rgba(46,125,82,0.15); color: var(--success); }
+  .score-warn { background: rgba(212,134,10,0.15); color: var(--warning); }
+  .score-bad { background: rgba(192,57,43,0.15); color: var(--danger); }
+
+  /* ===== PORTFOLIO ===== */
+  .project-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .project-card:hover { border-color: var(--royal); transform: translateX(2px); }
+  .project-card-title { font-family: 'Playfair Display', serif; font-size: 15px; color: var(--deep-blue); font-weight: 600; }
+  .project-card-meta { font-size: 11px; color: #888; margin-top: 4px; font-family: 'JetBrains Mono', monospace; }
+  .project-card-preview { font-size: 12px; color: #555; margin-top: 6px; line-height: 1.4; }
+
+  /* ===== TRACKER ===== */
+  .radar-container {
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto 20px;
+  }
+
+  .skill-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 14px;
+  }
+  .skill-name { font-size: 13px; color: var(--text); min-width: 130px; }
+  .skill-bar-wrap { flex: 1; height: 10px; background: var(--light-grey); border-radius: 10px; overflow: hidden; }
+  .skill-bar { height: 100%; background: linear-gradient(90deg, var(--deep-blue), var(--royal)); border-radius: 10px; transition: width 0.8s ease; }
+  .skill-val { font-size: 12px; font-family: 'JetBrains Mono', monospace; color: var(--deep-blue); min-width: 36px; text-align: right; }
+
+  /* ===== CITATION MODULE ===== */
+  .scenario-block {
+    background: var(--light-grey);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--text);
+    font-style: italic;
+    border-left: 3px solid var(--border);
+  }
+
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .checklist-item:last-child { border-bottom: none; }
+
+  .check-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    font-size: 12px;
+    margin-top: 1px;
+  }
+  .check-box.checked { background: var(--success); border-color: var(--success); color: white; }
+
+  .checklist-text { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* ===== TEACHER MODE ===== */
+  .rubric-table { width: 100%; border-collapse: collapse; font-size: 12px; margin: 12px 0; }
+  .rubric-table th { background: var(--deep-blue); color: white; padding: 8px 10px; text-align: left; }
+  .rubric-table td { padding: 8px 10px; border: 1px solid var(--border); vertical-align: top; line-height: 1.45; }
+  .rubric-table tr:nth-child(even) td { background: rgba(26,58,107,0.04); }
+
+  /* ===== TABS ===== */
+  .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 16px; overflow-x: auto; }
+  .tab {
+    padding: 10px 16px;
+    font-size: 13px;
+    color: #888;
+    cursor: pointer;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+    font-family: 'Source Serif 4', serif;
+  }
+  .tab.active { color: var(--royal); border-bottom-color: var(--royal); font-weight: 600; }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ===== STATUS BAR ===== */
+  .status-bar {
+    background: rgba(46,125,82,0.12);
+    border: 1px solid rgba(46,125,82,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--success);
+    display: flex; align-items: center; gap: 8px;
+    margin-bottom: 14px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Print styles */
+  @media print {
+    .top-bar, .back-btn, .page-nav, .btn-primary, .btn-secondary, .btn-danger, #title-page { display: none !important; }
+    .content-area { background: white; color: black; }
+    .policy-page, .tool-section { padding: 10px; }
+    .page-header { background: none; color: black; border: 2px solid black; }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(26,58,107,0.3); border-radius: 4px; }
+
+  /* Fade in animation */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .fade-in { animation: fadeUp 0.4s ease forwards; }
+</style>
+</head>
+<body>
+
+<!-- ===== TITLE PAGE ===== -->
+<div id="title-page">
+  <div class="title-header fade-in">
+    <div class="author-row">
+      <img src="author.jpg" alt="Mateen Yousuf" class="author-photo" onerror="this.style.display='none'">
+      <div class="author-info">
+        <div class="author-name">Mateen Yousuf</div>
+        <div class="author-title">Teacher, School Education Department Kashmir</div>
+      </div>
+    </div>
+    <div class="title-badge">✦ Aligned with NEP 2020 | NCF 2023 | Competency-Based Learning ✦</div>
+  </div>
+
+  <div class="main-title-section fade-in">
+    <span class="ornament">📚</span>
+    <h1 class="main-title">Research &<br><span>Academic Writing</span><br>Lab</h1>
+    <p class="subtitle">Classes 9–12 · Offline Edition</p>
+    <div class="divider-ornament"><span>✦</span></div>
+    <p style="font-size:13px; color: var(--grey); line-height:1.5; margin-bottom:8px;">
+      A comprehensive offline toolkit for developing research, writing, and critical thinking competencies
+    </p>
+  </div>
+
+  <div class="nav-grid fade-in">
+    <button class="nav-btn" onclick="openSection('policy')">
+      <div class="nav-btn-icon">🏛️</div>
+      <div class="nav-btn-label">Policy &amp; Framework</div>
+      <div class="nav-btn-desc">NEP 2020 · NCF 2023 · 13 content pages</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('research')">
+      <div class="nav-btn-icon">🔬</div>
+      <div class="nav-btn-label">Research Lab</div>
+      <div class="nav-btn-desc">Question builder · Outline tools</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('writing')">
+      <div class="nav-btn-icon">✍️</div>
+      <div class="nav-btn-label">Writing Builder</div>
+      <div class="nav-btn-desc">Scaffold · Argument checker</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('citation')">
+      <div class="nav-btn-icon">📋</div>
+      <div class="nav-btn-label">Citation &amp; Ethics</div>
+      <div class="nav-btn-desc">Plagiarism · References · Integrity</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('portfolio')">
+      <div class="nav-btn-icon">🗂️</div>
+      <div class="nav-btn-label">My Portfolio</div>
+      <div class="nav-btn-desc">Save · Track · Export drafts</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('tracker')">
+      <div class="nav-btn-icon">📊</div>
+      <div class="nav-btn-label">Skill Tracker</div>
+      <div class="nav-btn-desc">Radar chart · Growth summary</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('teacher')">
+      <div class="nav-btn-icon">👩‍🏫</div>
+      <div class="nav-btn-label">Teacher Mode</div>
+      <div class="nav-btn-desc">Rubrics · Prompts · Assessment</div>
+    </button>
+    <button class="nav-btn" onclick="openSection('about')">
+      <div class="nav-btn-icon">ℹ️</div>
+      <div class="nav-btn-label">About &amp; Guide</div>
+      <div class="nav-btn-desc">Install · Export · APK guide</div>
+    </button>
+  </div>
+</div>
+
+<!-- ===== APP SHELL ===== -->
+<div id="app-shell">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">←</button>
+    <div class="top-bar-title" id="section-title">Section</div>
+    <button class="back-btn" onclick="window.print()">🖨</button>
+  </div>
+  <div class="content-area" id="content-area"></div>
+</div>
+
+<script>
+// =============================================
+// DATA LAYER
+// =============================================
+const POLICY_PAGES = [
+  {
+    num: "Page 01", title: "NEP 2020 and Inquiry-Based Learning",
+    intro: "Understanding how India's National Education Policy 2020 transforms the role of research and inquiry in school education.",
+    content: `
+      <h3>What is NEP 2020?</h3>
+      <p>The National Education Policy 2020 is a landmark document in Indian education. Released after more than 34 years since the last major policy revision, NEP 2020 signals a fundamental rethinking of what education means for young Indians in the 21st century. At its heart, the policy moves away from an exam-driven, rote-memorisation model toward a system that values understanding, creativity, critical thinking, and the ability to ask meaningful questions.</p>
+      <p>For students in Classes 9–12, this shift is profoundly significant. These are the years when intellectual habits are formed, when curiosity either deepens or fades, and when the capacity for independent thought either blossoms or becomes buried under exam pressure. NEP 2020 asks educators and students alike to rediscover the joy of genuine inquiry.</p>
+      
+      <h3>The Centrality of Inquiry</h3>
+      <p>Inquiry-based learning is a pedagogical approach in which students do not simply receive information from teachers but actively investigate questions, problems, and phenomena. Rather than being told "the answer," students are guided through a process of wondering, hypothesising, gathering evidence, and constructing their own understanding.</p>
+      <p>NEP 2020 specifically emphasises that students must develop the ability to "think critically, solve problems, be creative, have a sense of aesthetics and art, have oral and written communication skills, be literate and competent in science and mathematics, be knowledgeable about social sciences and humanities." Each of these competencies is deeply connected to the practice of inquiry.</p>
+      
+      <div class="callout">
+        <div class="callout-label">NEP 2020 Quote</div>
+        <p>"The highest priority of the education system will be to achieve universal foundational literacy and numeracy... [and] to make education more holistic, flexible, multidisciplinary, suited to 21st-century needs." — NEP 2020</p>
+      </div>
+      
+      <h3>Five Pillars of Inquiry-Based Learning</h3>
+      <p>According to educational researchers, inquiry-based learning rests on five key pillars that align perfectly with NEP 2020's vision:</p>
+      <ul>
+        <li><strong>Orientation:</strong> Engaging students' curiosity about a topic before formal instruction begins.</li>
+        <li><strong>Conceptualisation:</strong> Helping students form clear questions and hypotheses about what they want to investigate.</li>
+        <li><strong>Investigation:</strong> Actively gathering data, reading sources, conducting experiments, or interviewing people.</li>
+        <li><strong>Conclusion:</strong> Drawing evidence-based conclusions and connecting findings to broader ideas.</li>
+        <li><strong>Discussion:</strong> Sharing findings, inviting critique, and refining understanding through dialogue.</li>
+      </ul>
+      
+      <h3>From Passive to Active Learners</h3>
+      <p>Traditional schooling in India has often positioned students as passive receivers of information — attending lectures, copying notes, and reproducing content in exams. NEP 2020 challenges this model fundamentally. It calls for students to become active participants in their own education, capable of formulating questions, seeking answers independently, and communicating their findings clearly.</p>
+      <p>This transformation requires new skills. Students must learn how to frame a research question, how to identify credible sources, how to evaluate evidence, how to construct an argument, and how to write with precision and clarity. These are exactly the skills that the Research and Academic Writing Lab is designed to develop.</p>
+      
+      <h3>Research in Schools: Why Now?</h3>
+      <p>In earlier decades, research was considered an activity reserved for university students or professional academics. NEP 2020 breaks this assumption. It recognises that the habits of mind that make a good researcher — curiosity, rigour, patience, intellectual honesty — are best developed early. A Class 10 student who learns how to frame a research question, read sources carefully, and write an argument clearly will carry these skills into higher education, professional life, and citizenship.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection Prompts</div>
+        <ul>
+          <li>Think of a topic you are genuinely curious about. What questions does it raise for you?</li>
+          <li>In your experience, has school learning mostly been about "receiving" information or "discovering" it? What would you prefer?</li>
+          <li>Name one habit of a good researcher that you already possess, and one you would like to develop.</li>
+        </ul>
+      </div>
+      
+      <div class="callout">
+        <div class="callout-label">💬 Classroom Discussion</div>
+        <p>Divide into groups. Each group picks a real-world problem (water scarcity, road safety, student stress). Discuss: what questions would a researcher ask about this problem? How would they find answers? Share with the class.</p>
+      </div>
+    `
+  },
+  {
+    num: "Page 02", title: "NCF 2023 and Language Across the Curriculum",
+    intro: "How the National Curriculum Framework 2023 positions language as a tool of thinking and learning in every subject.",
+    content: `
+      <h3>What is the NCF 2023?</h3>
+      <p>The National Curriculum Framework for School Education 2023 (NCF-SE 2023) is the document that translates the vision of NEP 2020 into actual curriculum design for Indian schools. Released by the National Council of Educational Research and Training, NCF 2023 reimagines not just what students should learn but how learning should happen and how it should be assessed.</p>
+      <p>One of the most significant conceptual shifts in NCF 2023 is its treatment of language. Rather than treating language as one subject among many, NCF 2023 positions language as a fundamental tool of thinking, learning, and communicating across all subjects. This idea — sometimes called "Language Across the Curriculum" (LAC) — has profound implications for how we understand academic writing.</p>
+      
+      <h3>Language as a Tool of Thought</h3>
+      <p>The psychologist Lev Vygotsky famously argued that language and thought are deeply intertwined — that when we write or speak about an idea, we are not simply reporting what we already think but actively constructing and clarifying our thinking. NCF 2023 builds on this understanding by recognising that when a student writes a history essay, a science lab report, or a geography analysis, they are not just demonstrating knowledge — they are using language to organise, examine, and deepen their understanding.</p>
+      
+      <div class="callout">
+        <div class="callout-label">Key Idea: LAC</div>
+        <p>Language Across the Curriculum means that every teacher — of science, mathematics, social science, or arts — is also a teacher of language. Academic writing is not just an English class skill; it belongs in every subject.</p>
+      </div>
+      
+      <h3>What is Academic Language?</h3>
+      <p>Academic language differs from everyday conversational language in important ways. It tends to be more precise, more structured, and more formal. It uses discipline-specific vocabulary, complex sentence structures, and conventions for making claims and supporting them with evidence. When a student writes "I think water is important" this is conversational. When they write "Water scarcity poses a critical challenge to sustainable development in arid regions, as evidenced by decreasing groundwater levels in multiple states," they are using academic language.</p>
+      <p>Learning to write academically is not about being pretentious or using difficult words for their own sake. It is about developing the precision and rigour needed to communicate complex ideas clearly and persuasively to a knowledgeable audience.</p>
+      
+      <h3>NCF 2023 Competency Expectations</h3>
+      <p>NCF 2023 outlines specific competencies for language in Grades 9–12, including:</p>
+      <ul>
+        <li>Reading and comprehending complex academic texts across disciplines</li>
+        <li>Writing well-organised arguments with a clear thesis and supporting evidence</li>
+        <li>Using appropriate vocabulary and conventions for different subject areas</li>
+        <li>Citing sources and acknowledging other thinkers' contributions</li>
+        <li>Participating in academic discussions and defending a position respectfully</li>
+      </ul>
+      
+      <h3>Writing to Learn vs Learning to Write</h3>
+      <p>A key insight from NCF 2023 is the distinction between "writing to learn" and "learning to write." In traditional education, students mostly "learn to write" — that is, they study writing as a skill in English class and then write essays or answers to demonstrate what they know. NCF 2023 encourages "writing to learn" as well: using writing as a tool of inquiry and understanding, not just of demonstration. A student who writes a reflective paragraph about why a historical event happened is doing both — they are developing their writing skills and deepening their historical thinking at the same time.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection Prompts</div>
+        <ul>
+          <li>Think of a time when writing helped you understand something better. What was the subject?</li>
+          <li>In which school subject do you find academic writing most challenging? Why?</li>
+          <li>What is one word or phrase you have learned in a subject class (not English) that you now use in your thinking?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 03", title: "Why Research Skills Matter in School",
+    intro: "Building the case for research as a lifelong skill, not just an academic exercise.",
+    content: `
+      <h3>Beyond the Classroom</h3>
+      <p>When we talk about research skills in school, we are not simply preparing students to write term papers or complete project assignments. We are equipping them with a set of intellectual habits and practical abilities that will serve them throughout their lives — in higher education, in professional careers, in civic participation, and in personal decision-making.</p>
+      <p>Consider a doctor evaluating a new treatment protocol, a journalist investigating a public corruption case, an engineer troubleshooting a bridge design, or a citizen evaluating claims made by a political candidate. Each of these activities requires skills that are at the core of academic research: the ability to ask a precise question, find reliable information, evaluate evidence critically, and communicate conclusions clearly.</p>
+      
+      <h3>The Information Age Challenge</h3>
+      <p>Students today are growing up in an environment of information abundance — and information chaos. The internet offers access to billions of documents, videos, social media posts, and databases. But not all of this information is accurate, reliable, or relevant. Without research skills, students are left vulnerable to misinformation, manipulation, and confusion.</p>
+      <p>Research skills are, in an important sense, the literacy skills of the information age. Just as the invention of printing made basic reading and writing essential for participation in modern society, the digital revolution makes information literacy — the ability to find, evaluate, and use information effectively — essential for 21st-century citizenship.</p>
+      
+      <div class="callout">
+        <div class="callout-label">Did You Know?</div>
+        <p>Studies suggest that over 60% of information shared on social media contains factual errors. Research skills help you distinguish reliable information from misinformation.</p>
+      </div>
+      
+      <h3>Six Core Research Skills</h3>
+      <ul>
+        <li><strong>Question Formulation:</strong> The ability to identify a problem and frame it as a specific, answerable research question.</li>
+        <li><strong>Source Identification:</strong> Knowing where to look for information and how to identify sources appropriate for a given question.</li>
+        <li><strong>Source Evaluation:</strong> Assessing the credibility, reliability, relevance, and currency of a source.</li>
+        <li><strong>Synthesis:</strong> Drawing together information from multiple sources and identifying patterns, themes, and contradictions.</li>
+        <li><strong>Argumentation:</strong> Constructing a coherent, evidence-based argument to answer a research question or defend a position.</li>
+        <li><strong>Communication:</strong> Presenting findings clearly and accurately, using appropriate conventions for the discipline and audience.</li>
+      </ul>
+      
+      <h3>Research and Character Development</h3>
+      <p>There is a less-discussed dimension of research education that relates to character and values. Good research requires intellectual honesty — the willingness to follow evidence wherever it leads, even when the findings challenge our existing beliefs. It requires intellectual humility — recognising the limits of our own knowledge and remaining open to revision. And it requires a commitment to fairness — representing others' views accurately before critiquing them.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection Prompts</div>
+        <ul>
+          <li>Describe a situation in daily life where you had to find information and decide whether to trust it.</li>
+          <li>What is the difference between an opinion and a well-researched argument?</li>
+          <li>Think of a profession you admire. How would research skills be useful in that profession?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 04", title: "Moving from Rote to Analytical Writing",
+    intro: "Understanding the difference between reproducing information and constructing original analytical arguments.",
+    content: `
+      <h3>The Rote Writing Problem</h3>
+      <p>Many students in Indian schools have been trained, through years of exam practice, in a particular style of writing that we might call "rote writing." Rote writing is characterised by the reproduction of memorised information in response to exam questions. The student reads the question, identifies which memorised passage applies, and reproduces it as accurately as possible. The goal is not to think but to recall.</p>
+      <p>This style of writing has serious limitations. It does not develop the student's own thinking. It does not build the capacity to respond to genuinely new questions. And it leaves students poorly prepared for the kinds of writing required in higher education and professional life, where the ability to construct original arguments is essential.</p>
+      
+      <h3>What is Analytical Writing?</h3>
+      <p>Analytical writing involves examining a topic, idea, or question carefully, breaking it down into its component parts, evaluating evidence, and constructing an original interpretation or argument. The analytical writer does not simply report what others have said; they engage critically with the topic, offer their own reasoned perspective, and support it with evidence.</p>
+      
+      <div class="callout">
+        <div class="callout-label">Comparison</div>
+        <p><strong>Rote:</strong> "The Battle of Panipat was fought in 1526 between Babur and Ibrahim Lodi. Babur won because of superior tactics."<br><br><strong>Analytical:</strong> "The outcome of the First Battle of Panipat illustrates how military innovation — specifically the use of field artillery and the tulughma formation — can decisively overcome numerical superiority, suggesting that adaptability rather than size determines battlefield outcomes."</p>
+      </div>
+      
+      <h3>Key Features of Analytical Writing</h3>
+      <ul>
+        <li><strong>A Clear Thesis:</strong> The writer states their main argument or interpretation explicitly, usually early in the essay.</li>
+        <li><strong>Evidence-Based Reasoning:</strong> Every claim is supported by specific evidence — facts, data, quotations, examples.</li>
+        <li><strong>Explanation:</strong> The writer explains how the evidence supports the claim; they do not leave the connection implicit.</li>
+        <li><strong>Counter-Argument Awareness:</strong> Good analytical writers acknowledge opposing views and address them fairly.</li>
+        <li><strong>Coherent Structure:</strong> The argument is organised logically, with clear connections between paragraphs and ideas.</li>
+        <li><strong>Original Insight:</strong> The writer offers something beyond mere summary — a perspective, an interpretation, a conclusion that is their own.</li>
+      </ul>
+      
+      <h3>Steps to Develop Analytical Writing</h3>
+      <p>The transition from rote to analytical writing does not happen overnight. It is a gradual process of developing new habits. Some practical steps include:</p>
+      <ul>
+        <li><em>Question the given:</em> When you encounter a statement of fact, ask "Why? So what? Is this always true?"</li>
+        <li><em>Look for patterns:</em> Can you identify a pattern across multiple examples or cases?</li>
+        <li><em>Compare and contrast:</em> How are two apparently similar things actually different, or vice versa?</li>
+        <li><em>Consider causation:</em> What caused this? Is the commonly cited cause really the most important?</li>
+        <li><em>Evaluate significance:</em> Why does this matter? What are its implications?</li>
+      </ul>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection Prompts</div>
+        <ul>
+          <li>Take any fact from a textbook. Can you turn it into an analytical question? Try now.</li>
+          <li>What makes you hesitant to share your own opinion in a written answer? How might you overcome that hesitation?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 05", title: "Structure of Academic Argument",
+    intro: "Learning the architecture of a well-constructed academic argument from thesis to conclusion.",
+    content: `
+      <h3>What is an Argument?</h3>
+      <p>In everyday language, "argument" often means a disagreement or quarrel. In academic writing, an argument means something quite different: a structured set of reasons and evidence offered in support of a claim or position. A good academic argument is not angry or emotional; it is reasoned, evidence-based, and fair.</p>
+      
+      <h3>The Architecture of an Argument</h3>
+      <p>Every strong academic argument has a recognisable architecture. Understanding this structure helps you both as a writer (constructing arguments of your own) and as a reader (evaluating arguments others make).</p>
+      <ul>
+        <li><strong>Thesis:</strong> The central claim or position. This is the "answer" your argument provides to your research question. A good thesis is specific, arguable (not a mere statement of fact), and significant.</li>
+        <li><strong>Claims:</strong> Sub-arguments that support the thesis. Each claim makes a specific point that contributes to the overall argument.</li>
+        <li><strong>Evidence:</strong> The factual support for each claim — data, quotations, examples, statistics, research findings.</li>
+        <li><strong>Reasoning:</strong> The explanation of how the evidence supports the claim. This is where analytical writing happens.</li>
+        <li><strong>Counter-argument:</strong> An acknowledgment of the strongest objection to your argument, followed by a response to it.</li>
+        <li><strong>Conclusion:</strong> A synthesis of your argument, restating the thesis in light of the evidence presented and suggesting implications.</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">The C-E-E Model</div>
+        <p><strong>Claim → Evidence → Explanation</strong><br>Every body paragraph should make a claim, provide evidence, and explain the connection between them. This three-part structure is the building block of academic argument.</p>
+      </div>
+      
+      <h3>The Role of Counter-Argument</h3>
+      <p>Beginning writers often feel that acknowledging opposing views weakens their argument. In fact, the opposite is true. Engaging with counter-arguments demonstrates intellectual honesty, shows that the writer has thought carefully about the topic, and actually strengthens the argument by demonstrating that the writer has considered and can refute the best objections.</p>
+      
+      <h3>Logical Connectors for Academic Argument</h3>
+      <p>The following phrases help signal the structure of an argument to your reader:</p>
+      <ul>
+        <li><em>To introduce evidence:</em> "This is supported by...", "Evidence for this claim includes...", "According to..."</li>
+        <li><em>To explain significance:</em> "This suggests...", "This indicates that...", "The implication is..."</li>
+        <li><em>To introduce counter-argument:</em> "Some argue that...", "Critics contend that...", "One might object..."</li>
+        <li><em>To refute counter-argument:</em> "However...", "Nevertheless...", "Despite this objection..."</li>
+        <li><em>To conclude:</em> "Therefore...", "In conclusion...", "This demonstrates that..."</li>
+      </ul>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection Prompts</div>
+        <ul>
+          <li>Choose a position on any issue you care about. Write one sentence for your thesis, one for your main evidence, and one counter-argument you must address.</li>
+          <li>Read a newspaper editorial. Can you identify the thesis, claims, and evidence?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 06", title: "Research Question Formulation",
+    intro: "Mastering the art of asking the right question — the foundation of all good research.",
+    content: `
+      <h3>Why the Question Matters Most</h3>
+      <p>Professional researchers often say that a well-formulated research question is worth more than any methodology or data set. This is because the quality of a research question determines the quality of every subsequent step in the research process. A vague question produces vague research. A precise, well-framed question guides the researcher efficiently toward meaningful answers.</p>
+      
+      <h3>Characteristics of a Good Research Question</h3>
+      <ul>
+        <li><strong>Focused:</strong> It asks about a specific, delimited topic, not a broad field.</li>
+        <li><strong>Researchable:</strong> It can be answered through the collection and analysis of evidence.</li>
+        <li><strong>Open:</strong> It cannot be answered with a simple "yes" or "no." It invites complex, reasoned answers.</li>
+        <li><strong>Significant:</strong> The answer to the question matters — it contributes to understanding an important issue.</li>
+        <li><strong>Arguable:</strong> Reasonable, informed people might answer it differently, which makes constructing a specific, defended answer worthwhile.</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">From Broad to Focused</div>
+        <p><strong>Too broad:</strong> "What are the effects of technology on society?"<br><strong>Better:</strong> "How has smartphone use affected reading habits among adolescents in urban India?"<br><strong>Best:</strong> "What is the relationship between daily smartphone screen time and reading comprehension scores among Class 10 students in Srinagar?"</p>
+      </div>
+      
+      <h3>Types of Research Questions</h3>
+      <ul>
+        <li><strong>Descriptive:</strong> "What are the current patterns of...?" — asks what exists or is happening.</li>
+        <li><strong>Comparative:</strong> "How does X differ from Y in terms of...?" — examines differences and similarities.</li>
+        <li><strong>Causal:</strong> "What factors contribute to...?" or "Why does...?" — investigates causes and effects.</li>
+        <li><strong>Evaluative:</strong> "How effective is...?" or "What is the impact of...?" — assesses outcomes or quality.</li>
+        <li><strong>Exploratory:</strong> "What are the experiences of...?" — investigates a little-known topic.</li>
+      </ul>
+      
+      <h3>The Funnel Model</h3>
+      <p>A useful way to develop a research question is to imagine a funnel. You begin with a broad topic area, then progressively narrow your focus until you arrive at a specific, answerable question. This narrowing process involves identifying what aspect of the topic interests you most, what existing research has already examined, and what gaps remain to be filled.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Activity</div>
+        <ul>
+          <li>Start with the topic "Environment." Apply the funnel model to arrive at a specific research question in four steps.</li>
+          <li>Evaluate this question: "Is social media bad for teenagers?" What makes it a weak research question? How would you improve it?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 07", title: "Hypothesis and Evidence",
+    intro: "Understanding the role of hypotheses, the types of evidence, and how evidence supports claims.",
+    content: `
+      <h3>What is a Hypothesis?</h3>
+      <p>A hypothesis is a tentative answer to a research question — an educated guess, based on preliminary knowledge and reasoning, about what you expect to find when you investigate the question more rigorously. A good hypothesis is specific enough to be tested or evaluated, and it proposes a relationship between variables or phenomena.</p>
+      
+      <h3>Hypothesis vs Thesis Statement</h3>
+      <p>In scientific research, the hypothesis is formed before data is collected and then tested against the data. In humanities and social science research, writers typically use the term "thesis statement" to describe a similar function — a central claim or interpretation that the rest of the essay will defend. The key difference is that a scientific hypothesis is explicitly provisional and open to falsification, while a humanities thesis is typically defended rather than tested in the strict sense.</p>
+      
+      <div class="callout">
+        <div class="callout-label">Example Hypothesis</div>
+        <p><strong>Research Question:</strong> "Does peer pressure influence academic performance among Class 11 students?"<br><br><strong>Hypothesis:</strong> "Students who report higher levels of peer pressure regarding academic performance are likely to show greater improvement in grades, as positive peer pressure motivates effort and competitive engagement."</p>
+      </div>
+      
+      <h3>Types of Evidence</h3>
+      <p>Evidence is the foundation of any research argument. Different disciplines privilege different kinds of evidence:</p>
+      <ul>
+        <li><strong>Statistical evidence:</strong> Numerical data, survey results, measurements, percentages. Compelling for establishing scale and patterns.</li>
+        <li><strong>Anecdotal evidence:</strong> Individual stories or examples. Useful for illustration but weak as sole support.</li>
+        <li><strong>Expert opinion:</strong> Views of recognised authorities in a field. Strong when the expert's credentials are relevant.</li>
+        <li><strong>Documentary evidence:</strong> Primary sources such as letters, laws, historical records, or official reports.</li>
+        <li><strong>Observational evidence:</strong> Data gathered through systematic observation or experiment.</li>
+      </ul>
+      
+      <h3>Evaluating Evidence Quality</h3>
+      <p>Not all evidence is equally reliable or relevant. When evaluating evidence, ask:</p>
+      <ul>
+        <li>Is it from a credible, authoritative source?</li>
+        <li>Is it current enough to be relevant?</li>
+        <li>Is it specifically relevant to my claim, or only tangentially related?</li>
+        <li>Could it be interpreted in a different way that would undermine my argument?</li>
+        <li>Is it representative, or is it an exception?</li>
+      </ul>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Reflection</div>
+        <ul>
+          <li>For the topic of "effects of junk food on student health," identify one piece of each type of evidence you might use.</li>
+          <li>A classmate argues: "My uncle smoked all his life and lived to 90, so smoking isn't really harmful." What type of evidence is this? What are its weaknesses?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 08", title: "Primary vs Secondary Sources",
+    intro: "Learning to distinguish, locate, and appropriately use primary and secondary sources in research.",
+    content: `
+      <h3>The Source Spectrum</h3>
+      <p>All research involves using sources — documents, data, texts, or accounts that provide information about the topic under investigation. Understanding the distinction between different types of sources is fundamental to conducting reliable research and acknowledging intellectual debts appropriately.</p>
+      
+      <h3>Primary Sources</h3>
+      <p>A primary source is an original, firsthand account of or evidence about a topic. It was created by someone with direct knowledge of or involvement in the events or phenomena being studied, typically at the time those events occurred. Examples include:</p>
+      <ul>
+        <li><strong>In History:</strong> Diaries, letters, speeches, newspaper articles from the period, photographs, government documents, laws, treaties.</li>
+        <li><strong>In Science:</strong> Laboratory data, experimental results, field observations, original research reports.</li>
+        <li><strong>In Literature:</strong> The original text being studied (the novel, poem, or play itself).</li>
+        <li><strong>In Social Science:</strong> Survey data collected by the researcher, interview transcripts, census records.</li>
+      </ul>
+      
+      <h3>Secondary Sources</h3>
+      <p>A secondary source is a document that analyses, interprets, or discusses primary sources. It is created after the event or phenomenon by someone who did not have direct involvement. Examples include:</p>
+      <ul>
+        <li>Textbooks and encyclopaedias</li>
+        <li>Scholarly articles that analyse historical events, literary texts, or scientific findings</li>
+        <li>Biographies</li>
+        <li>Documentary films (usually)</li>
+        <li>News analysis and opinion pieces</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">Key Insight</div>
+        <p>A secondary source for one purpose may be a primary source for another. A newspaper editorial from 1947 about Independence is a primary source if you are studying public opinion in 1947, but a secondary source if you are studying who wrote the editorial.</p>
+      </div>
+      
+      <h3>Tertiary Sources</h3>
+      <p>Tertiary sources compile and summarise primary and secondary sources. Encyclopaedias, almanacs, and indexes are examples. They are useful for getting an overview of a topic but generally not appropriate to cite as evidence in a research paper.</p>
+      
+      <h3>Evaluating Sources: The CRAAP Test</h3>
+      <ul>
+        <li><strong>C — Currency:</strong> How recent is the source? Is it current enough for your topic?</li>
+        <li><strong>R — Relevance:</strong> How closely does it relate to your research question?</li>
+        <li><strong>A — Authority:</strong> Who created it? What are their credentials?</li>
+        <li><strong>A — Accuracy:</strong> Is the information supported by evidence? Can it be verified elsewhere?</li>
+        <li><strong>P — Purpose:</strong> Why was it created? Is it trying to inform, persuade, sell, or entertain?</li>
+      </ul>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Activity</div>
+        <ul>
+          <li>For the research topic "The Green Revolution in Punjab," list two primary and two secondary sources you could use.</li>
+          <li>Apply the CRAAP test to a Wikipedia article on your topic. What are its strengths and weaknesses as a source?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 09", title: "Academic Integrity & Plagiarism",
+    intro: "Understanding the ethical foundations of scholarship and what constitutes plagiarism in all its forms.",
+    content: `
+      <h3>What is Academic Integrity?</h3>
+      <p>Academic integrity refers to a commitment to honesty, fairness, and responsibility in all aspects of scholarship. It is both an ethical principle and a practical necessity. Without academic integrity, the knowledge produced by researchers and scholars would be unreliable — we could not trust the findings reported in scientific papers, the interpretations offered by historians, or the arguments advanced by philosophers. Academic integrity is what makes knowledge trustworthy and cumulative.</p>
+      
+      <h3>The Five Pillars of Academic Integrity</h3>
+      <ul>
+        <li><strong>Honesty:</strong> Representing your own work accurately and truthfully, and acknowledging the work of others.</li>
+        <li><strong>Trust:</strong> Creating an environment in which scholars can rely on each other's work.</li>
+        <li><strong>Fairness:</strong> Applying consistent standards to the evaluation of all scholars' work.</li>
+        <li><strong>Respect:</strong> Honouring the intellectual contributions of others and the diversity of ideas.</li>
+        <li><strong>Responsibility:</strong> Taking ownership of your own scholarly conduct and its consequences.</li>
+      </ul>
+      
+      <h3>What is Plagiarism?</h3>
+      <p>Plagiarism is the use of another person's words, ideas, or work without proper acknowledgment. It is a form of intellectual theft — presenting someone else's thinking as your own. Plagiarism can be intentional (deliberately copying to deceive) or unintentional (failing to cite through ignorance or carelessness), but it is wrong in both cases.</p>
+      
+      <div class="callout">
+        <div class="callout-label">Forms of Plagiarism</div>
+        <p>• Copying text verbatim without quotation marks or citation<br>
+        • Paraphrasing too closely (changing only a few words)<br>
+        • Presenting someone else's idea as your own, even in your own words<br>
+        • Submitting work written by someone else (including AI-generated text)<br>
+        • Self-plagiarism: submitting your own previous work as new</p>
+      </div>
+      
+      <h3>Why Citation Solves the Problem</h3>
+      <p>The solution to plagiarism is citation — the practice of explicitly acknowledging any source whose words, ideas, or data you use in your writing. Proper citation allows your reader to find and evaluate your sources, demonstrates the scholarly foundation of your argument, and gives appropriate credit to the thinkers whose work you have built upon. Far from being merely a formal requirement, citation is an expression of intellectual generosity and scholarly community.</p>
+      
+      <h3>Consequences in Academic Life</h3>
+      <p>Plagiarism carries serious consequences in educational and professional settings. In schools, it may result in failing grades or disciplinary action. In universities, it can lead to expulsion. In professional life, it can end careers and destroy reputations. More fundamentally, habitual plagiarism prevents genuine intellectual development — the student who copies never develops the capacity for original thinking that education is meant to build.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Ethical Scenario</div>
+        <ul>
+          <li>A classmate shares their research notes with you before an exam. Is using those notes in your own essay plagiarism? Why or why not?</li>
+          <li>You find a paragraph online that perfectly expresses what you want to say. You change 10 words and include it without citation. Is this plagiarism?</li>
+          <li>What would you do if you discovered a classmate had plagiarised their project?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 10", title: "Citation Basics: A Conceptual Overview",
+    intro: "Understanding the why and how of citation before diving into specific formats.",
+    content: `
+      <h3>Why Cite?</h3>
+      <p>Academic writing is a conversation across time and between thinkers. When you cite a source, you are acknowledging that you have entered this conversation and are building on the thinking of others. Citation serves three essential purposes: it gives credit to the original thinker; it allows your reader to verify your sources and read further; and it demonstrates the scholarly foundation of your own argument.</p>
+      
+      <h3>What Needs to Be Cited?</h3>
+      <p>As a general rule, cite anything that is not common knowledge and that you learned from a specific source. This includes:</p>
+      <ul>
+        <li>Direct quotations (someone's exact words)</li>
+        <li>Paraphrased ideas (someone's ideas in your own words)</li>
+        <li>Statistics and data</li>
+        <li>Specific interpretations or analyses by a named scholar</li>
+        <li>Images, tables, or diagrams from external sources</li>
+      </ul>
+      <p>You do not need to cite: widely known facts ("India gained independence in 1947"), your own original ideas, or information that is common knowledge in a field.</p>
+      
+      <h3>Major Citation Styles</h3>
+      <p>Different academic disciplines use different citation formats. The main ones you will encounter include:</p>
+      <ul>
+        <li><strong>MLA (Modern Language Association):</strong> Common in humanities, especially literature. Uses parenthetical author-page citations.</li>
+        <li><strong>APA (American Psychological Association):</strong> Common in social sciences, education, and psychology. Uses author-date citations.</li>
+        <li><strong>Chicago/Turabian:</strong> Used in history and some humanities. Offers both footnote and author-date systems.</li>
+        <li><strong>Vancouver:</strong> Used in medicine and life sciences. Uses numbered citations.</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">APA Example</div>
+        <p><strong>In-text:</strong> (Sharma, 2019, p. 45)<br><strong>Reference:</strong> Sharma, R. (2019). <em>Educational reform in India</em>. Oxford University Press.</p>
+      </div>
+      
+      <h3>Components of a Citation</h3>
+      <p>Regardless of the specific format, all citations include variations of: Author(s) · Year of publication · Title of work · Publisher/Journal · Page numbers (where applicable) · URL/DOI (for online sources)</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Practice</div>
+        <ul>
+          <li>Find any textbook you have. Write a citation for it in APA format.</li>
+          <li>Why do different disciplines use different citation styles? What does this tell you about the different values of those disciplines?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 11", title: "Reflective Writing",
+    intro: "Understanding reflective writing as a distinct genre that combines personal experience with analytical thinking.",
+    content: `
+      <h3>What is Reflective Writing?</h3>
+      <p>Reflective writing asks you to examine your own learning, experiences, and thinking — to turn the lens of inquiry inward. Unlike descriptive writing (which records what happened) or analytical writing (which examines external evidence), reflective writing asks you to explore your own responses, insights, confusions, and growth.</p>
+      <p>NEP 2020 and NCF 2023 both emphasise reflective practices as essential to deep learning. When students reflect on what they have learned, how they have learned it, and how their understanding has changed, they engage in metacognition — thinking about thinking — which is associated with stronger and more lasting learning outcomes.</p>
+      
+      <h3>The Reflective Writing Cycle</h3>
+      <ul>
+        <li><strong>Description:</strong> What happened? What did you do, observe, or encounter?</li>
+        <li><strong>Feelings:</strong> What were your immediate reactions? What did you find challenging, surprising, or engaging?</li>
+        <li><strong>Evaluation:</strong> What was positive or negative about the experience? What worked well? What did not?</li>
+        <li><strong>Analysis:</strong> Why did things happen as they did? What can you learn from this?</li>
+        <li><strong>Conclusion:</strong> What will you do differently in the future? What has this experience changed about your understanding?</li>
+        <li><strong>Action Plan:</strong> What specific steps will you take to apply what you have learned?</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">Reflective ≠ Confessional</div>
+        <p>Good reflective writing is analytical, not merely personal. The goal is not to share your feelings in a diary-like way, but to use your personal experience as a starting point for intellectual analysis and learning.</p>
+      </div>
+      
+      <h3>Types of Reflective Writing in School</h3>
+      <ul>
+        <li><strong>Learning journals:</strong> Ongoing records of learning experiences, questions, and insights throughout a project or course.</li>
+        <li><strong>Project reflections:</strong> End-of-project evaluations examining the research process, challenges faced, and lessons learned.</li>
+        <li><strong>Reading responses:</strong> Personal-analytical responses to texts that connect the reading to one's own thinking and experience.</li>
+        <li><strong>Portfolio introductions:</strong> Explanatory statements placed at the beginning of a portfolio, describing what the work represents and how it has developed.</li>
+      </ul>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Writing Prompt</div>
+        <ul>
+          <li>Think of a time when you failed at an academic task. Using the reflective cycle above, write a short reflective paragraph (150–200 words) about that experience.</li>
+          <li>Read your paragraph back. Does it go beyond description to analysis and conclusion?</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 12", title: "Project-Based Learning Documentation",
+    intro: "How to document, present, and reflect on project-based learning in alignment with NEP 2020.",
+    content: `
+      <h3>What is Project-Based Learning?</h3>
+      <p>Project-Based Learning (PBL) is an instructional approach in which students work over an extended period to investigate and respond to an authentic, complex question or problem. Rather than simply learning content and reproducing it in an exam, PBL students apply their learning to create a real product — a report, a design, a presentation, an exhibit, a community intervention — that addresses the driving question.</p>
+      <p>NEP 2020 strongly endorses project-based and experiential learning as essential components of 21st-century education, noting that students need "opportunities for creativity and critical thinking through projects, assignments, and presentations."</p>
+      
+      <h3>Components of a Complete Project Report</h3>
+      <ul>
+        <li><strong>Title Page:</strong> Project title, student name, class, date, school</li>
+        <li><strong>Abstract/Executive Summary:</strong> 100–150 word summary of the project's question, methods, and findings</li>
+        <li><strong>Introduction:</strong> Background, context, and statement of the research question</li>
+        <li><strong>Objectives:</strong> Specific goals of the project</li>
+        <li><strong>Methodology:</strong> How you conducted your investigation</li>
+        <li><strong>Data/Findings:</strong> What you discovered, with evidence</li>
+        <li><strong>Analysis:</strong> What your findings mean; how they answer your research question</li>
+        <li><strong>Conclusion:</strong> Summary, implications, and limitations</li>
+        <li><strong>References:</strong> All sources cited</li>
+        <li><strong>Reflection:</strong> Personal reflection on the learning process</li>
+      </ul>
+      
+      <h3>Documentation During the Process</h3>
+      <p>Good project documentation is not just a final report — it is an ongoing process. Research notes, interview records, observation logs, draft analyses, peer feedback, and reflective journals are all part of a complete project portfolio. This documentation demonstrates the intellectual journey, not just the destination.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Project Prompt</div>
+        <ul>
+          <li>Investigate a local issue (waste management in your school, water use in your locality, noise pollution on your street). Document the entire research process using the components listed above.</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    num: "Page 13", title: "Assessment of Research Competencies",
+    intro: "How research competencies are assessed, and how to use assessment as a tool for growth.",
+    content: `
+      <h3>Competency-Based Assessment</h3>
+      <p>Traditional school assessment focuses primarily on knowledge — the ability to recall and reproduce information. NEP 2020 calls for a shift toward competency-based assessment, which evaluates not just what students know but what they can do with what they know. Research competencies — the ability to ask questions, find information, evaluate sources, construct arguments, and communicate findings — are central to this new assessment paradigm.</p>
+      
+      <h3>Key Research Competencies to Assess</h3>
+      <ul>
+        <li><strong>Question Formulation:</strong> Can the student formulate a focused, researchable, significant question?</li>
+        <li><strong>Source Identification and Evaluation:</strong> Does the student use credible, relevant sources and evaluate them critically?</li>
+        <li><strong>Evidence Use:</strong> Does the student select and use evidence effectively to support claims?</li>
+        <li><strong>Argumentation:</strong> Is there a clear thesis? Is the argument logical and coherent?</li>
+        <li><strong>Academic Writing Conventions:</strong> Is the writing structured, precise, and appropriately formal?</li>
+        <li><strong>Citation and Integrity:</strong> Are sources cited correctly? Is academic integrity maintained?</li>
+        <li><strong>Reflection:</strong> Can the student evaluate their own research process critically?</li>
+      </ul>
+      
+      <div class="callout">
+        <div class="callout-label">Assessment Principles</div>
+        <p>Good competency assessment is: Criterion-referenced (judged against standards, not peers); Formative (used to improve, not just grade); Transparent (students understand the criteria); Multiple (drawing on diverse evidence of competence).</p>
+      </div>
+      
+      <h3>Self-Assessment as a Learning Tool</h3>
+      <p>One of the most powerful — and most underused — forms of assessment is self-assessment. When students evaluate their own work against explicit criteria, they develop the metacognitive skills that transfer to new learning contexts. Research shows that students who regularly self-assess produce higher-quality work and demonstrate faster improvement than those who rely solely on teacher feedback.</p>
+      
+      <h3>Using Rubrics Effectively</h3>
+      <p>A rubric is a scoring tool that describes levels of performance for a set of criteria. Well-designed rubrics help students understand what is expected, provide consistent feedback, and support self-assessment. The rubric in the Teacher Mode section of this app provides a model for assessing research projects across all key competencies.</p>
+      
+      <div class="reflection-box">
+        <div class="rb-label">🔖 Self-Assessment</div>
+        <ul>
+          <li>Rate yourself on each of the seven research competencies listed above (1–5). What is your greatest strength? Your biggest area for growth?</li>
+          <li>Design your own one-question assessment for the competency of "source evaluation." What would a perfect answer look like?</li>
+        </ul>
+      </div>
+    `
+  }
+];
+
+const SUBJECTS = ["Biology","Chemistry","Physics","Mathematics","History","Geography","Political Science","Economics","Sociology","Psychology","Literature","Environmental Science","Computer Science"];
+const TOPICS = {
+  "Biology": ["Human Health","Ecosystems","Genetics","Evolution","Cell Biology"],
+  "Chemistry": ["Pollution","Reactions","Organic Chemistry","Materials","Industrial Chemistry"],
+  "Physics": ["Energy","Motion","Waves","Optics","Modern Physics"],
+  "Mathematics": ["Statistics","Patterns","Financial Maths","Geometry","Probability"],
+  "History": ["Colonial Rule","Independence","World Wars","Social Reform","Economic History"],
+  "Geography": ["Climate Change","Urbanisation","Water Resources","Agriculture","Disasters"],
+  "Political Science": ["Democracy","Rights","Governance","International Relations","Policy"],
+  "Economics": ["Poverty","Development","Markets","Employment","Globalisation"],
+  "Sociology": ["Education","Gender","Caste","Family","Media"],
+  "Psychology": ["Stress","Learning","Memory","Behaviour","Mental Health"],
+  "Literature": ["Identity","Power","Conflict","Language","Tradition"],
+  "Environmental Science": ["Pollution","Biodiversity","Climate","Waste","Conservation"],
+  "Computer Science": ["Privacy","AI","Cybersecurity","Digital Access","Social Media"]
+};
+
+const ETHICS_SCENARIOS = [
+  {
+    id: 1,
+    label: "Scenario A — Identify the plagiarism",
+    original: "The Green Revolution transformed Indian agriculture in the 1960s and 1970s by introducing high-yielding variety seeds, chemical fertilisers, and irrigation infrastructure, dramatically increasing wheat and rice production in Punjab and Haryana.",
+    suspect: "The Green Revolution changed Indian farming in the 1960s–70s through high-yielding seeds, fertilisers, and irrigation, greatly increasing wheat and rice output in Punjab and Haryana.",
+    is_plagiarism: true,
+    explanation: "This is plagiarism by paraphrasing. While several words have been changed, the sentence structure is nearly identical to the original and no citation is provided. True paraphrasing requires substantially rewriting the idea in your own words AND citing the source."
+  },
+  {
+    id: 2,
+    label: "Scenario B — Is this plagiarism?",
+    original: "India gained independence on 15 August 1947.",
+    suspect: "India became independent on 15 August 1947.",
+    is_plagiarism: false,
+    explanation: "This is NOT plagiarism. 'India gained independence on 15 August 1947' is common historical knowledge. Common knowledge does not need to be cited, even if you first encountered it in a specific source."
+  },
+  {
+    id: 3,
+    label: "Scenario C — Identify the violation",
+    original: null,
+    suspect: "According to various sources, climate change poses a serious risk to global food security.",
+    is_plagiarism: true,
+    explanation: "The phrase 'according to various sources' is not a citation. It does not identify which sources, by whom, or where to find them. Vague attribution is still academic dishonesty. Proper citation requires author, date, and publication details."
+  }
+];
+
+// =============================================
+// LOCAL STORAGE LAYER
+// =============================================
+const LS = {
+  get: (key) => { try { return JSON.parse(localStorage.getItem(key)); } catch(e) { return null; } },
+  set: (key, val) => { try { localStorage.setItem(key, JSON.stringify(val)); return true; } catch(e) { return false; } },
+  delete: (key) => { localStorage.removeItem(key); }
+};
+
+function getProjects() { return LS.get('researchProjects') || []; }
+function saveProjects(p) { LS.set('researchProjects', p); }
+function getSkillScores() { return LS.get('skillScores') || { argument:0, evidence:0, structure:0, logic:0, ethics:0 }; }
+function saveSkillScores(s) { LS.set('skillScores', s); }
+
+// =============================================
+// NAVIGATION
+// =============================================
+let currentSection = null;
+let currentPage = 0;
+
+function openSection(section) {
+  document.getElementById('title-page').style.display = 'none';
+  const shell = document.getElementById('app-shell');
+  shell.classList.add('active');
+  currentSection = section;
+
+  const titles = {
+    policy: 'Policy & Framework',
+    research: 'Research Lab',
+    writing: 'Academic Writing Builder',
+    citation: 'Citation & Ethics',
+    portfolio: 'My Portfolio',
+    tracker: 'Skill Tracker',
+    teacher: 'Teacher Mode',
+    about: 'About & Install Guide'
+  };
+  document.getElementById('section-title').textContent = titles[section] || section;
+
+  const ca = document.getElementById('content-area');
+  ca.scrollTop = 0;
+
+  if (section === 'policy') renderPolicyMenu();
+  else if (section === 'research') renderResearchLab();
+  else if (section === 'writing') renderWritingBuilder();
+  else if (section === 'citation') renderCitationModule();
+  else if (section === 'portfolio') renderPortfolio();
+  else if (section === 'tracker') renderTracker();
+  else if (section === 'teacher') renderTeacher();
+  else if (section === 'about') renderAbout();
+}
+
+function goHome() {
+  document.getElementById('title-page').style.display = 'flex';
+  document.getElementById('app-shell').classList.remove('active');
+  currentSection = null;
+}
+
+// =============================================
+// POLICY MODULE
+// =============================================
+function renderPolicyMenu() {
+  const ca = document.getElementById('content-area');
+  let html = `<div class="section-menu">
+    <div class="section-title">Policy & Framework</div>
+    <div class="section-subtitle">13 detailed pages aligned with NEP 2020 and NCF 2023</div>
+    <div class="menu-list">`;
+  POLICY_PAGES.forEach((p,i) => {
+    html += `<div class="menu-item" onclick="renderPolicyPage(${i})">
+      <div class="menu-icon">${['🏛️','📖','🔬','✍️','🏗️','❓','🧪','📚','🛡️','📋','💭','📁','📊'][i]}</div>
+      <div class="menu-text">
+        <div class="menu-name">${p.title}</div>
+        <div class="menu-desc">${p.intro.substring(0,70)}...</div>
+      </div>
+      <div class="menu-arrow">›</div>
+    </div>`;
+  });
+  html += `</div></div>`;
+  ca.innerHTML = html;
+}
+
+function renderPolicyPage(idx) {
+  const p = POLICY_PAGES[idx];
+  const ca = document.getElementById('content-area');
+  const prevDisabled = idx === 0 ? 'disabled' : '';
+  const nextDisabled = idx === POLICY_PAGES.length - 1 ? 'disabled' : '';
+  ca.innerHTML = `
+    <div class="policy-page">
+      <div class="page-header">
+        <div class="page-num">${p.num} of 13</div>
+        <div class="page-title">${p.title}</div>
+        <div class="page-intro">${p.intro}</div>
+      </div>
+      <div class="content-body">${p.content}</div>
+      <div class="page-nav">
+        <button class="page-nav-btn ${prevDisabled}" onclick="renderPolicyPage(${idx-1})">← Previous</button>
+        <button class="page-nav-btn" onclick="renderPolicyMenu()">📋 Menu</button>
+        <button class="page-nav-btn ${nextDisabled}" onclick="renderPolicyPage(${idx+1})">Next →</button>
+      </div>
+    </div>
+  `;
+  ca.scrollTop = 0;
+}
+
+// =============================================
+// RESEARCH LAB
+// =============================================
+function renderResearchLab() {
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding: 16px 0 0;">
+      <div class="section-title">Research Lab</div>
+      <div class="section-subtitle">Tools to guide your research from question to outline</div>
+    </div>
+
+    <!-- RESEARCH QUESTION BUILDER -->
+    <div class="tool-card">
+      <h3>🔬 Research Question Builder</h3>
+      
+      <label>Select your Subject</label>
+      <select id="rq-subject" onchange="updateTopics()">
+        <option value="">-- Choose Subject --</option>
+        ${SUBJECTS.map(s => `<option value="${s}">${s}</option>`).join('')}
+      </select>
+      
+      <label>Select Topic Area</label>
+      <select id="rq-topic">
+        <option value="">-- Select subject first --</option>
+      </select>
+      
+      <label>Describe your broad interest in 1–2 sentences</label>
+      <textarea id="rq-broad" placeholder="e.g. I am interested in how plastic waste affects rivers in Kashmir..."></textarea>
+      
+      <label>What specific problem or gap do you see?</label>
+      <textarea id="rq-problem" placeholder="e.g. Most studies focus on urban rivers. Rural rivers in Kashmir are less studied..."></textarea>
+      
+      <label>Who or what is affected? (Your key variable)</label>
+      <input type="text" id="rq-variable" placeholder="e.g. fish populations, village drinking water, students">
+      
+      <button class="btn-primary" onclick="generateResearchQuestion()">🔨 Generate Research Question Worksheet</button>
+      
+      <div class="output-box" id="rq-output">
+        <h4>📄 Research Question Worksheet</h4>
+        <div id="rq-result"></div>
+        <div style="margin-top:14px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="saveResearchQuestion()">💾 Save to Portfolio</button>
+          <button class="btn-secondary" onclick="window.print()">🖨 Print</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- OUTLINE BUILDER -->
+    <div class="tool-card">
+      <h3>🏗️ Outline & Structure Builder</h3>
+      <label>Your Research Question</label>
+      <input type="text" id="ol-question" placeholder="Paste or type your research question here...">
+      
+      <label>Your Main Argument / Thesis (your proposed answer)</label>
+      <textarea id="ol-thesis" placeholder="e.g. Plastic pollution from urban runoff has measurably reduced fish biodiversity in the Jhelum river over the past decade..."></textarea>
+      
+      <label>Key Argument 1 (a reason supporting your thesis)</label>
+      <input type="text" id="ol-arg1" placeholder="e.g. Microplastics accumulate in fish tissue...">
+      
+      <label>Key Argument 2</label>
+      <input type="text" id="ol-arg2" placeholder="e.g. Plastic debris blocks light and oxygen in water...">
+      
+      <label>Key Argument 3 (optional)</label>
+      <input type="text" id="ol-arg3" placeholder="e.g. Comparison with unpolluted rivers shows biodiversity drop...">
+      
+      <label>Counter-Argument (what critics might say)</label>
+      <input type="text" id="ol-counter" placeholder="e.g. Some argue river flow naturally clears plastic...">
+      
+      <button class="btn-primary" onclick="generateOutline()">📋 Generate Structured Outline</button>
+      
+      <div class="output-box" id="ol-output">
+        <h4>📄 Research Outline</h4>
+        <div id="ol-result"></div>
+        <div style="margin-top:14px;">
+          <button class="btn-secondary" onclick="saveOutline()">💾 Save to Portfolio</button>
+          <button class="btn-secondary" onclick="window.print()">🖨 Print</button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function updateTopics() {
+  const subj = document.getElementById('rq-subject').value;
+  const sel = document.getElementById('rq-topic');
+  if (TOPICS[subj]) {
+    sel.innerHTML = TOPICS[subj].map(t => `<option value="${t}">${t}</option>`).join('');
+  } else {
+    sel.innerHTML = '<option>-- Select subject first --</option>';
+  }
+}
+
+function generateResearchQuestion() {
+  const subj = document.getElementById('rq-subject').value;
+  const topic = document.getElementById('rq-topic').value;
+  const broad = document.getElementById('rq-broad').value.trim();
+  const problem = document.getElementById('rq-problem').value.trim();
+  const variable = document.getElementById('rq-variable').value.trim();
+
+  if (!subj || !broad) { alert('Please select a subject and describe your interest.'); return; }
+
+  const focusedQ = `How does ${topic.toLowerCase() || 'this topic'} affect ${variable || 'relevant stakeholders'} in the context of ${broad.split(' ').slice(0,5).join(' ')}...?`;
+  const measurableQ = variable ? 
+    `What is the measurable impact of ${topic.toLowerCase()} on ${variable} among [population/place] in [timeframe]?` :
+    `What are the primary factors determining [specific outcome] in the context of ${topic.toLowerCase()}?`;
+
+  const html = `
+    <div style="margin-bottom:12px;"><span class="tag">${subj}</span> <span class="tag">${topic}</span></div>
+    <p><strong>Step 1 — Broad Topic:</strong> ${broad || '(not provided)'}</p>
+    <p><strong>Step 2 — Problem / Gap:</strong> ${problem || '(not provided)'}</p>
+    <p><strong>Step 3 — Key Variable:</strong> ${variable || '(not provided)'}</p>
+    <hr style="border:none;border-top:1px solid var(--border);margin:12px 0;">
+    <p><strong>🔑 Suggested Focused Question:</strong></p>
+    <div class="callout" style="margin:8px 0;"><p><em>${focusedQ}</em></p></div>
+    <p><strong>🔬 Measurable Research Question Version:</strong></p>
+    <div class="callout" style="margin:8px 0;"><p><em>${measurableQ}</em></p></div>
+    <p style="font-size:12px;color:#666;">✏️ Edit these suggestions to fit your exact topic. A good research question should be focused, researchable, and open-ended.</p>
+    <div style="margin-top:12px;">
+      <p><strong>Identify your variables:</strong></p>
+      <p>• <em>Independent variable</em> (what you're examining): <strong>${topic || '—'}</strong></p>
+      <p>• <em>Dependent variable</em> (what may be affected): <strong>${variable || '—'}</strong></p>
+      <p>• <em>Context</em>: From your description: ${broad.substring(0,60)}...</p>
+    </div>
+  `;
+
+  document.getElementById('rq-result').innerHTML = html;
+  const out = document.getElementById('rq-output');
+  out.classList.add('show');
+  out.scrollIntoView({ behavior: 'smooth' });
+}
+
+function generateOutline() {
+  const q = document.getElementById('ol-question').value.trim();
+  const thesis = document.getElementById('ol-thesis').value.trim();
+  const a1 = document.getElementById('ol-arg1').value.trim();
+  const a2 = document.getElementById('ol-arg2').value.trim();
+  const a3 = document.getElementById('ol-arg3').value.trim();
+  const counter = document.getElementById('ol-counter').value.trim();
+
+  if (!q || !thesis) { alert('Please provide a research question and thesis.'); return; }
+
+  const html = `
+    <div style="font-size:13px; line-height:1.7;">
+      <div style="background:#f0f4ff;border-radius:8px;padding:12px;margin-bottom:12px;">
+        <strong>📌 Research Question:</strong><br><em>${q}</em>
+      </div>
+      
+      <strong>I. INTRODUCTION</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Hook / Opening context</li>
+        <li>Background on the topic</li>
+        <li>Significance of the question</li>
+        <li>Thesis statement: <em>"${thesis}"</em></li>
+        <li>Overview of main arguments</li>
+      </ul>
+      
+      <strong>II. LITERATURE OVERVIEW</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>What has been studied on this topic before?</li>
+        <li>What do existing sources agree on?</li>
+        <li>Where are the gaps your question addresses?</li>
+      </ul>
+      
+      ${a1 ? `<strong>III. ARGUMENT 1</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Claim: ${a1}</li>
+        <li>Evidence: [cite your source/data]</li>
+        <li>Explanation: How does this support the thesis?</li>
+      </ul>` : ''}
+      
+      ${a2 ? `<strong>IV. ARGUMENT 2</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Claim: ${a2}</li>
+        <li>Evidence: [cite your source/data]</li>
+        <li>Explanation: Connection to thesis</li>
+      </ul>` : ''}
+      
+      ${a3 ? `<strong>V. ARGUMENT 3</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Claim: ${a3}</li>
+        <li>Evidence: [cite your source/data]</li>
+        <li>Explanation: Connection to thesis</li>
+      </ul>` : ''}
+      
+      ${counter ? `<strong>${a3?'VI':'V'}. COUNTER-ARGUMENT & RESPONSE</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Counter-argument: "${counter}"</li>
+        <li>Response: [explain why this objection does not undermine your thesis]</li>
+      </ul>` : ''}
+      
+      <strong>CONCLUSION</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>Restate thesis in light of evidence presented</li>
+        <li>Summarise how each argument contributes</li>
+        <li>Broader implications of your findings</li>
+        <li>Limitations and areas for further research</li>
+      </ul>
+      
+      <strong>REFERENCES</strong>
+      <ul style="margin:6px 0 12px 16px;">
+        <li>[List all sources cited in the paper]</li>
+      </ul>
+    </div>
+  `;
+
+  document.getElementById('ol-result').innerHTML = html;
+  const out = document.getElementById('ol-output');
+  out.classList.add('show');
+  out.scrollIntoView({ behavior: 'smooth' });
+}
+
+function saveResearchQuestion() {
+  const projects = getProjects();
+  const q = document.getElementById('rq-question') || { value: '' };
+  const content = document.getElementById('rq-result').innerHTML;
+  projects.push({
+    id: Date.now(),
+    type: 'research_question',
+    title: 'Research Question: ' + (document.getElementById('rq-subject').value || 'Untitled'),
+    content: content,
+    date: new Date().toLocaleDateString('en-IN')
+  });
+  saveProjects(projects);
+  alert('Saved to Portfolio! ✓');
+}
+
+function saveOutline() {
+  const projects = getProjects();
+  const content = document.getElementById('ol-result').innerHTML;
+  projects.push({
+    id: Date.now(),
+    type: 'outline',
+    title: 'Outline: ' + (document.getElementById('ol-question').value.substring(0,40) || 'Untitled'),
+    content: content,
+    date: new Date().toLocaleDateString('en-IN')
+  });
+  saveProjects(projects);
+  alert('Saved to Portfolio! ✓');
+}
+
+// =============================================
+// WRITING BUILDER
+// =============================================
+function renderWritingBuilder() {
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">Academic Writing Builder</div>
+      <div class="section-subtitle">Scaffold your essay section by section</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTab('scaffold')">Writing Scaffold</div>
+      <div class="tab" onclick="switchTab('checker')">Argument Checker</div>
+      <div class="tab" onclick="switchTab('templates')">Templates</div>
+    </div>
+
+    <div class="tab-content active" id="tab-scaffold">
+      <!-- THESIS BUILDER -->
+      <div class="tool-card">
+        <h3>🎯 Thesis Statement Builder</h3>
+        <label>Your position on the topic</label>
+        <input type="text" id="ts-position" placeholder="e.g. online learning is effective for motivated students...">
+        <label>Why / because (main reason)</label>
+        <input type="text" id="ts-reason" placeholder="e.g. it provides flexibility and access to diverse resources...">
+        <label>Despite / although (acknowledge complexity)</label>
+        <input type="text" id="ts-concede" placeholder="e.g. despite concerns about digital equity...">
+        <button class="btn-primary" onclick="buildThesis()">✨ Build Thesis Statement</button>
+        <div class="output-box" id="thesis-output" style="margin-top:12px;">
+          <h4>Your Thesis Statement</h4>
+          <p id="thesis-result" style="font-style:italic; font-size:15px; color: var(--deep-blue); line-height:1.6;"></p>
+        </div>
+      </div>
+
+      <!-- INTRODUCTION BUILDER -->
+      <div class="tool-card">
+        <h3>📝 Introduction Paragraph</h3>
+        <label>Hook (an interesting fact, question, or quote to open)</label>
+        <textarea id="intro-hook" placeholder="e.g. Every year, over 300 million students globally are affected by..." rows="2"></textarea>
+        <label>Background context (2–3 sentences)</label>
+        <textarea id="intro-bg" placeholder="Provide context for your topic..." rows="3"></textarea>
+        <label>Your thesis statement (from above, or write here)</label>
+        <textarea id="intro-thesis" placeholder="Paste your thesis here..." rows="2"></textarea>
+        <label>Preview of main arguments (1 sentence)</label>
+        <input type="text" id="intro-preview" placeholder="e.g. This essay will examine three aspects: X, Y, and Z.">
+        <button class="btn-primary" onclick="buildIntro()">📄 Preview Introduction Paragraph</button>
+        <div class="output-box" id="intro-output">
+          <h4>Introduction Paragraph</h4>
+          <p id="intro-result"></p>
+        </div>
+      </div>
+
+      <!-- BODY PARAGRAPH BUILDER -->
+      <div class="tool-card">
+        <h3>📐 Body Paragraph (C–E–E Model)</h3>
+        <p style="font-size:12px;color:#666;margin-bottom:12px;">Claim → Evidence → Explanation</p>
+        <label>Claim (your argument for this paragraph)</label>
+        <input type="text" id="bp-claim" placeholder="e.g. Online learning improves access for students in remote areas...">
+        <label>Evidence (fact, statistic, or example)</label>
+        <textarea id="bp-evidence" placeholder="e.g. According to a 2022 UNICEF report, digital learning platforms reached 40 million rural students..." rows="3"></textarea>
+        <label>Explanation (why does this evidence support your claim?)</label>
+        <textarea id="bp-explain" placeholder="This demonstrates that... / This shows... / This suggests..." rows="3"></textarea>
+        <label>Link to thesis (optional)</label>
+        <input type="text" id="bp-link" placeholder="e.g. This supports the argument that...">
+        <button class="btn-primary" onclick="buildBodyPara()">📄 Preview Body Paragraph</button>
+        <div class="output-box" id="bp-output">
+          <h4>Body Paragraph</h4>
+          <p id="bp-result"></p>
+        </div>
+      </div>
+
+      <!-- CONCLUSION BUILDER -->
+      <div class="tool-card">
+        <h3>🏁 Conclusion Paragraph</h3>
+        <label>Restate thesis (in different words)</label>
+        <textarea id="conc-thesis" placeholder="Reword your thesis without repeating it exactly..." rows="2"></textarea>
+        <label>Summary of main arguments (1–2 sentences)</label>
+        <textarea id="conc-summary" placeholder="Through examining X, Y, and Z, this essay has demonstrated that..." rows="3"></textarea>
+        <label>Broader implication or significance</label>
+        <input type="text" id="conc-imply" placeholder="e.g. These findings suggest that policymakers should...">
+        <label>Closing thought (final memorable sentence)</label>
+        <input type="text" id="conc-close" placeholder="e.g. Ultimately, the future of education depends on...">
+        <button class="btn-primary" onclick="buildConclusion()">📄 Preview Conclusion</button>
+        <div class="output-box" id="conc-output">
+          <h4>Conclusion Paragraph</h4>
+          <p id="conc-result"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-checker">
+      <div class="tool-card">
+        <h3>✅ Argument Quality Checker</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:14px;">Paste your complete essay or argument below. The checker will analyse its structure and quality using rule-based logic.</p>
+        <textarea id="aq-text" placeholder="Paste your essay text here..." style="min-height:180px;"></textarea>
+        <button class="btn-primary" onclick="checkArgument()">🔍 Analyse My Argument</button>
+        <div class="output-box" id="aq-output">
+          <h4>📊 Argument Quality Analysis</h4>
+          <div id="aq-result"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="tab-templates">
+      <div class="tool-card">
+        <h3>📋 Useful Academic Phrases</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:14px;">Reference these phrases when writing your essays.</p>
+        <div id="template-content"></div>
+      </div>
+    </div>
+  </div>`;
+
+  renderTemplates();
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    const tabs = ['scaffold','checker','templates'];
+    t.classList.toggle('active', tabs[i] === id);
+  });
+  document.querySelectorAll('.tab-content').forEach(tc => {
+    tc.classList.toggle('active', tc.id === 'tab-' + id);
+  });
+}
+
+function buildThesis() {
+  const pos = document.getElementById('ts-position').value.trim();
+  const reason = document.getElementById('ts-reason').value.trim();
+  const concede = document.getElementById('ts-concede').value.trim();
+  if (!pos) { alert('Please enter your position.'); return; }
+  let thesis = concede 
+    ? `Although ${concede}, ${pos}, because ${reason || '[your reasoning]'}.`
+    : `${pos.charAt(0).toUpperCase() + pos.slice(1)}, because ${reason || '[your reasoning]'}.`;
+  document.getElementById('thesis-result').textContent = thesis;
+  document.getElementById('thesis-output').classList.add('show');
+}
+
+function buildIntro() {
+  const hook = document.getElementById('intro-hook').value.trim();
+  const bg = document.getElementById('intro-bg').value.trim();
+  const thesis = document.getElementById('intro-thesis').value.trim();
+  const preview = document.getElementById('intro-preview').value.trim();
+  if (!hook || !thesis) { alert('Hook and thesis are required.'); return; }
+  const para = [hook, bg, thesis, preview].filter(Boolean).join(' ');
+  document.getElementById('intro-result').textContent = para;
+  document.getElementById('intro-output').classList.add('show');
+}
+
+function buildBodyPara() {
+  const claim = document.getElementById('bp-claim').value.trim();
+  const evidence = document.getElementById('bp-evidence').value.trim();
+  const explain = document.getElementById('bp-explain').value.trim();
+  const link = document.getElementById('bp-link').value.trim();
+  if (!claim || !evidence) { alert('Claim and evidence are required.'); return; }
+  const para = [claim, evidence, explain, link].filter(Boolean).join(' ');
+  document.getElementById('bp-result').textContent = para;
+  document.getElementById('bp-output').classList.add('show');
+}
+
+function buildConclusion() {
+  const thesis = document.getElementById('conc-thesis').value.trim();
+  const summary = document.getElementById('conc-summary').value.trim();
+  const imply = document.getElementById('conc-imply').value.trim();
+  const close = document.getElementById('conc-close').value.trim();
+  if (!thesis) { alert('Please restate your thesis.'); return; }
+  const para = [thesis, summary, imply, close].filter(Boolean).join(' ');
+  document.getElementById('conc-result').textContent = para;
+  document.getElementById('conc-output').classList.add('show');
+}
+
+// ===== ARGUMENT CHECKER =====
+function checkArgument() {
+  const text = document.getElementById('aq-text').value.trim();
+  if (!text || text.length < 50) { alert('Please enter at least 50 characters of text.'); return; }
+
+  const lower = text.toLowerCase();
+  const words = text.split(/\s+/).length;
+
+  // Rule-based checks
+  const checks = [
+    {
+      name: 'Thesis Statement',
+      icon: '🎯',
+      check: () => {
+        const markers = ['argue','argues','contend','thesis','claim','this essay','this paper','this study','demonstrate','shows that','suggest that'];
+        return markers.some(m => lower.includes(m));
+      },
+      good: 'A thesis or central claim is present.',
+      bad: 'No clear thesis detected. Use phrases like "This essay argues..." or "This paper contends..."'
+    },
+    {
+      name: 'Evidence Indicators',
+      icon: '📊',
+      check: () => {
+        const markers = ['according to','research shows','studies indicate','data','evidence','statistics','reported','survey','found that','percent','%'];
+        return markers.filter(m => lower.includes(m)).length >= 2;
+      },
+      good: 'Evidence language is present (2+ indicators).',
+      bad: 'Limited evidence language. Include phrases like "According to...", "Research shows...", "Data indicates..."'
+    },
+    {
+      name: 'Logical Connectors',
+      icon: '🔗',
+      check: () => {
+        const connectors = ['therefore','however','consequently','furthermore','moreover','although','despite','because','thus','in addition','as a result','nevertheless'];
+        return connectors.filter(c => lower.includes(c)).length >= 3;
+      },
+      good: 'Good use of logical connectors.',
+      bad: 'Add more logical connectors: "therefore", "however", "furthermore", "because", "consequently"...'
+    },
+    {
+      name: 'Counter-Argument',
+      icon: '⚖️',
+      check: () => {
+        const markers = ['however','critics','some argue','opponents','on the other hand','despite','critics claim','while some','one might argue','it could be said'];
+        return markers.some(m => lower.includes(m));
+      },
+      good: 'Counter-argument or alternative view is acknowledged.',
+      bad: 'No counter-argument detected. Strengthen your argument by addressing opposing views.'
+    },
+    {
+      name: 'Conclusion',
+      icon: '🏁',
+      check: () => {
+        const markers = ['in conclusion','to conclude','in summary','therefore','ultimately','overall','to summarise','in essence','this demonstrates'];
+        return markers.some(m => lower.includes(m));
+      },
+      good: 'A conclusion is present.',
+      bad: 'No clear conclusion detected. Add "In conclusion..." or "Therefore..." at the end.'
+    },
+    {
+      name: 'Paragraph Structure',
+      icon: '📐',
+      check: () => text.split('\n').filter(l => l.trim().length > 30).length >= 3,
+      good: 'Multiple paragraphs detected — good structure.',
+      bad: 'Text appears to be a single block. Break into paragraphs (Introduction, Body, Conclusion).'
+    },
+    {
+      name: 'Word Count',
+      icon: '📏',
+      check: () => words >= 200,
+      good: `Good length: ${words} words.`,
+      bad: `Short: ${words} words. Academic essays should typically be 300–800+ words.`
+    }
+  ];
+
+  let passed = 0;
+  let html = '<div style="display:flex;flex-direction:column;gap:10px;">';
+
+  checks.forEach(c => {
+    const ok = c.check();
+    if (ok) passed++;
+    html += `<div style="display:flex;align-items:flex-start;gap:10px;padding:10px;background:${ok?'rgba(46,125,82,0.08)':'rgba(192,57,43,0.08)'};border-radius:8px;border:1px solid ${ok?'rgba(46,125,82,0.25)':'rgba(192,57,43,0.25)'};">
+      <div style="font-size:16px;flex-shrink:0;">${ok?'✅':'⚠️'}</div>
+      <div>
+        <div style="font-weight:600;font-size:13px;color:${ok?'var(--success)':'var(--danger)'};">${c.icon} ${c.name}</div>
+        <div style="font-size:12px;color:#555;margin-top:3px;">${ok?c.good:c.bad}</div>
+      </div>
+    </div>`;
+  });
+
+  const score = Math.round((passed / checks.length) * 100);
+  const scoreClass = score >= 70 ? 'score-good' : score >= 45 ? 'score-warn' : 'score-bad';
+  const scoreLabel = score >= 70 ? 'Strong Argument' : score >= 45 ? 'Developing Argument' : 'Needs Improvement';
+
+  html = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px;">
+    <div>
+      <div style="font-size:24px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--deep-blue);">${score}%</div>
+      <span class="score-badge ${scoreClass}">${scoreLabel}</span>
+    </div>
+    <div style="font-size:12px;color:#888;">${passed} of ${checks.length} checks passed</div>
+  </div>` + html + '</div>';
+
+  // Update skill scores
+  const scores = getSkillScores();
+  scores.argument = Math.max(scores.argument, Math.round(passed >= 5 ? 80 : passed >= 3 ? 55 : 30));
+  scores.structure = Math.max(scores.structure, checks[5].check() ? 75 : 40);
+  scores.logic = Math.max(scores.logic, checks[2].check() ? 70 : 35);
+  saveSkillScores(scores);
+
+  document.getElementById('aq-result').innerHTML = html;
+  document.getElementById('aq-output').classList.add('show');
+}
+
+function renderTemplates() {
+  const phrases = [
+    { cat: 'Introducing a Claim', items: ['This essay argues that...','It can be contended that...','Evidence suggests that...','A key point is that...'] },
+    { cat: 'Introducing Evidence', items: ['According to [source]...','Research conducted by [author] indicates...','Data from [year] shows that...','A study found that...'] },
+    { cat: 'Explaining Evidence', items: ['This demonstrates that...','This suggests that...','This supports the claim that...','The significance of this is...'] },
+    { cat: 'Counter-Argument', items: ['Some argue that...','Critics contend that...','An opposing view holds that...','One might object that...'] },
+    { cat: 'Refuting Counter-Argument', items: ['However, this overlooks...','Nevertheless, the evidence shows...','Despite this objection...','While this argument has merit...'] },
+    { cat: 'Concluding', items: ['In conclusion...','Therefore...','This essay has demonstrated that...','The evidence presented confirms that...'] }
+  ];
+
+  let html = '';
+  phrases.forEach(p => {
+    html += `<div style="margin-bottom:16px;">
+      <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--deep-blue);margin-bottom:8px;">${p.cat}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;">
+        ${p.items.map(i => `<span style="background:rgba(26,58,107,0.08);border:1px solid rgba(26,58,107,0.2);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--deep-blue);cursor:pointer;font-family:'JetBrains Mono',monospace;" onclick="copyPhrase('${i.replace(/'/g,"\\'")}')">📋 ${i}</span>`).join('')}
+      </div>
+    </div>`;
+  });
+  const el = document.getElementById('template-content');
+  if (el) el.innerHTML = html;
+}
+
+function copyPhrase(phrase) {
+  navigator.clipboard?.writeText(phrase).then(() => {
+    alert('Copied: ' + phrase);
+  }).catch(() => alert('Tap to copy: ' + phrase));
+}
+
+// =============================================
+// CITATION & ETHICS
+// =============================================
+function renderCitationModule() {
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">Citation & Ethics</div>
+      <div class="section-subtitle">Academic integrity, plagiarism, and referencing</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchCiteTab('plagiarism')">Plagiarism</div>
+      <div class="tab" onclick="switchCiteTab('scenarios')">Scenarios</div>
+      <div class="tab" onclick="switchCiteTab('formats')">Citation Formats</div>
+      <div class="tab" onclick="switchCiteTab('checklist')">Ethics Checklist</div>
+    </div>
+
+    <div class="tab-content active" id="ctab-plagiarism">
+      <div class="tool-card">
+        <h3>🛡️ Paraphrasing Practice</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:12px;">Read the original text, then practise paraphrasing it in the box below. A good paraphrase uses your own words and sentence structure while retaining the original meaning — and always needs a citation.</p>
+        
+        <div style="margin-bottom:12px;">
+          <label>Select a passage to practise with:</label>
+          <select id="para-select" onchange="updateParaExample()">
+            <option value="0">Example 1 — Climate Change</option>
+            <option value="1">Example 2 — Indian Economy</option>
+            <option value="2">Example 3 — Education Policy</option>
+          </select>
+        </div>
+        
+        <div class="scenario-block" id="para-original"></div>
+        
+        <label>Your Paraphrase (in your own words):</label>
+        <textarea id="para-attempt" placeholder="Write your paraphrase here..." style="min-height:80px;"></textarea>
+        
+        <button class="btn-primary" onclick="checkParaphrase()">✅ Check My Paraphrase</button>
+        
+        <div class="output-box" id="para-output">
+          <h4>Paraphrase Feedback</h4>
+          <div id="para-feedback"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="ctab-scenarios">
+      <div class="tool-card">
+        <h3>⚖️ Plagiarism Identification Scenarios</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:14px;">Read each scenario and decide whether it constitutes plagiarism. Tap your answer to see the explanation.</p>
+        ${ETHICS_SCENARIOS.map((s,i) => `
+          <div style="margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border);">
+            <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--deep-blue);margin-bottom:10px;">${s.label}</div>
+            ${s.original ? `<div style="margin-bottom:8px;"><strong style="font-size:11px;color:#888;">ORIGINAL:</strong><div class="scenario-block">${s.original}</div></div>` : ''}
+            <div><strong style="font-size:11px;color:#888;">SUBMITTED TEXT:</strong><div class="scenario-block">${s.suspect}</div></div>
+            <div style="display:flex;gap:8px;margin-top:10px;">
+              <button class="btn-secondary" onclick="answerScenario(${i}, true)">✗ Yes — Plagiarism</button>
+              <button class="btn-secondary" onclick="answerScenario(${i}, false)">✓ Not Plagiarism</button>
+            </div>
+            <div id="scenario-result-${i}" style="display:none;margin-top:10px;padding:10px;border-radius:8px;font-size:13px;line-height:1.5;"></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="tab-content" id="ctab-formats">
+      <div class="tool-card">
+        <h3>📋 Reference Format Examples</h3>
+        
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--deep-blue);margin-bottom:12px;">📚 Book</div>
+          <div style="background:var(--light-grey);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:#333;">
+            <strong>APA:</strong> Author, A. A. (Year). <em>Title of work: Capital letter after colon</em>. Publisher.<br>
+            <em>Example:</em> Sharma, R. K. (2019). <em>Research methods in education</em>. Oxford University Press.<br><br>
+            <strong>MLA:</strong> Author Last, First. <em>Title of Book</em>. Publisher, Year.<br>
+            <em>Example:</em> Sharma, Rajesh Kumar. <em>Research Methods in Education</em>. Oxford University Press, 2019.
+          </div>
+        </div>
+        
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--deep-blue);margin-bottom:12px;">🌐 Website</div>
+          <div style="background:var(--light-grey);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:#333;">
+            <strong>APA:</strong> Author, A. A. (Year, Month Day). <em>Title of page</em>. Site Name. URL<br>
+            <em>Example:</em> Ministry of Education. (2020, July 29). <em>National Education Policy 2020</em>. Government of India. https://www.education.gov.in/nep<br><br>
+            <strong>MLA:</strong> Author Last, First. "Title of Article." <em>Website Name</em>, Day Month Year, URL.
+          </div>
+        </div>
+        
+        <div style="margin-bottom:16px;">
+          <div style="font-family:'Playfair Display',serif;font-size:15px;font-weight:700;color:var(--deep-blue);margin-bottom:12px;">📰 Journal Article</div>
+          <div style="background:var(--light-grey);border-radius:8px;padding:12px;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.7;color:#333;">
+            <strong>APA:</strong> Author, A. A., & Author, B. B. (Year). Title of article. <em>Journal Name, Volume</em>(Issue), Page–Page.<br>
+            <em>Example:</em> Mehta, P., & Singh, S. (2021). Research skills in secondary schools. <em>Journal of Indian Education, 47</em>(2), 33–48.
+          </div>
+        </div>
+        
+        <div class="callout">
+          <div class="callout-label">In-Text Citation Reminder</div>
+          <p><strong>APA:</strong> (Author, Year, p. page) — e.g. (Sharma, 2019, p. 45)<br>
+          <strong>MLA:</strong> (Author page) — e.g. (Sharma 45)</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="ctab-checklist">
+      <div class="tool-card">
+        <h3>✅ Academic Integrity Checklist</h3>
+        <p style="font-size:13px;color:#555;margin-bottom:14px;">Before submitting any academic work, tick each item below to confirm you have maintained integrity throughout.</p>
+        <div id="ethics-checklist"></div>
+        <div id="checklist-score" style="margin-top:14px;display:none;"></div>
+      </div>
+    </div>
+  </div>`;
+
+  updateParaExample();
+  renderEthicsChecklist();
+}
+
+const PARA_EXAMPLES = [
+  {
+    original: "Climate change is causing a rise in global average temperatures, with the IPCC reporting a 1.1°C increase since pre-industrial times. This warming is intensifying extreme weather events, threatening food security, and displacing coastal communities worldwide.",
+    hint: "Try rewriting completely in your own structure. Note: you still need to cite the IPCC."
+  },
+  {
+    original: "India's GDP growth rate of 7.2% in 2023-24 makes it the world's fastest-growing major economy, driven primarily by robust domestic consumption, government capital expenditure, and a resilient services sector.",
+    hint: "Avoid simply replacing individual words. Restructure the entire sentence and cite your source."
+  },
+  {
+    original: "NEP 2020 envisions a radical restructuring of school education in India, replacing the 10+2 curriculum structure with a 5+3+3+4 framework aligned with children's developmental stages from ages 3 to 18.",
+    hint: "The specific data (5+3+3+4, ages 3–18) can remain but the sentence structure must be your own, and you must cite NEP 2020."
+  }
+];
+
+function updateParaExample() {
+  const idx = parseInt(document.getElementById('para-select').value);
+  document.getElementById('para-original').innerHTML = `<strong>Original Text:</strong><br>${PARA_EXAMPLES[idx].original}`;
+}
+
+function checkParaphrase() {
+  const idx = parseInt(document.getElementById('para-select').value);
+  const original = PARA_EXAMPLES[idx].original.toLowerCase();
+  const attempt = document.getElementById('para-attempt').value.trim();
+  
+  if (!attempt || attempt.length < 20) { alert('Please write a paraphrase first.'); return; }
+  
+  const origWords = original.split(' ');
+  const attemptWords = attempt.toLowerCase().split(' ');
+  
+  // Calculate word overlap
+  const overlap = origWords.filter(w => w.length > 4 && attemptWords.includes(w)).length;
+  const overlapPercent = Math.round((overlap / origWords.length) * 100);
+  
+  const hasCitation = attempt.includes('(') || attempt.toLowerCase().includes('according') || attempt.includes('cited') || attempt.toLowerCase().includes('source');
+  
+  let html = '';
+  if (overlapPercent > 60) {
+    html = `<div style="background:rgba(192,57,43,0.1);border:1px solid rgba(192,57,43,0.3);border-radius:8px;padding:12px;">
+      <div style="color:var(--danger);font-weight:600;margin-bottom:6px;">⚠️ Too Close to Original (${overlapPercent}% word similarity)</div>
+      <p style="font-size:13px;">Your paraphrase shares too many words with the original. Rewrite by changing both vocabulary AND sentence structure. ${PARA_EXAMPLES[idx].hint}</p>
+    </div>`;
+  } else if (overlapPercent > 35) {
+    html = `<div style="background:rgba(212,134,10,0.1);border:1px solid rgba(212,134,10,0.3);border-radius:8px;padding:12px;">
+      <div style="color:var(--warning);font-weight:600;margin-bottom:6px;">🔶 Partially Paraphrased (${overlapPercent}% word similarity)</div>
+      <p style="font-size:13px;">You've changed some vocabulary, but the sentence structure may still be too similar. Try reordering ideas and using different sentence patterns.</p>
+    </div>`;
+  } else {
+    html = `<div style="background:rgba(46,125,82,0.1);border:1px solid rgba(46,125,82,0.3);border-radius:8px;padding:12px;">
+      <div style="color:var(--success);font-weight:600;margin-bottom:6px;">✅ Good Paraphrase (${overlapPercent}% word similarity)</div>
+      <p style="font-size:13px;">You've successfully rewritten the idea in your own words!</p>
+    </div>`;
+  }
+  
+  if (!hasCitation) {
+    html += `<div style="background:rgba(212,134,10,0.1);border:1px solid rgba(212,134,10,0.3);border-radius:8px;padding:12px;margin-top:10px;">
+      <div style="color:var(--warning);font-weight:600;margin-bottom:6px;">📋 Missing Citation</div>
+      <p style="font-size:13px;">Even a good paraphrase requires a citation. Add "(Author, Year)" or "According to [source]" to acknowledge the original.</p>
+    </div>`;
+  } else {
+    html += `<div style="background:rgba(46,125,82,0.1);border:1px solid rgba(46,125,82,0.3);border-radius:8px;padding:12px;margin-top:10px;">
+      <div style="color:var(--success);font-weight:600;margin-bottom:4px;">✅ Citation detected</div>
+      <p style="font-size:12px;">You've acknowledged the source.</p>
+    </div>`;
+  }
+  
+  document.getElementById('para-feedback').innerHTML = html;
+  document.getElementById('para-output').classList.add('show');
+}
+
+function answerScenario(idx, userAnswer) {
+  const s = ETHICS_SCENARIOS[idx];
+  const correct = userAnswer === s.is_plagiarism;
+  const div = document.getElementById(`scenario-result-${idx}`);
+  div.style.display = 'block';
+  div.style.background = correct ? 'rgba(46,125,82,0.1)' : 'rgba(192,57,43,0.1)';
+  div.style.border = `1px solid ${correct ? 'rgba(46,125,82,0.3)' : 'rgba(192,57,43,0.3)'}`;
+  div.innerHTML = `<strong style="color:${correct?'var(--success)':'var(--danger)'};">${correct ? '✅ Correct!' : '❌ Incorrect'}</strong> — ${s.explanation}`;
+}
+
+function switchCiteTab(id) {
+  document.querySelectorAll('#content-area .tabs .tab').forEach((t,i) => {
+    const tabs = ['plagiarism','scenarios','formats','checklist'];
+    t.classList.toggle('active', tabs[i] === id);
+  });
+  document.querySelectorAll('[id^="ctab-"]').forEach(tc => {
+    tc.classList.toggle('active', tc.id === 'ctab-' + id);
+  });
+}
+
+const CHECKLIST_ITEMS = [
+  "I have written this work entirely myself",
+  "All direct quotations are in quotation marks with citations",
+  "All paraphrased ideas are cited, even when in my own words",
+  "I have not submitted this work (or substantially similar work) before",
+  "I have not used another person's work and presented it as my own",
+  "All sources in my reference list are actually cited in my text",
+  "I have not fabricated or misrepresented any data or findings",
+  "I have used AI tools only as permitted and disclosed their use where required",
+  "I have acknowledged all collaborators' contributions appropriately",
+  "My reference list follows the required citation format consistently"
+];
+
+let checklistState = new Array(CHECKLIST_ITEMS.length).fill(false);
+
+function renderEthicsChecklist() {
+  const el = document.getElementById('ethics-checklist');
+  if (!el) return;
+  el.innerHTML = CHECKLIST_ITEMS.map((item, i) => `
+    <div class="checklist-item" onclick="toggleCheck(${i})">
+      <div class="check-box ${checklistState[i] ? 'checked' : ''}" id="chk-${i}">${checklistState[i] ? '✓' : ''}</div>
+      <div class="checklist-text">${item}</div>
+    </div>
+  `).join('');
+  updateChecklistScore();
+}
+
+function toggleCheck(i) {
+  checklistState[i] = !checklistState[i];
+  const el = document.getElementById(`chk-${i}`);
+  el.classList.toggle('checked', checklistState[i]);
+  el.textContent = checklistState[i] ? '✓' : '';
+  updateChecklistScore();
+}
+
+function updateChecklistScore() {
+  const checked = checklistState.filter(Boolean).length;
+  const total = CHECKLIST_ITEMS.length;
+  const pct = Math.round((checked/total)*100);
+  const el = document.getElementById('checklist-score');
+  if (!el) return;
+  el.style.display = 'block';
+  const color = pct === 100 ? 'var(--success)' : pct >= 70 ? 'var(--warning)' : 'var(--danger)';
+  el.innerHTML = `<div style="display:flex;align-items:center;gap:12px;padding:12px;background:rgba(26,58,107,0.06);border-radius:8px;">
+    <div style="font-size:22px;font-weight:700;font-family:'JetBrains Mono',monospace;color:${color};">${pct}%</div>
+    <div>
+      <div style="font-size:13px;font-weight:600;color:${color};">${checked}/${total} items confirmed</div>
+      <div style="font-size:12px;color:#666;">${pct===100?'✅ Ready to submit':'Complete all items before submitting your work'}</div>
+    </div>
+  </div>`;
+}
+
+// =============================================
+// PORTFOLIO
+// =============================================
+function renderPortfolio() {
+  const ca = document.getElementById('content-area');
+  const projects = getProjects();
+
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">My Research Portfolio</div>
+      <div class="section-subtitle">Save, organise, and review your research work</div>
+    </div>
+
+    <!-- NEW PROJECT FORM -->
+    <div class="tool-card">
+      <h3>➕ New Research Draft</h3>
+      <label>Project Title</label>
+      <input type="text" id="proj-title" placeholder="e.g. Effects of Air Pollution on Student Health in Srinagar">
+      <label>Research Question</label>
+      <textarea id="proj-question" placeholder="Your focused research question..." rows="2"></textarea>
+      <label>Draft Content / Notes</label>
+      <textarea id="proj-content" placeholder="Write your draft, notes, or findings here..." style="min-height:140px;"></textarea>
+      <label>Reflection (what have you learned so far?)</label>
+      <textarea id="proj-reflection" placeholder="Reflect on your research process..." rows="3"></textarea>
+      <button class="btn-primary" onclick="saveNewProject()">💾 Save to Portfolio</button>
+    </div>
+
+    <!-- SAVED PROJECTS -->
+    <div class="tool-card">
+      <h3>📁 Saved Projects (${projects.length})</h3>
+      ${projects.length === 0 ? '<p style="color:#888;font-size:13px;">No saved projects yet. Create your first draft above.</p>' : ''}
+      <div id="projects-list">
+        ${projects.map((p,i) => `
+          <div class="project-card" onclick="viewProject(${i})">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;">
+              <div>
+                <div class="project-card-title">${p.title || 'Untitled Project'}</div>
+                <div class="project-card-meta">📅 ${p.date || 'No date'} · ${p.type || 'draft'}</div>
+              </div>
+              <button class="btn-danger" onclick="event.stopPropagation();deleteProject(${i})">🗑</button>
+            </div>
+            ${p.question ? `<div class="project-card-preview">Q: ${p.question.substring(0,80)}...</div>` : ''}
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:8px;padding:0 0 16px;flex-wrap:wrap;">
+      <button class="btn-secondary" onclick="exportData()">📤 Export All Data</button>
+      <button class="btn-secondary" onclick="importData()">📥 Import Data</button>
+    </div>
+  </div>`;
+}
+
+function saveNewProject() {
+  const title = document.getElementById('proj-title').value.trim();
+  const question = document.getElementById('proj-question').value.trim();
+  const content = document.getElementById('proj-content').value.trim();
+  const reflection = document.getElementById('proj-reflection').value.trim();
+
+  if (!title) { alert('Please enter a project title.'); return; }
+
+  const projects = getProjects();
+  projects.unshift({
+    id: Date.now(),
+    type: 'draft',
+    title,
+    question,
+    content,
+    reflection,
+    date: new Date().toLocaleDateString('en-IN'),
+    revisions: 1
+  });
+  saveProjects(projects);
+  alert('Project saved! ✓');
+  renderPortfolio();
+}
+
+function viewProject(idx) {
+  const ca = document.getElementById('content-area');
+  const projects = getProjects();
+  const p = projects[idx];
+  if (!p) return;
+
+  ca.innerHTML = `<div class="tool-section">
+    <button class="btn-secondary" onclick="renderPortfolio()" style="margin-bottom:14px;">← Back to Portfolio</button>
+    <div class="tool-card">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-bottom:16px;">
+        <div>
+          <div style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--deep-blue);">${p.title}</div>
+          <div style="font-size:11px;color:#888;font-family:'JetBrains Mono',monospace;margin-top:4px;">${p.date} · Revision ${p.revisions || 1}</div>
+        </div>
+        <button class="btn-secondary" onclick="editProject(${idx})">✏️ Edit</button>
+      </div>
+      
+      ${p.question ? `<div class="callout"><div class="callout-label">Research Question</div><p>${p.question}</p></div>` : ''}
+      
+      ${p.content ? `<div style="margin:14px 0;"><h3 style="font-family:'Playfair Display',serif;font-size:15px;color:var(--deep-blue);margin-bottom:8px;">Draft / Notes</h3><div style="background:var(--light-grey);border-radius:8px;padding:14px;font-size:13px;line-height:1.7;white-space:pre-wrap;">${p.content}</div></div>` : ''}
+      
+      ${p.reflection ? `<div class="reflection-box"><div class="rb-label">💭 My Reflection</div><p>${p.reflection}</p></div>` : ''}
+      
+      <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-secondary" onclick="window.print()">🖨 Print</button>
+        <button class="btn-danger" onclick="deleteProject(${idx})">🗑 Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function editProject(idx) {
+  const ca = document.getElementById('content-area');
+  const projects = getProjects();
+  const p = projects[idx];
+
+  ca.innerHTML = `<div class="tool-section">
+    <button class="btn-secondary" onclick="renderPortfolio()" style="margin-bottom:14px;">← Back</button>
+    <div class="tool-card">
+      <h3>✏️ Edit Project</h3>
+      <label>Title</label>
+      <input type="text" id="edit-title" value="${(p.title||'').replace(/"/g,'&quot;')}">
+      <label>Research Question</label>
+      <textarea id="edit-question" rows="2">${p.question||''}</textarea>
+      <label>Content / Notes</label>
+      <textarea id="edit-content" style="min-height:160px;">${p.content||''}</textarea>
+      <label>Reflection</label>
+      <textarea id="edit-reflection" rows="3">${p.reflection||''}</textarea>
+      <button class="btn-primary" onclick="updateProject(${idx})">💾 Save Changes</button>
+    </div>
+  </div>`;
+}
+
+function updateProject(idx) {
+  const projects = getProjects();
+  projects[idx] = {
+    ...projects[idx],
+    title: document.getElementById('edit-title').value,
+    question: document.getElementById('edit-question').value,
+    content: document.getElementById('edit-content').value,
+    reflection: document.getElementById('edit-reflection').value,
+    date: new Date().toLocaleDateString('en-IN'),
+    revisions: (projects[idx].revisions || 1) + 1
+  };
+  saveProjects(projects);
+  alert('Updated! ✓');
+  viewProject(idx);
+}
+
+function deleteProject(idx) {
+  if (!confirm('Delete this project? This cannot be undone.')) return;
+  const projects = getProjects();
+  projects.splice(idx, 1);
+  saveProjects(projects);
+  renderPortfolio();
+}
+
+function exportData() {
+  const data = {
+    projects: getProjects(),
+    skillScores: getSkillScores(),
+    exportDate: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'research_lab_backup.json';
+  a.click();
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        if (data.projects) saveProjects(data.projects);
+        if (data.skillScores) saveSkillScores(data.skillScores);
+        alert('Data imported successfully! ✓');
+        renderPortfolio();
+      } catch(err) {
+        alert('Invalid file. Please use a backup JSON file from this app.');
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// =============================================
+// SKILL TRACKER
+// =============================================
+function renderTracker() {
+  const ca = document.getElementById('content-area');
+  const scores = getSkillScores();
+
+  // Analytics formulas
+  const completeness = scores.argument;
+  const structure = scores.structure;
+  const logic = scores.logic;
+  const evidence = scores.evidence;
+  const ethics = scores.ethics;
+  const competencyIndex = Math.round((completeness + structure + logic + evidence + ethics) / 5);
+  const improvement = Math.round(Math.max(0, competencyIndex - 40));
+
+  const skills = [
+    { name: 'Argument Clarity', key: 'argument', val: scores.argument },
+    { name: 'Evidence Use', key: 'evidence', val: scores.evidence },
+    { name: 'Logical Reasoning', key: 'logic', val: scores.logic },
+    { name: 'Writing Structure', key: 'structure', val: scores.structure },
+    { name: 'Ethical Awareness', key: 'ethics', val: scores.ethics }
+  ];
+
+  const svgSize = 260;
+  const cx = svgSize/2, cy = svgSize/2, r = 90;
+  const labels = skills.map(s => s.name.split(' ')[0]);
+  const vals = skills.map(s => s.val / 100);
+
+  function polarToCart(angle, radius) {
+    const rad = (angle - 90) * Math.PI / 180;
+    return [cx + radius * Math.cos(rad), cy + radius * Math.sin(rad)];
+  }
+
+  const n = skills.length;
+  const angleStep = 360 / n;
+
+  // Polygon grid
+  let gridSVG = '';
+  [0.25, 0.5, 0.75, 1].forEach(frac => {
+    const pts = Array.from({length:n},(_,i) => polarToCart(i*angleStep, r*frac).join(',')).join(' ');
+    gridSVG += `<polygon points="${pts}" fill="none" stroke="rgba(26,58,107,0.15)" stroke-width="1"/>`;
+  });
+
+  // Axes
+  for (let i=0;i<n;i++) {
+    const [x,y] = polarToCart(i*angleStep, r);
+    gridSVG += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(26,58,107,0.2)" stroke-width="1"/>`;
+    const [lx,ly] = polarToCart(i*angleStep, r+24);
+    gridSVG += `<text x="${lx}" y="${ly}" text-anchor="middle" font-size="9" fill="#555" font-family="JetBrains Mono">${labels[i]}</text>`;
+  }
+
+  // Data polygon
+  const dataPts = skills.map((s,i) => polarToCart(i*angleStep, r*(s.val/100)).join(',')).join(' ');
+  gridSVG += `<polygon points="${dataPts}" fill="rgba(40,85,160,0.25)" stroke="#2855a0" stroke-width="2"/>`;
+  skills.forEach((s,i) => {
+    const [x,y] = polarToCart(i*angleStep, r*(s.val/100));
+    gridSVG += `<circle cx="${x}" cy="${y}" r="4" fill="#2855a0"/>`;
+  });
+
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">Analytical Skill Tracker</div>
+      <div class="section-subtitle">Track your research competency growth over time</div>
+    </div>
+
+    <!-- RADAR CHART -->
+    <div class="tool-card">
+      <h3>📊 Competency Radar Chart</h3>
+      <div class="radar-container">
+        <svg viewBox="0 0 ${svgSize} ${svgSize}" xmlns="http://www.w3.org/2000/svg">
+          ${gridSVG}
+        </svg>
+      </div>
+      
+      <!-- Progress Bars -->
+      ${skills.map(s => `
+        <div class="skill-row">
+          <div class="skill-name">${s.name}</div>
+          <div class="skill-bar-wrap"><div class="skill-bar" style="width:${s.val}%"></div></div>
+          <div class="skill-val">${s.val}%</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="tool-card">
+      <h3>📈 Growth Summary</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div style="background:rgba(26,58,107,0.06);border-radius:10px;padding:14px;text-align:center;">
+          <div style="font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--deep-blue);">${competencyIndex}%</div>
+          <div style="font-size:11px;color:#666;margin-top:4px;">Research Competency Index</div>
+        </div>
+        <div style="background:rgba(46,125,82,0.06);border-radius:10px;padding:14px;text-align:center;">
+          <div style="font-size:28px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--success);">+${improvement}%</div>
+          <div style="font-size:11px;color:#666;margin-top:4px;">Improvement from Baseline</div>
+        </div>
+      </div>
+      
+      <div class="callout">
+        <div class="callout-label">Formulas Used</div>
+        <p style="font-family:'JetBrains Mono',monospace;font-size:11px;">
+          Competency Index = (Argument + Evidence + Logic + Structure + Ethics) ÷ 5<br>
+          Improvement % = Max(0, Competency Index − 40 baseline)<br>
+          Writing Structure Score = Structure × 0.4 + Logic × 0.3 + Argument × 0.3
+        </p>
+      </div>
+    </div>
+
+    <!-- MANUAL UPDATE -->
+    <div class="tool-card">
+      <h3>✏️ Update Skill Self-Assessment</h3>
+      <p style="font-size:13px;color:#555;margin-bottom:14px;">Rate each competency honestly based on your recent work (0–100).</p>
+      ${skills.map(s => `
+        <div style="margin-bottom:12px;">
+          <label>${s.name}</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input type="range" id="skill-${s.key}" min="0" max="100" value="${s.val}" style="flex:1;accent-color:var(--royal);" oninput="document.getElementById('sv-${s.key}').textContent=this.value+'%'">
+            <span id="sv-${s.key}" style="font-family:'JetBrains Mono',monospace;font-size:13px;min-width:40px;">${s.val}%</span>
+          </div>
+        </div>
+      `).join('')}
+      <button class="btn-primary" onclick="updateSkills()">💾 Save Assessment</button>
+    </div>
+  </div>`;
+}
+
+function updateSkills() {
+  const keys = ['argument','evidence','logic','structure','ethics'];
+  const scores = {};
+  keys.forEach(k => {
+    scores[k] = parseInt(document.getElementById('skill-'+k).value);
+  });
+  saveSkillScores(scores);
+  alert('Skills updated! ✓');
+  renderTracker();
+}
+
+// =============================================
+// TEACHER MODE
+// =============================================
+function renderTeacher() {
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">Teacher Mode</div>
+      <div class="section-subtitle">Rubrics, project prompts, and assessment resources</div>
+    </div>
+
+    <div class="tabs">
+      <div class="tab active" onclick="switchTeacherTab('rubric')">Rubric</div>
+      <div class="tab" onclick="switchTeacherTab('prompts')">Project Prompts</div>
+      <div class="tab" onclick="switchTeacherTab('feedback')">Feedback Template</div>
+      <div class="tab" onclick="switchTeacherTab('guide')">Presentation Guide</div>
+    </div>
+
+    <div class="tab-content active" id="ttab-rubric">
+      <div class="tool-card">
+        <h3>📊 Research Project Assessment Rubric</h3>
+        <p style="font-size:12px;color:#666;margin-bottom:12px;">Total marks: 50 | Print for classroom use</p>
+        <div style="overflow-x:auto;">
+          <table class="rubric-table">
+            <tr>
+              <th style="min-width:100px;">Criterion</th>
+              <th style="min-width:90px;">Excellent (9–10)</th>
+              <th style="min-width:90px;">Proficient (7–8)</th>
+              <th style="min-width:90px;">Developing (5–6)</th>
+              <th style="min-width:90px;">Beginning (1–4)</th>
+            </tr>
+            <tr>
+              <td><strong>Research Question</strong> (10 marks)</td>
+              <td>Focused, original, researchable, and significant. Variables clearly identified.</td>
+              <td>Clear and focused. Most criteria met. Minor gaps in specificity.</td>
+              <td>Somewhat focused but broad or lacks clear variables.</td>
+              <td>Vague, too broad, or not researchable.</td>
+            </tr>
+            <tr>
+              <td><strong>Sources & Evidence</strong> (10 marks)</td>
+              <td>Diverse, credible, relevant sources. Evidence carefully selected and well-integrated.</td>
+              <td>Mostly credible sources. Evidence used effectively with minor gaps.</td>
+              <td>Some credible sources. Evidence present but not always well-chosen.</td>
+              <td>Few or unreliable sources. Evidence weak or missing.</td>
+            </tr>
+            <tr>
+              <td><strong>Argument Quality</strong> (10 marks)</td>
+              <td>Clear thesis. Logical, coherent argument. Counter-argument addressed effectively.</td>
+              <td>Clear thesis. Argument mostly logical. Counter-argument mentioned.</td>
+              <td>Thesis present but unclear. Argument inconsistent. Counter-argument absent.</td>
+              <td>No clear thesis. Argument unclear or absent.</td>
+            </tr>
+            <tr>
+              <td><strong>Academic Writing</strong> (10 marks)</td>
+              <td>Formal, precise academic language. Excellent structure, grammar, and vocabulary.</td>
+              <td>Mostly formal. Good structure and grammar with minor errors.</td>
+              <td>Some academic language. Structure inconsistent. Noticeable errors.</td>
+              <td>Informal language. Poor structure and many errors.</td>
+            </tr>
+            <tr>
+              <td><strong>Citation & Integrity</strong> (10 marks)</td>
+              <td>All sources cited correctly and consistently. No plagiarism. Format perfect.</td>
+              <td>Most sources cited. Minor format errors. No plagiarism.</td>
+              <td>Some sources cited. Errors in format. Possible paraphrase issues.</td>
+              <td>Citations missing or incorrect. Possible plagiarism.</td>
+            </tr>
+          </table>
+        </div>
+        <button class="btn-secondary" onclick="window.print()" style="margin-top:12px;">🖨 Print Rubric</button>
+      </div>
+    </div>
+
+    <div class="tab-content" id="ttab-prompts">
+      <div class="tool-card">
+        <h3>💡 Sample Research Project Prompts</h3>
+        <p style="font-size:12px;color:#666;margin-bottom:14px;">Adapt these prompts for Classes 9–12 across subjects.</p>
+        
+        ${[
+          { subj: '🌿 Environmental Science', prompt: 'Investigate the impact of solid waste disposal practices on groundwater quality in your local area. What are the main sources of contamination, and what community-level interventions are most effective?' },
+          { subj: '📊 Economics', prompt: 'Analyse the relationship between MGNREGA implementation and rural poverty reduction in a specific district. What factors determine the scheme\'s effectiveness?' },
+          { subj: '🏛️ Political Science', prompt: 'Examine how social media has changed political communication in India\'s last two general elections. What are the implications for democratic participation?' },
+          { subj: '🧬 Biology', prompt: 'Investigate the prevalence of anaemia among adolescent girls in your school. What dietary, social, and awareness factors contribute to the problem? What interventions would be most effective?' },
+          { subj: '📖 Literature', prompt: 'Compare the representation of women in two works from different periods of Indian literature. How do social and historical contexts shape these representations?' },
+          { subj: '🌍 Geography', prompt: 'Study the changing land use patterns in your locality over the past 20 years. What are the environmental and social consequences of urban expansion?' },
+          { subj: '🔢 Mathematics', prompt: 'Design and conduct a statistical study of screen time patterns among students in your school. What correlations can you find with academic performance or sleep quality?' },
+          { subj: '🧠 Psychology', prompt: 'Examine the relationship between exam anxiety and academic performance in Class 10 students. What coping strategies do students report as most effective?' }
+        ].map(p => `
+          <div style="margin-bottom:14px;padding:14px;background:rgba(26,58,107,0.04);border-radius:10px;border:1px solid var(--border);">
+            <div style="font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--deep-blue);margin-bottom:8px;">${p.subj}</div>
+            <p style="font-size:13px;color:#444;line-height:1.6;">${p.prompt}</p>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+
+    <div class="tab-content" id="ttab-feedback">
+      <div class="tool-card">
+        <h3>📝 Student Feedback Template</h3>
+        <p style="font-size:12px;color:#666;margin-bottom:12px;">Fill in for each student project and print.</p>
+        
+        <div style="border:1px solid var(--border);border-radius:10px;padding:16px;font-size:13px;line-height:1.8;">
+          <p><strong>Student Name:</strong> _________________________________ &nbsp;&nbsp; <strong>Class:</strong> ______ &nbsp;&nbsp; <strong>Date:</strong> ____________</p>
+          <p><strong>Project Title:</strong> _______________________________________________________________</p>
+          <br>
+          <p><strong>STRENGTHS:</strong></p>
+          <p>□ Research question formulation &nbsp;&nbsp; □ Source selection &nbsp;&nbsp; □ Argument quality &nbsp;&nbsp; □ Academic language &nbsp;&nbsp; □ Citations</p>
+          <p>Comments: _____________________________________________________________________________</p>
+          <br>
+          <p><strong>AREAS FOR DEVELOPMENT:</strong></p>
+          <p>□ Research question formulation &nbsp;&nbsp; □ Source selection &nbsp;&nbsp; □ Argument quality &nbsp;&nbsp; □ Academic language &nbsp;&nbsp; □ Citations</p>
+          <p>Comments: _____________________________________________________________________________</p>
+          <br>
+          <p><strong>MARKS:</strong> Research Q: ___/10 &nbsp; Sources: ___/10 &nbsp; Argument: ___/10 &nbsp; Writing: ___/10 &nbsp; Citation: ___/10 &nbsp; <strong>Total: ___/50</strong></p>
+          <br>
+          <p><strong>ONE SPECIFIC IMPROVEMENT for next draft:</strong></p>
+          <p>__________________________________________________________________________________________</p>
+          <br>
+          <p><strong>Teacher Signature:</strong> _________________________ &nbsp;&nbsp; <strong>Date:</strong> ___________</p>
+        </div>
+        <button class="btn-secondary" onclick="window.print()" style="margin-top:12px;">🖨 Print Template</button>
+      </div>
+    </div>
+
+    <div class="tab-content" id="ttab-guide">
+      <div class="tool-card">
+        <h3>🎤 Project Presentation Guidelines</h3>
+        
+        <div class="content-body">
+          <h3>Duration and Format</h3>
+          <p>Each presentation should be 8–10 minutes, followed by 5 minutes of Q&A. Students may use a poster, slides (up to 8), or a physical display. All presentations should be accompanied by a written report of 800–1200 words.</p>
+          
+          <h3>Required Components</h3>
+          <ul>
+            <li><strong>Opening (1 min):</strong> State the research question and why it matters.</li>
+            <li><strong>Background (1 min):</strong> What is already known about this topic?</li>
+            <li><strong>Methodology (1 min):</strong> How did you investigate the question?</li>
+            <li><strong>Findings (3 min):</strong> What did you discover? Use data/evidence.</li>
+            <li><strong>Analysis (2 min):</strong> What do your findings mean?</li>
+            <li><strong>Conclusion (1 min):</strong> How does this answer your research question?</li>
+            <li><strong>Questions (1 min):</strong> Be prepared to explain your sources and reasoning.</li>
+          </ul>
+          
+          <h3>Assessment Criteria for Presentations</h3>
+          <ul>
+            <li>Content quality and accuracy (40%)</li>
+            <li>Clarity and organisation (25%)</li>
+            <li>Evidence of research process (20%)</li>
+            <li>Response to questions (15%)</li>
+          </ul>
+          
+          <div class="callout">
+            <div class="callout-label">Tip for Students</div>
+            <p>The best presentations do not read from slides. They tell a story about a question they genuinely care about, using evidence to make a compelling case. Know your data well enough to explain it in your own words.</p>
+          </div>
+        </div>
+        <button class="btn-secondary" onclick="window.print()">🖨 Print Guide</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function switchTeacherTab(id) {
+  document.querySelectorAll('#content-area .tabs .tab').forEach((t,i) => {
+    const tabs = ['rubric','prompts','feedback','guide'];
+    t.classList.toggle('active', tabs[i] === id);
+  });
+  document.querySelectorAll('[id^="ttab-"]').forEach(tc => {
+    tc.classList.toggle('active', tc.id === 'ttab-' + id);
+  });
+}
+
+// =============================================
+// ABOUT / INSTALL GUIDE
+// =============================================
+function renderAbout() {
+  const ca = document.getElementById('content-area');
+  ca.innerHTML = `<div class="tool-section">
+    <div class="section-menu" style="padding:16px 0 0;">
+      <div class="section-title">About & Install Guide</div>
+      <div class="section-subtitle">How to save, install, and convert this app</div>
+    </div>
+
+    <div class="tool-card">
+      <h3>📱 Install as App (Add to Home Screen)</h3>
+      <div class="content-body">
+        <h3>On Android (Chrome)</h3>
+        <ul>
+          <li>Open this file in Chrome browser</li>
+          <li>Tap the three-dot menu (⋮) in the top right</li>
+          <li>Select "Add to Home screen"</li>
+          <li>Name it "Research Lab" and tap Add</li>
+          <li>The app icon will appear on your home screen and work offline!</li>
+        </ul>
+        
+        <h3>On iPhone/iPad (Safari)</h3>
+        <ul>
+          <li>Open this page in Safari</li>
+          <li>Tap the Share button (square with arrow)</li>
+          <li>Scroll down and tap "Add to Home Screen"</li>
+          <li>Tap Add — it will appear as an app icon</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h3>💾 How to Save & Run Locally</h3>
+      <div class="content-body">
+        <h3>Step 1: Create Project Folder</h3>
+        <ul>
+          <li>Create a folder called <code>research-lab-app</code> on your computer or USB drive</li>
+          <li>Place <strong>index.html</strong>, <strong>manifest.json</strong>, <strong>service-worker.js</strong>, and <strong>author.jpg</strong> in this folder</li>
+        </ul>
+        
+        <h3>Step 2: Run the App</h3>
+        <ul>
+          <li><strong>Method 1 — Direct:</strong> Double-click index.html to open in browser (basic features only)</li>
+          <li><strong>Method 2 — VS Code Live Server:</strong> Install VS Code + Live Server extension, then click "Go Live" (recommended for PWA features)</li>
+          <li><strong>Method 3 — Python Server:</strong> Open terminal in folder, run: <code>python -m http.server 8080</code>, then visit http://localhost:8080</li>
+        </ul>
+        
+        <h3>Step 3: Host for Free</h3>
+        <ul>
+          <li><strong>GitHub Pages:</strong> Upload to a GitHub repository → Settings → Pages → Enable. Free and permanent.</li>
+          <li><strong>Netlify:</strong> Drag and drop your folder at netlify.com/drop. Instant free hosting.</li>
+          <li><strong>Cloudflare Pages:</strong> Connect your GitHub repo for automatic deployment.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h3>📦 APK Conversion Guide (Android App)</h3>
+      <div class="content-body">
+        <h3>Method 1: PWA Builder (Easiest)</h3>
+        <ul>
+          <li>Host the app on GitHub Pages or Netlify</li>
+          <li>Visit pwabuilder.com and enter your hosted URL</li>
+          <li>Click "Build My PWA" → Select Android</li>
+          <li>Download the generated APK or Android package</li>
+          <li>Install on Android via Settings → Install Unknown Apps</li>
+        </ul>
+        
+        <h3>Method 2: Android Studio WebView</h3>
+        <ul>
+          <li>Install Android Studio (free from developer.android.com)</li>
+          <li>Create new project → Empty Activity</li>
+          <li>In MainActivity.java, set up WebView to load your local HTML file</li>
+          <li>Copy your app files to assets/ folder</li>
+          <li>Build → Generate Signed APK</li>
+          <li>Create a keystore (keep the password safe!)</li>
+          <li>Sign and export the APK</li>
+        </ul>
+        
+        <h3>Icon & Splash Configuration</h3>
+        <ul>
+          <li>App icon: 512×512 PNG (placed in res/mipmap folders)</li>
+          <li>Splash screen: Edit styles.xml to set SplashTheme</li>
+          <li>Use Android Studio's Image Asset tool to generate all icon sizes automatically</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tool-card">
+      <h3>ℹ️ About This App</h3>
+      <div style="display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap;">
+        <img src="author.jpg" style="width:80px;height:80px;border-radius:50%;border:3px solid var(--accent);object-fit:cover;" onerror="this.style.display='none'">
+        <div style="flex:1;min-width:180px;">
+          <div style="font-family:'Playfair Display',serif;font-size:16px;font-weight:700;color:var(--deep-blue);">Mateen Yousuf</div>
+          <div style="font-size:12px;color:#666;margin-bottom:8px;">Teacher, School Education Department Kashmir</div>
+          <p style="font-size:13px;color:#444;line-height:1.6;">This app was developed to bring NEP 2020 and NCF 2023 aligned research and academic writing skills to students in Classes 9–12, with special attention to offline access for schools in Kashmir and other areas with limited internet connectivity.</p>
+        </div>
+      </div>
+      <div style="margin-top:14px;padding:12px;background:rgba(26,58,107,0.06);border-radius:8px;">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="tag">Version 1.0</span>
+          <span class="tag">Fully Offline</span>
+          <span class="tag">NEP 2020 Aligned</span>
+          <span class="tag">NCF 2023 Aligned</span>
+          <span class="tag">No Login Required</span>
+          <span class="tag">Classes 9–12</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+// =============================================
+// PWA SERVICE WORKER REGISTRATION (inline blob)
+// =============================================
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    const swCode = `
+const CACHE_NAME = 'research-lab-v1';
+self.addEventListener('install', e => { self.skipWaiting(); });
+self.addEventListener('activate', e => { self.clients.claim(); });
+self.addEventListener('fetch', e => {
+  e.respondWith(
+    caches.match(e.request).then(r => r || fetch(e.request).catch(() => new Response('Offline')))
+  );
+});`;
+    try {
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl, { scope: '/' })
+        .then(() => console.log('SW registered via blob'))
+        .catch(() => {}); // silently ignore if blocked
+    } catch(e) { /* ignore */ }
+  });
+}
+
+// =============================================
+// INSTALL PROMPT
+// =============================================
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// =============================================
+// INIT
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // Show title page
+  document.getElementById('title-page').style.display = 'flex';
+});
+</script>
+</body>
+</html>

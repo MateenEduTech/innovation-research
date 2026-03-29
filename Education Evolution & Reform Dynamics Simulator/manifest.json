@@ -1,0 +1,39 @@
+{
+  "name": "Education Evolution & Reform Dynamics Simulator",
+  "short_name": "EduEvolution",
+  "description": "Long-Term Educational Reform Dynamics Simulator aligned with NEP 2020. Developed by Mateen Yousuf, School Education Department Kashmir.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#060e1f",
+  "theme_color": "#0a1628",
+  "orientation": "portrait-primary",
+  "lang": "en",
+  "categories": ["education", "productivity"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Reform Lifecycle Lab",
+      "url": "./index.html#lifecycle",
+      "description": "Simulate reform adoption stages"
+    },
+    {
+      "name": "Evolution Simulation",
+      "url": "./index.html#projection",
+      "description": "50-year projection engine"
+    }
+  ]
+}

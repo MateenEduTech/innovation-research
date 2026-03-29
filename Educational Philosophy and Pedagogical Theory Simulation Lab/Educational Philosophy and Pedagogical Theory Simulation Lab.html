@@ -1,0 +1,2346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<meta name="theme-color" content="#1a3a6b"/>
+<meta name="description" content="Education Philosophy & Pedagogical Theory Simulation Lab - Offline PWA by Mateen Yousuf"/>
+<link rel="manifest" href="manifest.json"/>
+<title>Education Philosophy & Pedagogical Theory Simulation Lab</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --navy: #0a1628;
+  --deep-blue: #1a3a6b;
+  --royal-blue: #2558a8;
+  --light-blue: #4a80d4;
+  --maroon: #7b1d1d;
+  --maroon-light: #a52a2a;
+  --gold: #c9a84c;
+  --gold-light: #e8c56a;
+  --cream: #f5f0e8;
+  --cream-dark: #ede5d8;
+  --text-light: #e8e4dc;
+  --text-muted: #a8b4c8;
+  --white: #ffffff;
+  --success: #2d7a4a;
+  --card-bg: rgba(26,58,107,0.4);
+  --border: rgba(201,168,76,0.3);
+  --shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Crimson Pro', Georgia, serif;
+  background: var(--navy);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ====== BACKGROUND ====== */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 20%, rgba(26,58,107,0.6) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(123,29,29,0.3) 0%, transparent 50%),
+    linear-gradient(160deg, #0a1628 0%, #0d1f3c 50%, #0a1628 100%);
+  z-index:-1;
+}
+
+/* ====== TYPOGRAPHY ====== */
+h1,h2,h3 { font-family: 'Playfair Display', serif; }
+code, .mono { font-family: 'JetBrains Mono', monospace; }
+
+/* ====== SCROLLBAR ====== */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--navy); }
+::-webkit-scrollbar-thumb { background:var(--deep-blue); border-radius:3px; }
+
+/* ====== PAGES ====== */
+.page { display:none; min-height:100vh; padding:20px; }
+.page.active { display:block; }
+
+/* ====== HEADER ====== */
+.app-header {
+  position:sticky; top:0; z-index:100;
+  background:rgba(10,22,40,0.95);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:12px 20px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+}
+.app-header h2 {
+  font-size:1rem; color:var(--gold); font-weight:600;
+  letter-spacing:0.02em;
+}
+.back-btn {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  color:var(--gold);
+  padding:8px 16px; border-radius:6px;
+  cursor:pointer; font-family:inherit; font-size:0.85rem;
+  transition:all 0.2s;
+}
+.back-btn:hover { background:var(--deep-blue); }
+
+/* ====== TITLE PAGE ====== */
+#title-page {
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  min-height:100vh;
+  padding:40px 20px;
+  text-align:center;
+}
+.crest {
+  width:90px; height:90px;
+  background:linear-gradient(135deg, var(--deep-blue), var(--navy));
+  border:3px solid var(--gold);
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:2.4rem;
+  margin-bottom:24px;
+  box-shadow: 0 0 40px rgba(201,168,76,0.3), inset 0 0 20px rgba(201,168,76,0.1);
+  animation: crestPulse 3s ease-in-out infinite;
+}
+@keyframes crestPulse {
+  0%,100%{box-shadow:0 0 40px rgba(201,168,76,0.3),inset 0 0 20px rgba(201,168,76,0.1);}
+  50%{box-shadow:0 0 60px rgba(201,168,76,0.5),inset 0 0 30px rgba(201,168,76,0.15);}
+}
+.title-main {
+  font-size:clamp(1.6rem,5vw,2.8rem);
+  color:var(--cream);
+  line-height:1.2;
+  letter-spacing:0.01em;
+  margin-bottom:8px;
+  text-shadow:0 2px 20px rgba(201,168,76,0.2);
+}
+.title-main span { color:var(--gold); display:block; }
+.title-subtitle {
+  font-size:clamp(0.9rem,3vw,1.15rem);
+  color:var(--text-muted);
+  font-style:italic;
+  margin-bottom:4px;
+}
+.title-author {
+  color:var(--gold-light);
+  font-size:1.1rem;
+  font-weight:600;
+  margin-bottom:2px;
+}
+.title-designation {
+  color:var(--text-muted);
+  font-size:0.9rem;
+  font-style:italic;
+  margin-bottom:28px;
+}
+.badge {
+  display:inline-flex; align-items:center; gap:8px;
+  border:1px solid var(--gold);
+  padding:8px 20px; border-radius:30px;
+  font-size:0.78rem; color:var(--gold);
+  letter-spacing:0.05em;
+  background:rgba(201,168,76,0.08);
+  margin-bottom:40px;
+}
+.nav-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:14px; width:100%; max-width:480px;
+}
+.nav-btn {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:22px 16px;
+  cursor:pointer;
+  transition:all 0.3s;
+  text-align:left;
+}
+.nav-btn:hover {
+  background:rgba(26,58,107,0.7);
+  border-color:var(--gold);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+.nav-btn .nb-icon { font-size:1.8rem; margin-bottom:8px; display:block; }
+.nav-btn .nb-title {
+  font-family:'Playfair Display',serif;
+  color:var(--gold);
+  font-size:0.9rem;
+  font-weight:700;
+  display:block;
+  margin-bottom:4px;
+}
+.nav-btn .nb-desc {
+  color:var(--text-muted);
+  font-size:0.78rem;
+  font-style:italic;
+  line-height:1.3;
+}
+.divider {
+  width:60px; height:2px;
+  background:linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin:20px auto;
+}
+.author-section {
+  margin-top:36px;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+}
+.author-photo {
+  width:80px; height:80px;
+  border-radius:50%;
+  border:2px solid var(--gold);
+  object-fit:cover;
+  box-shadow:0 4px 20px rgba(201,168,76,0.3);
+}
+.author-info { text-align:center; }
+
+/* ====== SECTION HEADERS ====== */
+.section-hero {
+  background:linear-gradient(135deg, rgba(26,58,107,0.8), rgba(10,22,40,0.9));
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:32px 24px;
+  margin-bottom:24px;
+  position:relative; overflow:hidden;
+}
+.section-hero::before {
+  content:'';
+  position:absolute; top:-30px; right:-30px;
+  width:120px; height:120px;
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(201,168,76,0.15), transparent 70%);
+}
+.section-hero h1 {
+  font-size:clamp(1.4rem,4vw,2rem);
+  color:var(--gold);
+  margin-bottom:8px;
+}
+.section-hero p {
+  color:var(--text-muted);
+  font-style:italic;
+  font-size:1rem;
+}
+
+/* ====== CARDS ====== */
+.card {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:16px;
+  transition:all 0.2s;
+}
+.card:hover { border-color:rgba(201,168,76,0.5); }
+.card h3 {
+  color:var(--gold);
+  font-size:1.1rem;
+  margin-bottom:10px;
+}
+.card p, .card li {
+  color:var(--text-light);
+  font-size:0.95rem;
+  line-height:1.7;
+  margin-bottom:6px;
+}
+.card ul { padding-left:20px; }
+
+/* ====== PHILOSOPHY PAGES ====== */
+.phil-nav {
+  display:flex; gap:8px;
+  overflow-x:auto;
+  padding-bottom:8px;
+  margin-bottom:20px;
+  -webkit-overflow-scrolling:touch;
+}
+.phil-nav::-webkit-scrollbar { height:4px; }
+.phil-tab {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:8px 16px; border-radius:20px;
+  cursor:pointer; white-space:nowrap;
+  font-size:0.82rem;
+  transition:all 0.2s;
+  flex-shrink:0;
+}
+.phil-tab.active { background:var(--deep-blue); border-color:var(--gold); color:var(--gold); }
+.phil-tab:hover { border-color:var(--gold); color:var(--text-light); }
+
+.phil-content { display:none; }
+.phil-content.active { display:block; }
+
+.phil-content h2 {
+  color:var(--gold);
+  font-size:1.5rem;
+  margin-bottom:6px;
+}
+.phil-content .page-number {
+  color:var(--text-muted);
+  font-size:0.8rem;
+  margin-bottom:16px;
+  letter-spacing:0.1em;
+}
+.content-section {
+  background:rgba(26,58,107,0.25);
+  border-left:3px solid var(--gold);
+  padding:16px 18px;
+  margin-bottom:14px;
+  border-radius:0 8px 8px 0;
+}
+.content-section h3 {
+  color:var(--gold-light);
+  font-size:1rem;
+  margin-bottom:8px;
+}
+.content-section p, .content-section li {
+  color:var(--text-light);
+  font-size:0.93rem;
+  line-height:1.75;
+  margin-bottom:6px;
+}
+.content-section ul { padding-left:18px; }
+.reflection-box {
+  background:rgba(123,29,29,0.2);
+  border:1px solid rgba(123,29,29,0.5);
+  border-radius:8px;
+  padding:16px;
+  margin-top:16px;
+}
+.reflection-box h4 { color:#e07070; margin-bottom:8px; font-size:0.9rem; }
+.reflection-box p { color:var(--text-muted); font-size:0.88rem; font-style:italic; line-height:1.6; }
+.key-concepts {
+  display:flex; flex-wrap:wrap; gap:8px;
+  margin:12px 0;
+}
+.concept-tag {
+  background:rgba(201,168,76,0.15);
+  border:1px solid rgba(201,168,76,0.4);
+  color:var(--gold);
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:0.78rem;
+}
+
+/* ====== SIMULATION STUDIO ====== */
+.sim-step { display:none; }
+.sim-step.active { display:block; }
+.choice-grid { display:grid; gap:10px; }
+.choice-btn {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+  cursor:pointer;
+  text-align:left;
+  transition:all 0.2s;
+  width:100%;
+}
+.choice-btn:hover { background:rgba(26,58,107,0.7); border-color:var(--gold); }
+.choice-btn.selected { background:rgba(37,88,168,0.5); border-color:var(--gold); }
+.choice-btn .choice-label {
+  font-family:'Playfair Display',serif;
+  color:var(--gold);
+  font-size:0.95rem;
+  display:block;
+  margin-bottom:4px;
+}
+.choice-btn .choice-desc {
+  color:var(--text-muted);
+  font-size:0.82rem;
+  font-style:italic;
+}
+.scenario-box {
+  background:linear-gradient(135deg, rgba(37,88,168,0.3), rgba(26,58,107,0.4));
+  border:1px solid var(--light-blue);
+  border-radius:12px;
+  padding:20px;
+  margin-bottom:20px;
+}
+.scenario-box .scenario-label {
+  font-size:0.75rem; letter-spacing:0.1em;
+  color:var(--light-blue); text-transform:uppercase;
+  margin-bottom:8px;
+}
+.scenario-box h3 { color:var(--cream); font-size:1.1rem; margin-bottom:6px; }
+.scenario-box p { color:var(--text-muted); font-size:0.9rem; line-height:1.6; }
+
+.score-display {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin:20px 0;
+}
+.score-item {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+  text-align:center;
+}
+.score-item .score-val {
+  font-size:2rem;
+  font-family:'Playfair Display',serif;
+  color:var(--gold);
+  display:block;
+}
+.score-item .score-label {
+  font-size:0.75rem;
+  color:var(--text-muted);
+  font-style:italic;
+}
+.score-bar {
+  height:6px;
+  background:rgba(255,255,255,0.1);
+  border-radius:3px;
+  margin-top:8px;
+  overflow:hidden;
+}
+.score-fill {
+  height:100%;
+  border-radius:3px;
+  background:linear-gradient(90deg, var(--deep-blue), var(--gold));
+  transition:width 1s ease;
+}
+.result-card {
+  background:linear-gradient(135deg, rgba(26,58,107,0.6), rgba(10,22,40,0.8));
+  border:1px solid var(--gold);
+  border-radius:14px;
+  padding:24px;
+  margin-bottom:20px;
+}
+.result-card h3 { color:var(--gold); margin-bottom:12px; font-size:1.2rem; }
+.result-card p { color:var(--text-light); line-height:1.7; font-size:0.93rem; margin-bottom:8px; }
+
+/* ====== THEORY COMPARISON LAB ====== */
+.compare-selectors {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:12px; margin-bottom:20px;
+}
+.select-box {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:14px;
+}
+.select-box label {
+  display:block;
+  color:var(--text-muted);
+  font-size:0.78rem;
+  margin-bottom:8px;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+}
+.select-box select {
+  width:100%;
+  background:rgba(10,22,40,0.8);
+  border:1px solid var(--border);
+  border-radius:6px;
+  color:var(--text-light);
+  padding:8px;
+  font-family:inherit;
+  font-size:0.9rem;
+}
+.comparison-table {
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.85rem;
+}
+.comparison-table th {
+  background:var(--deep-blue);
+  color:var(--gold);
+  padding:12px;
+  text-align:left;
+  border-bottom:2px solid var(--gold);
+  font-family:'Playfair Display',serif;
+}
+.comparison-table td {
+  padding:10px 12px;
+  border-bottom:1px solid rgba(201,168,76,0.15);
+  color:var(--text-light);
+  vertical-align:top;
+  line-height:1.6;
+}
+.comparison-table tr:nth-child(even) td {
+  background:rgba(26,58,107,0.2);
+}
+.comparison-table .dimension-col {
+  color:var(--gold-light);
+  font-weight:600;
+  width:28%;
+}
+
+/* ====== ASSESSMENT MODELER ====== */
+.model-grid {
+  display:grid; gap:14px;
+}
+.model-card {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.model-card.selected { border-color:var(--gold); background:rgba(37,88,168,0.4); }
+.model-card h3 { color:var(--gold); margin-bottom:6px; font-size:1rem; }
+.model-card p { color:var(--text-muted); font-size:0.85rem; font-style:italic; line-height:1.5; }
+.metric-row {
+  display:flex; align-items:center; gap:12px;
+  margin:8px 0;
+}
+.metric-row span { color:var(--text-muted); font-size:0.82rem; width:130px; flex-shrink:0; }
+.metric-bar {
+  flex:1; height:8px;
+  background:rgba(255,255,255,0.1);
+  border-radius:4px; overflow:hidden;
+}
+.metric-fill {
+  height:100%; border-radius:4px;
+  transition:width 1.2s ease;
+}
+.fill-blue { background:linear-gradient(90deg, var(--deep-blue), var(--light-blue)); }
+.fill-gold { background:linear-gradient(90deg, var(--maroon-light), var(--gold)); }
+.fill-green { background:linear-gradient(90deg, #1a5c36, #2d7a4a); }
+.metric-val { color:var(--gold); font-size:0.8rem; width:35px; text-align:right; }
+
+/* ====== DILEMMA LAB ====== */
+.dilemma-card {
+  background:linear-gradient(135deg, rgba(123,29,29,0.3), rgba(10,22,40,0.7));
+  border:1px solid rgba(123,29,29,0.5);
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:20px;
+}
+.dilemma-card .dilemma-type {
+  color:#e07070;
+  font-size:0.75rem;
+  text-transform:uppercase;
+  letter-spacing:0.1em;
+  margin-bottom:8px;
+}
+.dilemma-card h3 { color:var(--cream); font-size:1.1rem; margin-bottom:8px; }
+.dilemma-card p { color:var(--text-muted); font-size:0.9rem; line-height:1.6; }
+
+/* ====== RADAR CHART ====== */
+.radar-container {
+  display:flex; flex-direction:column; align-items:center;
+  padding:20px 0;
+}
+canvas#radarChart {
+  max-width:300px;
+  width:100%;
+}
+.questionnaire { display:grid; gap:14px; }
+.q-item {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:16px;
+}
+.q-item p {
+  color:var(--text-light);
+  font-size:0.93rem;
+  margin-bottom:10px;
+  line-height:1.6;
+}
+.q-options { display:flex; gap:8px; flex-wrap:wrap; }
+.q-opt {
+  background:rgba(26,58,107,0.4);
+  border:1px solid var(--border);
+  color:var(--text-muted);
+  padding:6px 14px;
+  border-radius:20px;
+  cursor:pointer;
+  font-size:0.82rem;
+  transition:all 0.2s;
+}
+.q-opt.selected, .q-opt:hover {
+  background:var(--deep-blue);
+  border-color:var(--gold);
+  color:var(--gold);
+}
+
+/* ====== NEP MAPPING TOOL ====== */
+.nep-grid { display:grid; gap:12px; }
+.nep-component {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:18px;
+  cursor:pointer;
+  transition:all 0.3s;
+}
+.nep-component:hover { border-color:var(--gold); background:rgba(26,58,107,0.6); }
+.nep-component.expanded { border-color:var(--gold); }
+.nep-component h3 { color:var(--gold); font-size:1rem; margin-bottom:6px; }
+.nep-component .nep-desc { color:var(--text-muted); font-size:0.85rem; font-style:italic; }
+.nep-detail {
+  display:none;
+  margin-top:14px;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.nep-detail.visible { display:block; }
+.nep-detail-row {
+  display:grid; gap:8px;
+  margin-bottom:12px;
+}
+.nep-detail-row .dr-label {
+  color:var(--gold-light);
+  font-size:0.8rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+}
+.nep-detail-row p {
+  color:var(--text-light);
+  font-size:0.88rem;
+  line-height:1.65;
+}
+
+/* ====== ACTION BUTTONS ====== */
+.action-btn {
+  background:linear-gradient(135deg, var(--deep-blue), var(--royal-blue));
+  border:1px solid var(--gold);
+  color:var(--gold);
+  padding:12px 28px;
+  border-radius:8px;
+  cursor:pointer;
+  font-family:'Playfair Display',serif;
+  font-size:0.95rem;
+  font-weight:600;
+  letter-spacing:0.03em;
+  transition:all 0.3s;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.action-btn:hover {
+  background:linear-gradient(135deg, var(--royal-blue), var(--light-blue));
+  transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(37,88,168,0.4);
+}
+.action-btn.secondary {
+  background:transparent;
+  border-color:var(--border);
+  color:var(--text-muted);
+}
+.action-btn.secondary:hover { border-color:var(--gold); color:var(--gold); }
+.btn-row {
+  display:flex; gap:12px; margin-top:20px;
+  flex-wrap:wrap;
+}
+
+/* ====== CURRICULUM SIMULATOR ====== */
+.curriculum-output {
+  background:var(--card-bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:20px;
+  margin-top:20px;
+  display:none;
+}
+.curriculum-output.visible { display:block; }
+.output-section {
+  margin-bottom:16px;
+  padding-bottom:16px;
+  border-bottom:1px solid var(--border);
+}
+.output-section:last-child { border-bottom:none; margin-bottom:0; }
+.output-section h4 {
+  color:var(--gold);
+  font-size:0.9rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  margin-bottom:8px;
+}
+.output-section p, .output-section li {
+  color:var(--text-light);
+  font-size:0.88rem;
+  line-height:1.65;
+}
+.output-section ul { padding-left:18px; }
+
+/* ====== MISC ====== */
+.section-label {
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--text-muted);
+  margin-bottom:6px;
+}
+.alert {
+  background:rgba(45,122,74,0.2);
+  border:1px solid rgba(45,122,74,0.5);
+  border-radius:8px;
+  padding:12px 16px;
+  color:#6dd98a;
+  font-size:0.88rem;
+  margin:12px 0;
+}
+.spinner {
+  display:inline-block;
+  width:20px; height:20px;
+  border:2px solid var(--border);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+  vertical-align:middle;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.table-wrapper { overflow-x:auto; margin:16px 0; }
+
+/* ====== PRINT ====== */
+@media print {
+  body::before { display:none; }
+  .app-header, .back-btn, .action-btn { display:none; }
+  .card, .content-section { break-inside:avoid; }
+}
+
+/* ====== RESPONSIVE ====== */
+@media(max-width:400px) {
+  .nav-grid { grid-template-columns:1fr; }
+  .score-display { grid-template-columns:1fr; }
+  .compare-selectors { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===================================================
+     TITLE PAGE
+===================================================== -->
+<div id="title-page" class="page active">
+  <div class="crest">📚</div>
+  <h1 class="title-main">
+    Education Philosophy &<br>
+    <span>Pedagogical Theory</span>
+    Simulation Lab
+  </h1>
+  <div class="divider"></div>
+  <p class="title-subtitle">Offline Edition</p>
+  <div class="badge">⚖️ Aligned with NEP 2020 | NCF 2023 | Pedagogical Thought</div>
+
+  <nav class="nav-grid">
+    <button class="nav-btn" onclick="openSection('foundations-page')">
+      <span class="nb-icon">🏛️</span>
+      <span class="nb-title">Explore Philosophies</span>
+      <span class="nb-desc">18 structured pages on major educational philosophies</span>
+    </button>
+    <button class="nav-btn" onclick="openSection('simulation-page')">
+      <span class="nb-icon">🎭</span>
+      <span class="nb-title">Pedagogy Simulation Studio</span>
+      <span class="nb-desc">Classroom decision-making under different philosophies</span>
+    </button>
+    <button class="nav-btn" onclick="openSection('comparison-page')">
+      <span class="nb-icon">⚖️</span>
+      <span class="nb-title">Theory Comparison Lab</span>
+      <span class="nb-desc">Structured side-by-side philosophy comparisons</span>
+    </button>
+    <button class="nav-btn" onclick="openSection('framework-page')">
+      <span class="nb-icon">🗺️</span>
+      <span class="nb-title">Framework & Educational Thought</span>
+      <span class="nb-desc">NEP mapping, curriculum design & assessment models</span>
+    </button>
+  </nav>
+
+  <div class="author-section">
+    <img src="author.jpg" alt="Mateen Yousuf" class="author-photo" onerror="this.style.display='none'"/>
+    <div class="author-info">
+      <div class="title-author">Mateen Yousuf</div>
+      <div class="title-designation">Teacher, School Education Department Kashmir</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     SECTION 1: FOUNDATIONS OF EDUCATIONAL PHILOSOPHY
+===================================================== -->
+<div id="foundations-page" class="page">
+  <div class="app-header">
+    <button class="back-btn" onclick="openSection('title-page')">← Home</button>
+    <h2>📚 Foundations of Philosophy</h2>
+  </div>
+
+  <div style="padding:16px 0;">
+    <div class="section-hero">
+      <h1>Foundations of Educational Philosophy</h1>
+      <p>18 structured conceptual pages — from ancient idealism to NEP 2020's philosophical synthesis</p>
+    </div>
+
+    <div class="phil-nav" id="philNav"></div>
+    <div id="philContents"></div>
+  </div>
+</div>
+
+<!-- ===================================================
+     SECTION 2: PEDAGOGY SIMULATION STUDIO
+===================================================== -->
+<div id="simulation-page" class="page">
+  <div class="app-header">
+    <button class="back-btn" onclick="openSection('title-page')">← Home</button>
+    <h2>🎭 Pedagogy Simulation Studio</h2>
+  </div>
+
+  <div style="padding:16px 0;">
+    <div class="section-hero">
+      <h1>Pedagogy Simulation Studio</h1>
+      <p>Choose a philosophy, face a classroom scenario, make decisions — see your alignment scores</p>
+    </div>
+
+    <!-- Step 1: Choose Philosophy -->
+    <div class="sim-step active" id="sim-step-1">
+      <div class="section-label">Step 1 of 3</div>
+      <div class="card">
+        <h3>Select Your Educational Philosophy</h3>
+        <p style="color:var(--text-muted);font-style:italic;font-size:0.88rem;margin-bottom:14px;">
+          Choose the philosophical lens through which you will approach the classroom scenario.
+        </p>
+        <div class="choice-grid" id="philChoiceGrid"></div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn" onclick="simStep2()">Next: View Scenario →</button>
+      </div>
+    </div>
+
+    <!-- Step 2: Scenario + Strategy Choice -->
+    <div class="sim-step" id="sim-step-2">
+      <div class="section-label">Step 2 of 3</div>
+      <div class="scenario-box" id="simScenarioBox"></div>
+      <div class="card">
+        <h3>Choose Your Teaching Strategy</h3>
+        <div class="choice-grid" id="strategyGrid"></div>
+      </div>
+      <div class="btn-row">
+        <button class="action-btn secondary" onclick="simBack()">← Back</button>
+        <button class="action-btn" onclick="simStep3()">Calculate Results →</button>
+      </div>
+    </div>
+
+    <!-- Step 3: Results -->
+    <div class="sim-step" id="sim-step-3">
+      <div class="section-label">Step 3 of 3 — Results</div>
+      <div id="simResults"></div>
+      <div class="btn-row">
+        <button class="action-btn secondary" onclick="simReset()">🔄 Try Another Scenario</button>
+        <button class="action-btn" onclick="saveSimResult()">💾 Save Result</button>
+      </div>
+      <div id="simSaveAlert"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     SECTION 3: THEORY COMPARISON LAB
+===================================================== -->
+<div id="comparison-page" class="page">
+  <div class="app-header">
+    <button class="back-btn" onclick="openSection('title-page')">← Home</button>
+    <h2>⚖️ Theory Comparison Lab</h2>
+  </div>
+
+  <div style="padding:16px 0;">
+    <div class="section-hero">
+      <h1>Theory Comparison Lab</h1>
+      <p>Select two philosophies to generate a structured comparative analysis across 7 dimensions</p>
+    </div>
+
+    <div class="compare-selectors">
+      <div class="select-box">
+        <label>Philosophy A</label>
+        <select id="compareA" onchange="generateComparison()"></select>
+      </div>
+      <div class="select-box">
+        <label>Philosophy B</label>
+        <select id="compareB" onchange="generateComparison()"></select>
+      </div>
+    </div>
+
+    <div id="comparisonOutput"></div>
+    <div class="btn-row">
+      <button class="action-btn" onclick="printComparison()">🖨️ Print / Export</button>
+      <button class="action-btn secondary" onclick="saveComparison()">💾 Save Report</button>
+    </div>
+    <div id="compareAlert"></div>
+  </div>
+</div>
+
+<!-- ===================================================
+     SECTION 4+: FRAMEWORK & EDUCATIONAL THOUGHT
+===================================================== -->
+<div id="framework-page" class="page">
+  <div class="app-header">
+    <button class="back-btn" onclick="openSection('title-page')">← Home</button>
+    <h2>🗺️ Framework & Educational Thought</h2>
+  </div>
+
+  <div style="padding:16px 0;">
+    <div class="section-hero">
+      <h1>Framework & Educational Thought</h1>
+      <p>Curriculum Design, Assessment Models, Dilemma Lab, Identity Radar & NEP Mapping</p>
+    </div>
+
+    <nav class="phil-nav">
+      <button class="phil-tab active" onclick="switchFramework('curriculum','this')">Curriculum Design</button>
+      <button class="phil-tab" onclick="switchFramework('assessment','this')">Assessment Modeler</button>
+      <button class="phil-tab" onclick="switchFramework('dilemmas','this')">Dilemma Lab</button>
+      <button class="phil-tab" onclick="switchFramework('identity','this')">Identity Radar</button>
+      <button class="phil-tab" onclick="switchFramework('nep','this')">NEP Mapping</button>
+    </nav>
+
+    <!-- CURRICULUM SIMULATOR -->
+    <div id="fw-curriculum">
+      <div class="card">
+        <h3>Curriculum Design Simulator</h3>
+        <p style="color:var(--text-muted);font-style:italic;font-size:0.88rem;margin-bottom:16px;">
+          Choose a philosophical base, grade, and subject to generate a curriculum design structure.
+        </p>
+        <div style="display:grid;gap:12px;">
+          <div>
+            <div class="section-label">Philosophy Base</div>
+            <select id="currPhil" style="width:100%;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:6px;color:var(--text-light);padding:10px;font-family:inherit;font-size:0.9rem;"></select>
+          </div>
+          <div>
+            <div class="section-label">Grade Level</div>
+            <select id="currGrade" style="width:100%;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:6px;color:var(--text-light);padding:10px;font-family:inherit;font-size:0.9rem;">
+              <option>Grade 1–2 (Early Primary)</option>
+              <option>Grade 3–5 (Primary)</option>
+              <option>Grade 6–8 (Middle)</option>
+              <option selected>Grade 9–10 (Secondary)</option>
+              <option>Grade 11–12 (Senior Secondary)</option>
+            </select>
+          </div>
+          <div>
+            <div class="section-label">Subject</div>
+            <select id="currSubject" style="width:100%;background:rgba(10,22,40,0.8);border:1px solid var(--border);border-radius:6px;color:var(--text-light);padding:10px;font-family:inherit;font-size:0.9rem;">
+              <option>Science</option>
+              <option>Mathematics</option>
+              <option>Social Studies / History</option>
+              <option>Language & Literature</option>
+              <option>Arts & Craft</option>
+              <option>Physical Education</option>
+              <option>Environmental Studies</option>
+            </select>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="action-btn" onclick="generateCurriculum()">⚙️ Generate Curriculum Design</button>
+        </div>
+      </div>
+      <div class="curriculum-output" id="currOutput"></div>
+    </div>
+
+    <!-- ASSESSMENT MODELER -->
+    <div id="fw-assessment" style="display:none;">
+      <div class="section-label">Select Assessment Model to Analyze</div>
+      <div class="model-grid" id="assessModelGrid"></div>
+      <div id="assessOutput" style="margin-top:16px;display:none;"></div>
+    </div>
+
+    <!-- DILEMMA LAB -->
+    <div id="fw-dilemmas" style="display:none;">
+      <div class="card">
+        <h3>Educational Dilemma Lab</h3>
+        <p style="color:var(--text-muted);font-style:italic;font-size:0.88rem;margin-bottom:14px;">
+          Face real classroom dilemmas. Choose your response philosophy. Receive alignment and ethics scores.
+        </p>
+      </div>
+      <div id="dilemmaContainer"></div>
+    </div>
+
+    <!-- IDENTITY RADAR -->
+    <div id="fw-identity" style="display:none;">
+      <div class="card">
+        <h3>📊 Pedagogical Identity Radar</h3>
+        <p style="color:var(--text-muted);font-style:italic;font-size:0.88rem;margin-bottom:14px;">
+          Answer 8 reflective questions to map your pedagogical identity across key dimensions.
+        </p>
+      </div>
+      <div class="questionnaire" id="identityQuestionnaire"></div>
+      <div class="btn-row">
+        <button class="action-btn" onclick="generateRadar()">📊 Generate Identity Radar</button>
+        <button class="action-btn secondary" onclick="saveIdentity()">💾 Save Profile</button>
+      </div>
+      <div id="radarContainer" style="display:none;margin-top:20px;">
+        <div class="card">
+          <h3>Your Pedagogical Identity</h3>
+          <div class="radar-container">
+            <canvas id="radarChart" width="300" height="300"></canvas>
+          </div>
+          <div id="radarSummary" style="margin-top:16px;"></div>
+        </div>
+      </div>
+      <div id="identityAlert"></div>
+    </div>
+
+    <!-- NEP MAPPING -->
+    <div id="fw-nep" style="display:none;">
+      <div class="card">
+        <h3>NEP 2020 Philosophical Mapping Tool</h3>
+        <p style="color:var(--text-muted);font-style:italic;font-size:0.88rem;margin-bottom:14px;">
+          Explore each NEP 2020 component and discover its philosophical underpinnings and classroom translations.
+        </p>
+      </div>
+      <div class="nep-grid" id="nepGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================================================
+     DATA & SCRIPTS
+===================================================== -->
+<script>
+'use strict';
+
+// ============================================================
+// PHILOSOPHY DATA
+// ============================================================
+const philosophyProfiles = [
+  {
+    id:'idealism',
+    name:'Idealism',
+    icon:'💎',
+    brief:'Reality is fundamentally mental/spiritual; education transmits eternal truths.',
+    color:'#4a80d4',
+    pages:[
+      {
+        title:'Idealism in Education',
+        content:[
+          {heading:'Core Metaphysical Assumptions',text:'Idealism posits that ultimate reality is non-material — it is composed of ideas, minds, and spiritual essences rather than matter. Rooted in Plato\'s theory of Forms, idealism maintains that the physical world is merely a pale reflection of a higher, perfect realm of ideas. In education, this translates to the belief that the primary purpose of schooling is to help students transcend the transient and access the permanent, eternal truths that govern all existence. The teacher, in this framework, is a guide who illuminates the path toward intellectual and spiritual enlightenment.'},
+          {heading:'Historical Roots',text:'Plato\'s Academy — founded around 387 BCE — represents the first institutionalized expression of idealist education. His Socratic dialogues modeled the process of drawing out innate knowledge through questioning. Later, Hegel\'s absolute idealism and Kant\'s transcendental idealism both shaped educational philosophy, arguing that the mind actively structures experience and that moral reasoning is central to human development.'},
+          {heading:'Curriculum Implications',text:'In an idealist curriculum, emphasis falls on the humanities, philosophy, mathematics, and the great literary and artistic traditions. These subjects are prized because they connect students to humanity\'s highest intellectual achievements. Idealist educators like Robert Hutchins championed a "Great Books" curriculum, believing that immersion in canonical texts cultivates wisdom, virtue, and a disciplined intellect. Sciences are valued insofar as they reveal the rational order underlying reality.'},
+          {heading:'Classroom Practice',text:'The idealist classroom is dialogic and Socratic. The teacher does not simply transmit information; instead, they pose questions that compel students to examine assumptions, synthesize knowledge, and arrive at universal principles through reasoning. Memorization of facts is considered inferior to the cultivation of deep understanding. Discussion, debate, and conceptual analysis are privileged methods.'},
+          {heading:'Role of the Teacher',text:'The teacher is a moral exemplar and intellectual authority — someone who embodies the virtues and knowledge students are meant to internalize. Teachers are mentors in the truest sense, guiding learners toward self-realization and moral perfection. Their authority is not coercive but inspirational, earned through demonstrated wisdom and character.'},
+          {heading:'Assessment in Idealism',text:'Idealist assessment emphasizes essays, oral examinations, and demonstrations of reasoning ability. Standardized tests measuring factual recall are viewed with suspicion; what matters is whether a student can engage meaningfully with complex ideas, construct arguments, and demonstrate genuine understanding. Portfolio assessments and reflective writing align naturally with idealist goals.'},
+          {heading:'Relevance to NEP 2020',text:'NEP 2020\'s emphasis on value education, constitutional ethics, and the development of character resonates deeply with idealist principles. The policy\'s vision of education as a transformative force — one that cultivates wisdom, not merely employable skills — reflects idealism\'s core conviction that education must nourish the whole person, particularly their moral and intellectual dimensions.'},
+        ],
+        concepts:['Plato','Socratic Method','Eternal Truths','Character Formation','Great Books'],
+        reflection:'Reflect: In your classroom, do you prioritize transmitting facts or cultivating understanding? How might Socratic questioning transform your next lesson?'
+      }
+    ]
+  },
+  {
+    id:'realism',
+    name:'Realism',
+    icon:'🔬',
+    brief:'The external world exists independently of the mind; knowledge comes through sensory experience.',
+    color:'#2d7a4a',
+    pages:[
+      {
+        title:'Realism and Scientific Orientation',
+        content:[
+          {heading:'Core Philosophical Stance',text:'Realism asserts that the material world exists independently of human perception and thought. Originating with Aristotle\'s rejection of Plato\'s transcendent Forms, realism insists that true knowledge is derived from systematic observation of the natural world. In education, this positions empirical investigation, scientific reasoning, and objective evidence as the gold standards of learning. The goal is to equip students with accurate, verifiable knowledge about the world as it actually is.'},
+          {heading:'Scientific Method as Pedagogical Model',text:'Realist education mirrors the scientific method: observation, hypothesis, experimentation, and conclusion. Students are trained to gather data, identify patterns, test theories, and revise beliefs in light of evidence. This produces what realists consider genuine learning — knowledge that is grounded, reliable, and applicable. Schools emphasizing STEM disciplines often operate implicitly within a realist framework.'},
+          {heading:'Curriculum Design',text:'A realist curriculum centers on natural sciences, mathematics, social sciences, and vocational subjects — disciplines that reveal how the world operates. Arts are valued instrumentally for developing observation and creativity in service of understanding reality more fully. The curriculum is organized logically, building from foundational facts toward complex theoretical understanding.'},
+          {heading:'Classroom Practice',text:'Realist classrooms are structured and evidence-driven. Teachers present factual information systematically, use demonstrations, laboratory experiments, and real-world case studies. Field trips, dissections, physical models, and multimedia presentations all serve the realist goal of grounding learning in observable reality. Abstract discussion without empirical grounding is considered educationally insufficient.'},
+          {heading:'Assessment Philosophy',text:'Realists favor objective, criterion-referenced assessment — tests, laboratory reports, and performance tasks that measure what students actually know and can do. Reliability and validity are paramount. Standardized examinations are viewed positively insofar as they measure real, verifiable competencies.'},
+          {heading:'Critique and Limitations',text:'Critics argue that realism, in its pure form, reduces education to fact accumulation and can neglect creativity, emotional intelligence, and critical consciousness. When taken to extremes, realist pedagogy may produce technically skilled but ethically unreflective individuals — able to describe the world but not to question its injustices.'},
+        ],
+        concepts:['Aristotle','Empiricism','Scientific Method','STEM','Objective Knowledge'],
+        reflection:'Reflect: How do you balance empirical rigor with creative exploration in your subject? Does the scientific method offer a model for all forms of learning?'
+      }
+    ]
+  },
+  {
+    id:'pragmatism',
+    name:'Pragmatism',
+    icon:'⚙️',
+    brief:'Knowledge is validated by its practical consequences; learning by doing.',
+    color:'#c9a84c',
+    pages:[
+      {
+        title:'Pragmatism & Experiential Learning',
+        content:[
+          {heading:'Philosophical Foundations',text:'Pragmatism, developed primarily by American philosophers Charles Sanders Peirce, William James, and John Dewey, asserts that the truth and value of ideas are determined by their practical consequences. An idea is "true" insofar as it works — it solves problems, guides effective action, and enables human flourishing. For education, this is revolutionary: learning must be grounded in real experience, and the test of education is its usefulness in democratic life.'},
+          {heading:'Dewey\'s Educational Vision',text:'John Dewey\'s Democracy and Education (1916) remains the most influential articulation of pragmatist pedagogy. Dewey argued that the school must be an embryonic community — a microcosm of democratic society. Children learn best through active engagement with problems that matter, through collaborative inquiry, and through reflecting on experience. "Learning by doing" is not merely a slogan; it reflects Dewey\'s conviction that knowledge is inseparable from action.'},
+          {heading:'Experiential Learning Cycle',text:'David Kolb later formalized Dewey\'s insights into the Experiential Learning Cycle: concrete experience → reflective observation → abstract conceptualization → active experimentation. This cycle describes how genuine learning happens — not through passive reception of information, but through an ongoing dialectic between experience and reflection. Project-based learning, problem-based learning, and case studies all embody this cycle.'},
+          {heading:'Curriculum as Experience',text:'A pragmatist curriculum is problem-centered rather than subject-centered. Disciplines are not taught in isolation but integrated around real problems — environmental challenges, community needs, historical questions — that require students to draw on multiple domains of knowledge. The curriculum evolves with the changing needs of society and the genuine interests and questions of students.'},
+          {heading:'Assessment in Pragmatism',text:'Pragmatist assessment is authentic and performance-based. Rather than abstract examinations, students are assessed through their ability to apply knowledge to real-world challenges — through projects, portfolios, exhibitions, and community service. The question is not "what does this student know?" but "what can this student do with what they know?"'},
+          {heading:'NEP 2020 Connection',text:'NEP 2020\'s emphasis on experiential learning, activity-based pedagogy, project-based learning, and vocational integration is deeply pragmatist in spirit. The policy\'s vision of competency-based education — focused on what students can actually do — aligns with Dewey\'s insistence that education must prepare students for real democratic participation, not merely for examination performance.'},
+        ],
+        concepts:['John Dewey','Learning by Doing','Project-Based Learning','Experiential Cycle','Democracy'],
+        reflection:'Reflect: Think of a concept you teach. How might you redesign the lesson so students encounter it through a real problem they want to solve?'
+      }
+    ]
+  },
+  {
+    id:'constructivism',
+    name:'Constructivism',
+    icon:'🧱',
+    brief:'Learners actively construct knowledge through experience and social interaction.',
+    color:'#7b4db5',
+    pages:[
+      {
+        title:'Constructivism',
+        content:[
+          {heading:'The Core Idea',text:'Constructivism holds that knowledge is not transmitted from teacher to student like water poured into a vessel; rather, it is actively built by each learner through their engagement with experiences, materials, and other people. Jean Piaget\'s cognitive constructivism and Lev Vygotsky\'s social constructivism together form the theoretical backbone of modern learner-centered pedagogy. Both thinkers, through different emphases, insist that learning is fundamentally an active, constructive process.'},
+          {heading:'Piaget\'s Cognitive Stages',text:'Piaget identified four stages of cognitive development — sensorimotor, preoperational, concrete operational, formal operational — through which children\'s capacity for abstract reasoning gradually matures. Each stage has distinct learning capacities and limitations. Constructivist teachers design instruction that respects these stages, providing concrete manipulatives for young learners and scaffolding abstract reasoning for older ones. Crucially, Piaget saw learners as scientists — naturally curious beings who test, revise, and expand their mental models of the world.'},
+          {heading:'Vygotsky\'s Zone of Proximal Development',text:'Vygotsky\'s concept of the Zone of Proximal Development (ZPD) — the space between what a learner can do independently and what they can achieve with guidance — is among the most practically influential ideas in education. It implies that the most effective teaching targets this zone: neither too easy (no growth) nor too difficult (overwhelming), but challenging enough to require support. Scaffolding — the gradual withdrawal of teacher support as competence grows — is the pedagogical application of ZPD.'},
+          {heading:'Social Learning and Dialogue',text:'For social constructivists, knowledge is co-created through dialogue, collaborative problem-solving, and cultural participation. The classroom is a community of inquiry where students build shared understanding through discussion, debate, and collaborative projects. Peer teaching, cooperative learning structures, and Socratic seminars all operationalize social constructivist principles.'},
+          {heading:'Assessment Implications',text:'Constructivist assessment is formative, ongoing, and focused on the process of meaning-making as much as the product. Portfolios, reflective journals, concept maps, and performance tasks reveal how students are constructing understanding. The teacher assesses not just what students know, but how they think — the quality of their reasoning, the sophistication of their questions.'},
+        ],
+        concepts:['Piaget','Vygotsky','ZPD','Scaffolding','Active Learning','Collaborative Inquiry'],
+        reflection:'Reflect: What prior knowledge do your students bring to your next topic? How can you design an activity that connects new content to their existing mental models?'
+      }
+    ]
+  },
+  {
+    id:'humanism',
+    name:'Humanism',
+    icon:'❤️',
+    brief:'Education must develop the whole person; learner needs, dignity, and self-actualization are paramount.',
+    color:'#c95a4c',
+    pages:[
+      {
+        title:'Humanism in Education',
+        content:[
+          {heading:'Philosophical Origins',text:'Educational humanism draws from Renaissance thought, existentialist philosophy, and humanistic psychology — particularly Abraham Maslow\'s hierarchy of needs and Carl Rogers\'s person-centered therapy. At its core, humanism insists that education must address the whole person: intellect, emotion, creativity, social connection, and spiritual development. The fundamental aim is human flourishing — what Aristotle called eudaimonia — not merely academic achievement or economic productivity.'},
+          {heading:'Maslow\'s Hierarchy and Education',text:'Maslow\'s hierarchy reminds educators that students cannot engage in higher-order learning when their basic needs — for safety, belonging, esteem — are unmet. A child who is hungry, bullied, or chronically anxious cannot focus on abstract reasoning or creative exploration. Humanistic educators attend to the whole child, recognizing that emotional well-being and a sense of belonging are preconditions for intellectual growth.'},
+          {heading:'Rogers\' Student-Centered Learning',text:'Carl Rogers argued that the most powerful learning occurs when students feel genuinely respected, understood, and free to direct their own educational journeys. Teacher authenticity, unconditional positive regard, and empathic understanding are the conditions that unlock deep, self-directed learning. In Rogerian classrooms, teachers are facilitators rather than authorities — their role is to create conditions in which students\' natural curiosity and self-actualization can flourish.'},
+          {heading:'Curriculum and Classroom Practice',text:'Humanistic curricula include not only academic subjects but arts, physical education, social-emotional learning, and community service. Classrooms are safe, inclusive spaces where student voices are honored. Choice, autonomy, and personal relevance guide lesson design. Teachers differentiate instruction, respect diverse learning styles, and create opportunities for students to pursue their passions.'},
+          {heading:'Critique',text:'Critics argue that humanism\'s emphasis on individual self-actualization can understate structural barriers — poverty, discrimination, systemic inequity — that constrain individual flourishing. A child\'s potential cannot be fully realized through inner development alone; structural change is also necessary. Critical pedagogues like Paulo Freire take humanism\'s concern for human dignity further, arguing that genuine humanization requires challenging oppressive social structures.'},
+        ],
+        concepts:['Maslow','Rogers','Self-Actualization','Whole Child','Student-Centered','Empathy'],
+        reflection:'Reflect: In what ways does your classroom honor the emotional and relational needs of students alongside their intellectual development? What one change could make it more humanistic?'
+      }
+    ]
+  },
+  {
+    id:'critical',
+    name:'Critical Pedagogy',
+    icon:'✊',
+    brief:'Education is political; it must conscientize students to challenge oppressive structures.',
+    color:'#c97a1d',
+    pages:[
+      {
+        title:'Critical Pedagogy',
+        content:[
+          {heading:'Theoretical Foundations',text:'Critical pedagogy, most powerfully articulated by Brazilian educator Paulo Freire in Pedagogy of the Oppressed (1968), insists that education is never neutral. Every curriculum, every classroom practice, every assessment system either reinforces or challenges existing power structures. Freire\'s devastating critique of "banking education" — the practice of depositing pre-packaged knowledge into passive students — argues that this model dehumanizes learners and perpetuates the status quo of social inequality.'},
+          {heading:'Conscientization and Praxis',text:'Freire introduced the concept of conscientization (conscientização) — the process by which individuals develop critical awareness of the social, political, and economic forces shaping their lives. Once conscientized, learners are equipped to challenge and transform unjust conditions. This awareness must be coupled with praxis — the dialectical relationship between critical reflection and transformative action. Education without action is mere verbalism; action without reflection is blind activism.'},
+          {heading:'Problem-Posing Education',text:'In contrast to banking education, Freire proposed problem-posing education: students and teachers together investigate the real, lived contradictions of their social world. The curriculum emerges from the genuine questions and struggles of the community. This dialogical method positions students as co-investigators rather than passive recipients, and the teacher as a co-learner rather than an authority figure.'},
+          {heading:'Contemporary Applications',text:'Contemporary critical pedagogy extends Freire\'s insights to address intersecting systems of oppression — racism, sexism, caste discrimination, ableism, and colonialism. In the Indian context, critical pedagogy demands attention to caste-based exclusion, gender inequality in educational access, and the reproduction of class privilege through elite schooling. NEP 2020\'s emphasis on equity and inclusion resonates with critical pedagogy\'s core commitments.'},
+          {heading:'Assessment and Power',text:'Critical pedagogy interrogates assessment as a technology of power. Who decides what counts as knowledge? Whose language, culture, and experiences are reflected in examinations? Critical educators advocate for community-based assessment, self-evaluation, and democratic participation in curriculum development as ways of disrupting the reproduction of educational inequality.'},
+        ],
+        concepts:['Freire','Conscientization','Praxis','Banking Education','Problem-Posing','Social Justice'],
+        reflection:'Reflect: Whose perspectives are present — and whose are absent — in the curriculum you teach? What would it look like to make your classroom a space of critical questioning?'
+      }
+    ]
+  },
+  {
+    id:'existentialism',
+    name:'Existentialism',
+    icon:'🌅',
+    brief:'Education must cultivate individual authenticity, freedom, and responsibility.',
+    color:'#4a4ab5',
+    pages:[
+      {
+        title:'Existentialism in Learning',
+        content:[
+          {heading:'Philosophical Core',text:'Existentialism — associated with thinkers like Jean-Paul Sartre, Simone de Beauvoir, Albert Camus, and in education, Maxine Greene — places individual freedom, choice, and responsibility at the center of the human condition. Sartre\'s famous declaration that "existence precedes essence" means there is no pre-given human nature or divine blueprint; human beings create themselves through their choices and commitments. This has radical implications for education.'},
+          {heading:'Authenticity and Self-Creation',text:'Existentialist education aims above all to cultivate authentic selfhood — the capacity to live honestly with one\'s freedom and accept responsibility for one\'s choices. Education that imposes a fixed identity, that tells students who they are and what to value, is a form of what Sartre called "bad faith." Instead, schools should create conditions for genuine self-exploration, creative self-expression, and courageous confrontation with existential questions.'},
+          {heading:'Maxine Greene and Aesthetic Education',text:'Philosopher Maxine Greene argued that encounters with art — literature, music, visual art, theatre — are uniquely powerful existential experiences. Art disrupts habitual perceptions, awakens moral imagination, and creates what Greene called "wide-awakeness" — a heightened attention to possibility and injustice. In her vision, aesthetic education is not a luxury but a necessity for democratic life.'},
+          {heading:'Classroom Implications',text:'Existentialist classrooms privilege student choice, personal projects, and reflective writing over prescribed content and standardized tests. Students are encouraged to explore questions that genuinely matter to them, to confront difficult truths about human existence — mortality, suffering, responsibility — and to develop their unique voices and perspectives. The teacher honors students\' subjectivity and creates space for authentic encounter.'},
+          {heading:'Tension with Systems',text:'Existentialism stands in perpetual tension with educational systems organized around standardization, uniformity, and measurable outcomes. The existentialist educator must navigate this tension — honoring individual authenticity within institutional constraints — without either surrendering to the system or becoming paralyzed by it.'},
+        ],
+        concepts:['Sartre','Authenticity','Freedom','Greene','Aesthetic Education','Self-Creation'],
+        reflection:'Reflect: In what moments does your classroom allow students to genuinely be themselves — to explore their own questions rather than yours? How might you expand these spaces?'
+      }
+    ]
+  },
+  {
+    id:'essentialism',
+    name:'Essentialism vs Progressivism',
+    icon:'🔄',
+    brief:'A central tension in education between transmitting core knowledge and fostering student growth.',
+    color:'#4aaa80',
+    pages:[
+      {
+        title:'Essentialism vs Progressivism',
+        content:[
+          {heading:'The Central Tension',text:'No debate has shaped modern education more persistently than the conflict between essentialism and progressivism. Essentialism holds that there is a core body of knowledge and skills — the "essentials" of a culture and a discipline — that all students must master. Progressivism, by contrast, argues that education should follow the interests, needs, and developmental readiness of the child, prioritizing process and experience over predetermined content.'},
+          {heading:'The Essentialist Case',text:'Essentialists like E.D. Hirsch argue that cultural literacy — shared knowledge of history, literature, science, and civic life — is essential for social cohesion and individual opportunity. Without a common knowledge base, students from disadvantaged backgrounds are particularly harmed: they lack the cultural capital needed to participate fully in public and professional life. In this view, progressive child-centered approaches inadvertently entrench inequality by failing to transmit the knowledge that empowers upward mobility.'},
+          {heading:'The Progressivist Response',text:'Progressivists counter that an essentialist curriculum often reflects the cultural preferences of the dominant group, marginalizing the experiences and knowledge systems of minority communities. Moreover, a curriculum organized around fixed content stifles creativity, fails to develop transferable thinking skills, and ill-prepares students for a rapidly changing world. What students need most is not the accumulation of facts but the capacity to inquire, adapt, collaborate, and create.'},
+          {heading:'NEP 2020\'s Attempted Synthesis',text:'NEP 2020 navigates this tension through a both/and rather than either/or approach. It maintains core content standards across subjects while simultaneously demanding pedagogical transformation toward experiential, inquiry-based learning. The policy insists on foundational literacy and numeracy as non-negotiable — an essentialist commitment — while also embracing multidisciplinary, project-based, and culturally responsive approaches — progressive commitments.'},
+          {heading:'Resolution in Practice',text:'Effective teachers do not choose between transmission and inquiry; they blend them intelligently. Core knowledge provides the material for inquiry; inquiry deepens and extends core knowledge. The tension is productive rather than paralyzing — it is the engine of ongoing pedagogical reflection and reform.'},
+        ],
+        concepts:['Hirsch','Cultural Literacy','Dewey','Child-Centered','Curriculum Tension','Synthesis'],
+        reflection:'Reflect: On a typical day, how much of your teaching is transmission-oriented and how much is inquiry-oriented? What would a more conscious balance look like?'
+      }
+    ]
+  },
+  {
+    id:'cbe',
+    name:'Competency-Based Education',
+    icon:'🎯',
+    brief:'Mastery of defined competencies drives progression; outcomes-focused, flexible pacing.',
+    color:'#2aa8c9',
+    pages:[
+      {
+        title:'Competency-Based Education Philosophy',
+        content:[
+          {heading:'Defining CBE',text:'Competency-Based Education (CBE) restructures schooling around the mastery of clearly defined competencies — observable, measurable combinations of knowledge, skills, attitudes, and values. Rather than progressing based on time spent in class, students advance when they demonstrate genuine mastery. This represents a fundamental shift from input-based education (covering the syllabus) to outcome-based education (demonstrating actual competence).'},
+          {heading:'Philosophical Roots',text:'CBE draws on behaviorist traditions in educational psychology — particularly B.F. Skinner\'s programmed instruction and Ralph Tyler\'s objectives-based curriculum model. However, modern CBE has been substantially enriched by constructivist insights, recognizing that competencies are not merely behavioral outputs but involve complex cognitive structures, metacognitive awareness, and the ability to transfer learning to novel contexts.'},
+          {heading:'NEP 2020 and Competency-Based Learning',text:'NEP 2020 makes competency-based assessment a cornerstone of its reform agenda. The policy calls for a shift from "rote-based, textbook-centric testing" toward assessments that evaluate genuine competencies — conceptual understanding, critical thinking, creativity, communication, and collaboration. The Holistic Progress Card replaces marks-based report cards with multidimensional competency profiles.'},
+          {heading:'Implementation Challenges',text:'CBE faces significant implementation challenges in large, resource-constrained school systems like India\'s. Defining competencies requires consensus across disciplines and levels. Assessing competencies authentically demands teacher capacity, time, and tools that are often unavailable. The risk of reducing competencies to easily-tested behaviors — rather than genuinely complex capabilities — is ever-present.'},
+          {heading:'Classroom Practice',text:'CBE classrooms use mastery learning principles: students receive instruction, practice, and feedback until they demonstrate competency, then move on. Differentiated instruction, formative assessment, personalized feedback, and multiple pathways to mastery are characteristic features. Technology increasingly enables adaptive learning pathways tailored to individual students\' competency profiles.'},
+        ],
+        concepts:['Mastery Learning','Outcomes-Based','Tyler','Holistic Progress Card','Assessment Reform','NEP 2020'],
+        reflection:'Reflect: Choose one competency you aim to develop in your students. How would you know — truly know — when a student has mastered it? What evidence would you accept?'
+      }
+    ]
+  },
+  {
+    id:'holistic',
+    name:'Holistic Education',
+    icon:'🌿',
+    brief:'Education must develop all dimensions of the person: intellectual, emotional, social, physical, spiritual.',
+    color:'#4a9e4a',
+    pages:[
+      {
+        title:'Holistic Education Theory',
+        content:[
+          {heading:'Beyond Cognitive Development',text:'Holistic education challenges the dominant cognitive bias of modern schooling — the reduction of education to the development of intellectual skills measurable through examinations. Drawing on indigenous educational traditions, Waldorf and Montessori approaches, and contemplative traditions from multiple cultures, holistic education insists that genuine human development encompasses intellectual, emotional, social, physical, aesthetic, ethical, and spiritual dimensions.'},
+          {heading:'Multiple Intelligences',text:'Howard Gardner\'s theory of Multiple Intelligences — linguistic, logical-mathematical, spatial, musical, bodily-kinesthetic, interpersonal, intrapersonal, naturalistic, existential — provides a psychological framework for holistic education. If human intelligence is genuinely multidimensional, a curriculum that develops only logical-linguistic abilities is not merely incomplete but actively unjust — it systematically undervalues and fails to develop the capacities of many learners.'},
+          {heading:'Social-Emotional Learning',text:'The CASEL framework identifies five core social-emotional competencies: self-awareness, self-management, social awareness, relationship skills, and responsible decision-making. Research consistently demonstrates that SEL programs improve academic achievement, reduce behavioral problems, and develop the interpersonal capacities students need for healthy relationships, citizenship, and professional life.'},
+          {heading:'NEP 2020\'s Holistic Vision',text:'NEP 2020\'s vision of "holistic development" directly challenges the examination-focused, marks-obsessed culture that has dominated Indian schooling. The policy mandates co-curricular activities, physical education, arts education, and community engagement as integral components of education — not peripheral extras. The Holistic Progress Card tracks development across physical, social, emotional, aesthetic, and ethical domains alongside academic achievement.'},
+          {heading:'Contemplative Practices',text:'Increasingly, holistic education incorporates mindfulness, yoga, meditation, and reflective practices drawn from India\'s own rich contemplative traditions. These practices cultivate attention, emotional regulation, and self-awareness — foundational capacities for all learning. NEP 2020 explicitly endorses the integration of yoga and mindfulness into school life.'},
+        ],
+        concepts:['Multiple Intelligences','SEL','CASEL','Waldorf','Montessori','Contemplative Learning'],
+        reflection:'Reflect: Which dimensions of your students — emotional, creative, physical, social — receive the least attention in your current practice? What one activity this week might honor those dimensions?'
+      }
+    ]
+  }
+];
+
+// ============================================================
+// SCENARIO MATRIX
+// ============================================================
+const scenarioMatrix = [
+  {
+    id:'s1',
+    context:'Grade 9 History class with chronically low engagement. Students are passive, avoiding eye contact and refusing to participate in class discussions.',
+    strategies:[
+      {id:'a',label:'Socratic Dialogue',desc:'Pose provocative questions about the historical period; let students work toward understanding through guided discussion.',best:['idealism','critical']},
+      {id:'b',label:'Primary Source Investigation',desc:'Students examine original documents, maps, and photographs; construct their own historical narrative.',best:['realism','constructivism']},
+      {id:'c',label:'Community Connection Project',desc:'Students identify local historical events or figures; create a documentary or exhibition for their community.',best:['pragmatism','cbe']},
+      {id:'d',label:'Personal Reflection Journal',desc:'Students connect historical events to their own family histories and identity; share selectively.',best:['humanism','existentialism']},
+      {id:'e',label:'Structured Debate on Historical Interpretation',desc:'Teams argue competing historical interpretations using evidence; teacher facilitates rather than judges.',best:['critical','idealism']},
+    ]
+  },
+  {
+    id:'s2',
+    context:'Grade 7 Mathematics: students understand procedures but cannot apply concepts to real problems. High on algorithmic performance, very low on conceptual transfer.',
+    strategies:[
+      {id:'a',label:'Manipulatives and Visual Models',desc:'Use physical objects, geometry boards, and visual representations before introducing symbols.',best:['constructivism','realism']},
+      {id:'b',label:'Real-World Problem-Solving',desc:'Students tackle genuine problems from their community — budgeting, measurement, data analysis.',best:['pragmatism','cbe']},
+      {id:'c',label:'Collaborative Inquiry Groups',desc:'Students in mixed groups investigate mathematical relationships; surface misconceptions through peer dialogue.',best:['constructivism','humanism']},
+      {id:'d',label:'Philosophical Discussion on Number',desc:'Explore what mathematics is, why it works, whether it is discovered or invented.',best:['idealism','existentialism']},
+      {id:'e',label:'Competency Assessment Redesign',desc:'Replace chapter tests with a performance task where students use mathematics to solve an authentic challenge.',best:['cbe','pragmatism']},
+    ]
+  },
+  {
+    id:'s3',
+    context:'Grade 11 Science class in a low-resource school with poor laboratory facilities. Students lack access to experiments but are expected to understand complex concepts.',
+    strategies:[
+      {id:'a',label:'Thought Experiments and Conceptual Analysis',desc:'Use carefully constructed thought experiments and Socratic questioning to develop conceptual understanding without equipment.',best:['idealism','constructivism']},
+      {id:'b',label:'Community Science Investigation',desc:'Students investigate locally observable phenomena — water quality, plant growth, weather patterns — without formal laboratory equipment.',best:['pragmatism','realism']},
+      {id:'c',label:'Peer Teaching and Jigsaw',desc:'Students each master one concept deeply and teach it to peers through creative demonstrations.',best:['constructivism','humanism']},
+      {id:'d',label:'Critical Analysis of Science Textbooks',desc:'Students examine whose knowledge is in textbooks, what is excluded, and how science affects their community.',best:['critical','existentialism']},
+      {id:'e',label:'Competency-Based Digital Projects',desc:'Students produce multimedia demonstrations of scientific concepts, assessed against defined competency criteria.',best:['cbe','pragmatism']},
+    ]
+  }
+];
+
+// ============================================================
+// ASSESSMENT MODELS
+// ============================================================
+const assessmentModels = [
+  {
+    id:'marks',
+    name:'Marks-Based Evaluation',
+    icon:'📊',
+    desc:'Numerical scores on standardized examinations determine student achievement and grade promotion.',
+    metrics:{motivation:45,equity:30,retention:40,sustainability:35,clarity:85,teacherLoad:70}
+  },
+  {
+    id:'cbe_assess',
+    name:'Competency-Based Evaluation',
+    icon:'🎯',
+    desc:'Student progress is measured against defined competencies; advancement based on demonstrated mastery.',
+    metrics:{motivation:70,equity:65,retention:75,sustainability:65,clarity:80,teacherLoad:55}
+  },
+  {
+    id:'holistic_portfolio',
+    name:'Holistic Portfolio Model',
+    icon:'📁',
+    desc:'Multi-dimensional evidence collection across academic, creative, social, and emotional dimensions.',
+    metrics:{motivation:85,equity:80,retention:85,sustainability:75,clarity:60,teacherLoad:40}
+  }
+];
+
+// ============================================================
+// DILEMMAS
+// ============================================================
+const dilemmas = [
+  {
+    id:'d1',
+    type:'Discipline Issue',
+    scenario:'A student frequently disrupts class but reveals in private that they are struggling at home. Their behavior affects the entire class. How do you respond?',
+    options:[
+      {label:'Strict disciplinary action with clear consequences',philosophy:'Realism/Essentialism',alignment:55,ethics:60},
+      {label:'One-on-one counseling and modified support plan',philosophy:'Humanism',alignment:90,ethics:92},
+      {label:'Involve the class in creating shared community norms',philosophy:'Critical/Constructivism',alignment:80,ethics:85},
+      {label:'Connect behavior to social structures; advocate for family support',philosophy:'Critical Pedagogy',alignment:75,ethics:88}
+    ]
+  },
+  {
+    id:'d2',
+    type:'Equity Conflict',
+    scenario:'Your school has limited resources. You can invest them in either advanced enrichment for high-achieving students or remedial support for struggling students. What do you choose?',
+    options:[
+      {label:'Invest in high achievers — maximize excellence',philosophy:'Essentialism',alignment:50,ethics:40},
+      {label:'Prioritize struggling students — equity first',philosophy:'Critical Pedagogy/Humanism',alignment:85,ethics:90},
+      {label:'Create a peer mentoring system where strong students support weaker ones',philosophy:'Constructivism/Pragmatism',alignment:88,ethics:92},
+      {label:'Advocate to authorities for additional resources; refuse the false choice',philosophy:'Critical Pedagogy',alignment:82,ethics:95}
+    ]
+  },
+  {
+    id:'d3',
+    type:'Curriculum Overload',
+    scenario:'The prescribed syllabus is impossibly vast. You cannot cover it meaningfully and develop genuine understanding. What do you do?',
+    options:[
+      {label:'Race through the syllabus — cover everything superficially',philosophy:'Essentialism (distorted)',alignment:30,ethics:35},
+      {label:'Select the most conceptually important content; go deep',philosophy:'Idealism/Constructivism',alignment:85,ethics:80},
+      {label:'Negotiate with students on what matters most; prioritize together',philosophy:'Critical/Pragmatism',alignment:78,ethics:88},
+      {label:'Document the problem systematically and escalate to curriculum authorities',philosophy:'Critical Pedagogy',alignment:70,ethics:90}
+    ]
+  }
+];
+
+// ============================================================
+// NEP 2020 MAPPING DATA
+// ============================================================
+const nepMapping = [
+  {
+    id:'fln',
+    title:'Foundational Literacy & Numeracy (FLN)',
+    desc:'Ensuring all children achieve basic reading, writing, and numeracy skills by Grade 3.',
+    philosophy:'Constructivism, Realism, Pragmatism',
+    theory:'Mastery learning; Piaget\'s concrete operational stage; Vygotsky\'s ZPD for early learners',
+    classroom:'Activity-based learning, manipulatives, phonics instruction, peer reading, daily reading programs, assessment for learning',
+    equity:'Addresses the most fundamental educational inequality; prioritizes historically underserved children'
+  },
+  {
+    id:'assessment',
+    title:'Assessment Reform & Holistic Progress Card',
+    desc:'Moving from marks-based ranking to multidimensional competency assessment.',
+    philosophy:'Humanism, Constructivism, Competency-Based Education',
+    theory:'Formative assessment theory; Multiple Intelligence framework; Authentic assessment',
+    classroom:'Portfolio assessment, observation records, self-assessment tools, peer evaluation, project-based documentation',
+    equity:'Reduces anxiety-driven rote learning; honors diverse abilities and intelligences'
+  },
+  {
+    id:'multidisciplinary',
+    title:'Multidisciplinary & Flexible Curriculum',
+    desc:'Breaking rigid stream boundaries; enabling students to pursue diverse subject combinations.',
+    philosophy:'Pragmatism, Holistic Education, Existentialism',
+    theory:'Dewey\'s curriculum integration; Gardner\'s Multiple Intelligences; experiential learning',
+    classroom:'Cross-subject projects, inquiry units spanning disciplines, student-chosen electives, community-based learning',
+    equity:'Dismantles the artificial hierarchy privileging science over arts; expands pathways for diverse talents'
+  },
+  {
+    id:'vocational',
+    title:'Vocational & Skill Integration',
+    desc:'Integrating vocational skills from Grade 6 onwards; removing social stigma from manual work.',
+    philosophy:'Pragmatism, Constructivism, Critical Pedagogy',
+    theory:'Dewey\'s hands-on learning; Gandhian Basic Education (Nai Talim); experiential cycle',
+    classroom:'Apprenticeships, skill labs, community projects, maker spaces, entrepreneurship projects',
+    equity:'Challenges caste-based hierarchy of knowledge; dignifies all forms of labor and skill'
+  },
+  {
+    id:'mother_tongue',
+    title:'Mother Tongue & Multilingual Education',
+    desc:'Prioritizing home language instruction in early years; protecting linguistic diversity.',
+    philosophy:'Critical Pedagogy, Humanism, Constructivism',
+    theory:'Cummins\' interdependence hypothesis; cultural-historical theory; linguistic rights framework',
+    classroom:'Bilingual instruction, local literature and folklore, mother tongue literacy before second language',
+    equity:'Addresses systematic discrimination against vernacular-medium students; honors linguistic identities'
+  },
+  {
+    id:'play_based',
+    title:'Play-Based & Activity-Based Early Learning',
+    desc:'Replacing formal instruction in early years with play, exploration, and activity.',
+    philosophy:'Constructivism, Humanism, Pragmatism',
+    theory:'Piaget\'s sensorimotor/preoperational stages; Vygotsky on play; Montessori method',
+    classroom:'Learning centers, free play time, dramatic play, outdoor exploration, art and music integration',
+    equity:'Counters pressure to accelerate academic learning prematurely; honors childhood'
+  }
+];
+
+// ============================================================
+// CURRICULUM RULES
+// ============================================================
+const curriculumRules = {
+  idealism:{approach:'Socratic dialogue and great texts exploration',assessment:'Essays, oral examinations, conceptual discussions',outcomes:['Critical reasoning and argumentation','Ethical reflection and character formation','Deep understanding of core ideas','Appreciation of intellectual heritage','Self-discipline and independent thinking']},
+  realism:{approach:'Systematic content delivery with empirical investigation',assessment:'Objective tests, laboratory reports, demonstrations',outcomes:['Factual mastery and scientific reasoning','Observation and data analysis skills','Practical application of knowledge','Evidence-based argumentation','Disciplinary proficiency']},
+  pragmatism:{approach:'Project-based and problem-centered learning with real-world application',assessment:'Performance tasks, portfolios, community projects',outcomes:['Applied problem-solving competency','Collaborative and communication skills','Democratic participation capacity','Flexible, transferable thinking','Community engagement orientation']},
+  constructivism:{approach:'Collaborative inquiry with scaffolded discovery and peer dialogue',assessment:'Concept maps, portfolios, peer assessment, self-reflection',outcomes:['Deep conceptual understanding','Metacognitive awareness','Collaborative knowledge construction','Creative thinking and inquiry skills','Self-directed learning capacity']},
+  humanism:{approach:'Student-centered exploration with emotional and relational support',assessment:'Self-assessment, portfolio, narrative evaluation',outcomes:['Self-awareness and emotional intelligence','Intrinsic motivation and love of learning','Interpersonal and social skills','Creative and aesthetic development','Holistic personal growth']},
+  critical:{approach:'Problem-posing pedagogy examining social issues through multiple perspectives',assessment:'Community action projects, critical reflection, social analysis',outcomes:['Critical consciousness of social structures','Agency and capacity for change','Collaborative justice-oriented action','Media and information literacy','Democratic participation skills']},
+  existentialism:{approach:'Personal project-based learning with authentic self-expression',assessment:'Personal portfolios, reflective narratives, individual presentations',outcomes:['Authentic identity development','Creative self-expression','Moral responsibility and agency','Capacity to live with uncertainty','Personal meaning-making']},
+  essentialism:{approach:'Structured content delivery building sequential foundational knowledge',assessment:'Criterion-referenced tests, standardized examinations',outcomes:['Cultural literacy and shared knowledge base','Disciplinary foundations','Academic readiness for higher education','Common civic knowledge','Reading and writing proficiency']},
+  cbe:{approach:'Mastery learning with multiple pathways and personalized progression',assessment:'Competency demonstrations, performance rubrics, adaptive assessments',outcomes:['Demonstrated, transferable competencies','Personalized learning trajectories','Self-monitoring and self-correction','Evidence-based confidence','Readiness for professional and civic life']},
+  holistic:{approach:'Multi-dimensional development integrating arts, body, emotions, and intellect',assessment:'Portfolio, performance, observation, peer and self-assessment across domains',outcomes:['Whole-person development','Emotional and social intelligence','Creative and aesthetic capacity','Physical health and wellbeing','Ethical and spiritual maturity']}
+};
+
+// ============================================================
+// APP STATE
+// ============================================================
+let selectedPhilosophy = null;
+let selectedStrategy = null;
+let currentScenarioIndex = 0;
+let identityAnswers = {};
+let frameworkSection = 'curriculum';
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function openSection(pageId) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById(pageId);
+  if(page) {
+    page.classList.add('active');
+    window.scrollTo(0,0);
+  }
+  if(pageId === 'foundations-page') buildPhilosophyPages();
+  if(pageId === 'simulation-page') buildSimulation();
+  if(pageId === 'comparison-page') buildComparison();
+  if(pageId === 'framework-page') buildFramework();
+}
+
+// ============================================================
+// SECTION 1: PHILOSOPHY PAGES
+// ============================================================
+function buildPhilosophyPages() {
+  const nav = document.getElementById('philNav');
+  const contents = document.getElementById('philContents');
+  if(nav.children.length > 0) return;
+
+  const allPages = [
+    {title:'What is Philosophy of Education?', philId:'intro'},
+    ...philosophyProfiles.map(p => ({title:p.name, philId:p.id})),
+    {title:'Assessment Philosophy Shift', philId:'assessment_phi'},
+    {title:'Knowledge vs Skill Debate', philId:'knowledge_skill'},
+    {title:'Role of Teacher Across Philosophies', philId:'teacher_role'},
+    {title:'Role of Student Across Philosophies', philId:'student_role'},
+    {title:'Curriculum Design Implications', philId:'curriculum_phi'},
+    {title:'Educational Equity & Justice', philId:'equity'},
+    {title:'NEP 2020 – A Philosophical Synthesis', philId:'nep_synth'}
+  ];
+
+  const introPages = [
+    {
+      id:'intro',
+      title:'What is Philosophy of Education?',
+      content:[
+        {heading:'Defining the Discipline',text:'Philosophy of education is the branch of philosophical inquiry concerned with the nature, aims, and problems of education. It examines foundational questions that educators, policymakers, and societies must confront: What is the purpose of education? What should be taught, and why? How should children be treated in schools? What is the relationship between education and social justice? These are not merely theoretical questions — they have immediate, practical implications for every classroom interaction, every curriculum decision, and every policy choice.'},
+        {heading:'Why Teachers Need Philosophy',text:'Many educators believe philosophy is abstract and disconnected from the practical challenges they face. In reality, every teacher operates from an implicit philosophy — a set of assumptions about what learning is, what knowledge matters, what students are capable of, and what schools are for. Making these assumptions explicit and subjecting them to critical examination is one of the most powerful forms of professional development available. The teacher who understands why they teach as they do is far better equipped to teach well.'},
+        {heading:'Major Schools of Thought',text:'Educational philosophy encompasses several major traditions: Idealism emphasizes eternal truths and intellectual and moral formation; Realism grounds education in the empirical world; Pragmatism prioritizes experience and problem-solving; Constructivism focuses on active knowledge construction; Humanism centers the whole person; Critical Pedagogy connects education to social justice; Existentialism foregrounds individual authenticity. Each tradition illuminates different dimensions of the educational enterprise and offers distinct guidance for practice.'},
+        {heading:'The Indian Philosophical Tradition',text:'India\'s own rich philosophical traditions — from the Vedic gurukul system to Tagore\'s Shantiniketan, Gandhi\'s Nai Talim, and Ambedkar\'s insistence on education as liberation — offer distinct and powerful alternatives to Western-centric educational philosophy. NEP 2020 explicitly draws on these traditions, advocating for an education system that is rooted in Indian culture and values while remaining globally engaged.'},
+        {heading:'Philosophy and Policy',text:'NEP 2020 itself is a philosophical document as much as a policy document. Its vision of holistic, experiential, inquiry-based, equity-focused education reflects specific philosophical commitments — to pragmatism, constructivism, humanism, and critical pedagogy. Understanding these philosophical foundations enables educators to implement the policy\'s spirit rather than merely its letter.'},
+      ],
+      concepts:['Educational Philosophy','Metaphysics','Epistemology','Axiology','NEP 2020'],
+      reflection:'Reflect: Write down three assumptions you hold about what education is for. Where did these assumptions come from? Which philosophical tradition do they most closely align with?'
+    },
+    {
+      id:'assessment_phi',
+      title:'Assessment Philosophy Shift',
+      content:[
+        {heading:'The Crisis of Marks',text:'For decades, Indian education has been dominated by a marks-centric culture that reduces the infinite complexity of human learning to a single percentage. This system, inherited partly from colonial examination structures, generates enormous anxiety, narrows the curriculum, incentivizes rote memorization over genuine understanding, and systematically discriminates against learners whose strengths lie outside the narrow band of linguistic and logical-mathematical intelligence that examinations reward.'},
+        {heading:'Formative vs Summative Assessment',text:'The distinction between formative and summative assessment is philosophically significant. Summative assessment — the examination at the end — judges learning. Formative assessment — the ongoing feedback process — shapes and deepens learning. Research overwhelmingly shows that formative assessment is more powerful than summative for improving learning outcomes. Yet most Indian schools still invest the vast majority of their assessment energy in summative evaluation.'},
+        {heading:'Authentic Assessment',text:'Authentic assessment evaluates students on tasks that mirror real-world demands — projects, performances, presentations, portfolios, community investigations. Unlike multiple-choice tests, authentic tasks require students to integrate knowledge, apply skills, exercise judgment, and communicate effectively. They reveal not just what students know but what students can do — a far more educationally meaningful question.'},
+        {heading:'NEP 2020\'s Assessment Vision',text:'NEP 2020 calls for a fundamental shift in the philosophy of assessment: from stress-inducing, high-stakes, annual examinations to continuous, formative, competency-based evaluation. The Holistic Progress Card replaces marks with multidimensional profiles. Board examinations move toward assessing higher-order skills. Self-assessment and peer assessment are integrated into regular classroom practice.'},
+      ],
+      concepts:['Formative Assessment','Authentic Assessment','Holistic Progress Card','Portfolio','Competency'],
+      reflection:'Reflect: If you had complete freedom to redesign assessment in your class, what would you measure, how would you measure it, and why?'
+    },
+    {
+      id:'knowledge_skill',
+      title:'Knowledge vs Skill Debate',
+      content:[
+        {heading:'A False Binary?',text:'The debate between "knowledge-based" and "skills-based" education has become increasingly polarized and politically charged. Knowledge advocates — like E.D. Hirsch — argue that skills require a rich base of domain-specific knowledge to function; you cannot think critically in a vacuum. Skills advocates counter that in an era of information abundance, knowing how to find, evaluate, and use knowledge matters more than storing it. Both positions contain important truths; the opposition is ultimately false.'},
+        {heading:'What Cognitive Science Says',text:'Cognitive science is clear: expertise requires both rich knowledge and sophisticated skills, deeply intertwined. Working memory — our capacity for conscious thought — is severely limited; we can only manipulate a few pieces of information simultaneously. Long-term memory, by contrast, is effectively unlimited. Expertise involves the gradual transfer of knowledge from effortful conscious processing to automatic, efficient long-term memory — freeing cognitive resources for higher-order thinking.'},
+        {heading:'21st Century Competencies',text:'The World Economic Forum identifies creativity, critical thinking, communication, and collaboration as the core competencies for the 21st century. These are not opposed to knowledge — they require it. Creative thinking requires a rich fund of domain knowledge to draw on. Critical thinking requires specific, contextual knowledge to evaluate evidence. The "4Cs" and disciplinary knowledge are complementary, not competing.'},
+        {heading:'NEP 2020\'s Resolution',text:'NEP 2020 articulates a knowledge-skill integration: it insists on foundational knowledge as non-negotiable while simultaneously demanding pedagogical transformation toward higher-order skill development. The curriculum is to be "reduced" in breadth to allow depth — enabling both genuine understanding and skill development. This reflects the philosophical insight that genuine learning is always simultaneously both.'},
+      ],
+      concepts:['Hirsch','21st Century Skills','Cognitive Load','4Cs','Deep Learning','Integration'],
+      reflection:'Reflect: In your subject, what is the relationship between content knowledge and skill? Can a student think critically about history without knowing history? Can they write well without reading widely?'
+    },
+    {
+      id:'teacher_role',
+      title:'Role of Teacher Across Philosophies',
+      content:[
+        {heading:'The Multi-Philosophical Teacher',text:'Every philosophy assigns the teacher a distinct role, and effective teachers are able to move fluidly among these roles depending on what the moment demands. Understanding the philosophical roots of each role enables teachers to make conscious, purposeful choices rather than defaulting to habitual patterns.'},
+        {heading:'Idealism: The Moral Exemplar',text:'In idealist philosophy, the teacher is first and foremost a model of intellectual and moral excellence — someone whose wisdom and character students aspire to emulate. The teacher\'s authority derives not from institutional position but from demonstrated virtue and deep knowledge. Socratic questioning is the primary pedagogical tool.'},
+        {heading:'Constructivism: The Facilitator and Scaffolder',text:'Constructivist teachers design rich learning environments, pose problems, ask generative questions, and provide scaffolding that supports students in constructing their own understanding. They listen as much as they speak, paying close attention to students\' thinking in order to identify misconceptions and extend understanding.'},
+        {heading:'Critical Pedagogy: The Co-Investigator',text:'In Freire\'s vision, the teacher relinquishes the position of authority-as-knowledge-holder and becomes a co-investigator — someone who learns alongside students as they together investigate the real contradictions of their shared social world. This demands tremendous humility, political consciousness, and willingness to have one\'s own assumptions challenged.'},
+        {heading:'Humanism: The Empathic Companion',text:'Humanistic teachers prioritize relationship. They know their students as whole persons — their strengths, struggles, dreams, and fears. They create conditions of psychological safety in which students feel genuinely seen and respected. Their most powerful pedagogical tool is not any technique but the quality of their presence and care.'},
+      ],
+      concepts:['Moral Exemplar','Facilitator','Co-Investigator','Scaffolder','Empathic Presence'],
+      reflection:'Reflect: Which of these teacher roles comes most naturally to you? Which is most challenging? What would it take to expand your repertoire?'
+    },
+    {
+      id:'student_role',
+      title:'Role of Student Across Philosophies',
+      content:[
+        {heading:'From Passive to Active',text:'The most significant transformation in 20th-century educational philosophy is the reconceptualization of the student\'s role from passive recipient to active agent. This shift is not merely pedagogical but deeply philosophical: it reflects changing conceptions of what knowledge is, how it is acquired, and what education is for.'},
+        {heading:'Idealism: The Aspiring Intellect',text:'In idealist education, students are understood as rational souls aspiring toward truth and virtue. Their role is disciplined engagement with great ideas — reading, arguing, reasoning — in pursuit of intellectual and moral excellence. Students are expected to bring intellectual seriousness and ethical commitment to their studies.'},
+        {heading:'Pragmatism: The Problem-Solver',text:'Pragmatist students are active problem-solvers and democratic citizens-in-training. They learn by doing — by grappling with real problems, collaborating with peers, reflecting on experience, and taking action. The classroom is a laboratory of democratic life, and students are its junior scientists.'},
+        {heading:'Critical Pedagogy: The Agent of Change',text:'Critical pedagogy calls students to be agents of social transformation. Once conscientized — aware of the structures of oppression shaping their lives — students are positioned not merely to understand the world but to change it. This is a demanding and empowering conception of the student\'s role.'},
+        {heading:'Constructivism: The Active Meaning-Maker',text:'Constructivist students are active builders of knowledge. They bring prior understanding to every learning encounter; they test new ideas against existing mental models; they revise and refine their thinking through experience and dialogue. Their errors are not failures but data — evidence of the ongoing construction process.'},
+      ],
+      concepts:['Active Learner','Co-Investigator','Problem-Solver','Meaning-Maker','Agent of Change'],
+      reflection:'Reflect: What role do your students currently play in your classroom? What role would you like them to play? What would need to change to make that possible?'
+    },
+    {
+      id:'curriculum_phi',
+      title:'Curriculum Design Implications',
+      content:[
+        {heading:'What is Curriculum, Philosophically?',text:'Curriculum is not merely a list of topics to be covered; it is a philosophical document expressing society\'s deepest convictions about what knowledge matters, what human beings are, and what education is for. Every curriculum decision — what to include, what to exclude, how to sequence, how to assess — is a philosophical choice, even when it presents itself as neutral or technical.'},
+        {heading:'Tyler\'s Rational Curriculum',text:'Ralph Tyler\'s four fundamental questions — What educational purposes should the school seek to attain? What learning experiences can be selected? How can these experiences be effectively organized? How can we determine whether purposes are being achieved? — provide a rational framework for curriculum development that has dominated educational planning since the 1940s. Tyler\'s framework reflects a pragmatist-realist blend: clear objectives, evidence-based practices, systematic evaluation.'},
+        {heading:'Critical Curriculum Theory',text:'Critical curriculum theorists like Michael Apple and Henry Giroux ask whose knowledge is in the curriculum and whose is excluded. The official curriculum, they argue, is never neutral; it reflects the cultural capital of dominant groups and systematically marginalizes the knowledge, experience, and perspectives of subordinate groups. Curriculum reform is, in this view, a political act.'},
+        {heading:'NCF 2023 Design Principles',text:'India\'s National Curriculum Framework 2023 is explicitly philosophical, drawing on constructivist, humanist, and critical principles. It emphasizes reduced content load (depth over breadth), integration across disciplines, experiential and inquiry-based learning, and the development of core capacities — critical thinking, creativity, communication, collaboration, and cultural literacy.'},
+      ],
+      concepts:['Tyler','Null Curriculum','Critical Theory','NCF 2023','Apple','Hidden Curriculum'],
+      reflection:'Reflect: What is the hidden curriculum of your school? What values and assumptions does the daily life of your school communicate to students, beyond the formal content?'
+    },
+    {
+      id:'equity',
+      title:'Educational Equity & Justice',
+      content:[
+        {heading:'Equality vs Equity',text:'Educational equality means providing all students with the same resources and opportunities. Educational equity means ensuring that every student receives what they need to reach their potential — which may require different levels and types of support for different students. The equality/equity distinction is crucial: treating unequal situations equally is itself a form of injustice.'},
+        {heading:'Structural Barriers',text:'Educational inequity in India is structural — embedded in caste, class, gender, disability, language, and geographic location. Children from Scheduled Castes, Scheduled Tribes, and Other Backward Classes face systematic disadvantage at every level of the educational system. First-generation learners lack the cultural capital that upper-caste, middle-class children bring to school. Girls face gender-based discrimination in many communities. Children with disabilities encounter inaccessible infrastructure and pedagogy.'},
+        {heading:'Ambedkar and the Right to Education',text:'B.R. Ambedkar\'s insistence that education is the most powerful tool for Dalit liberation remains as urgent today as when he first articulated it. His own life embodied the transformative potential of education in the face of systematic oppression. His vision of education as a tool for social equality and democratic citizenship is a powerful complement to the Western philosophical traditions that dominate educational discourse.'},
+        {heading:'NEP 2020 and Equity',text:'NEP 2020 frames equity as a central concern, not an afterthought. It includes specific provisions for children from Socially and Economically Disadvantaged Groups (SEDGs), girls\' education, children with disabilities, and linguistic minorities. The policy\'s emphasis on mother-tongue instruction in early years directly addresses the systematic disadvantaging of vernacular-medium students.'},
+      ],
+      concepts:['Equity vs Equality','Ambedkar','SEDGs','Inclusion','Social Justice','Caste and Education'],
+      reflection:'Reflect: Who in your current class is most disadvantaged — by family circumstances, language, ability, or social background? What specific, concrete action could you take this week to more equitably support them?'
+    },
+    {
+      id:'nep_synth',
+      title:'NEP 2020 — A Philosophical Synthesis',
+      content:[
+        {heading:'NEP 2020 as Philosophical Document',text:'India\'s National Education Policy 2020 is not merely a technical document outlining administrative reforms; it is an ambitious philosophical statement about the purposes and values of education in a democratic republic. Its 66 pages synthesize insights from multiple philosophical traditions, drawing on pragmatism, constructivism, humanism, critical pedagogy, and India\'s own educational traditions to articulate a coherent vision of education for the 21st century.'},
+        {heading:'From Rote to Reasoning',text:'NEP 2020\'s most fundamental philosophical commitment is the shift from rote memorization to genuine understanding and higher-order thinking. The policy explicitly criticizes "rote-based, textbook-centric" education and calls for pedagogy that develops critical thinking, creativity, scientific temper, and the ability to apply knowledge to novel situations. This reflects constructivist and pragmatist principles about the nature of genuine learning.'},
+        {heading:'Holistic Development as Guiding Value',text:'The policy\'s repeated emphasis on "holistic development" — across intellectual, social, emotional, physical, ethical, and aesthetic dimensions — reflects humanist and holistic education principles. The Holistic Progress Card, the mandatory integration of arts and physical education, the attention to social-emotional learning all embody the conviction that education must develop the whole person, not merely the academic mind.'},
+        {heading:'Equity at the Center',text:'NEP 2020\'s equity commitments — to foundational literacy for all, to inclusive education for children with disabilities, to mother-tongue instruction, to bridge courses for children returning to school — reflect critical pedagogy\'s insistence that education must actively redress, rather than reproduce, structural inequalities.'},
+        {heading:'Indian Philosophical Roots',text:'The policy draws explicitly on India\'s own philosophical traditions: Tagore\'s emphasis on joy and aesthetic experience in learning, Gandhi\'s Nai Talim integrating work and education, and the ancient gurukul tradition\'s emphasis on the teacher-student relationship and holistic formation. This synthesis of global and Indian philosophical traditions is itself philosophically significant — an assertion of educational sovereignty alongside global engagement.'},
+      ],
+      concepts:['NEP 2020','Holistic Development','Equity','Indian Traditions','Critical Thinking','Synthesis'],
+      reflection:'Reflect: Which philosophical tradition most resonates with your own educational values? How might you embody NEP 2020\'s philosophical vision more fully in your daily practice?'
+    }
+  ];
+
+  const allPageData = [introPages[0], ...philosophyProfiles, introPages[1], introPages[2], introPages[3], introPages[4], introPages[5], introPages[6], introPages[7]];
+
+  allPageData.forEach((p, i) => {
+    const tab = document.createElement('button');
+    tab.className = 'phil-tab' + (i===0?' active':'');
+    tab.textContent = p.title || p.name;
+    tab.onclick = () => {
+      document.querySelectorAll('.phil-tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      document.querySelectorAll('.phil-content').forEach(c=>c.classList.remove('active'));
+      document.getElementById('phil-' + i).classList.add('active');
+      window.scrollTo(0,150);
+    };
+    nav.appendChild(tab);
+
+    const div = document.createElement('div');
+    div.className = 'phil-content' + (i===0?' active':'');
+    div.id = 'phil-' + i;
+
+    const pageContent = p.pages ? p.pages[0] : p;
+    const contentArr = pageContent.content || p.content || [];
+    const concepts = pageContent.concepts || p.concepts || [];
+    const reflection = pageContent.reflection || p.reflection || '';
+
+    let html = `
+      <div class="section-label">PAGE ${i+1} OF ${allPageData.length}</div>
+      <h2>${pageContent.title || p.name || p.title}</h2>
+      <div class="key-concepts">${concepts.map(c=>`<span class="concept-tag">${c}</span>`).join('')}</div>
+    `;
+    contentArr.forEach(section => {
+      html += `
+        <div class="content-section">
+          <h3>${section.heading}</h3>
+          <p>${section.text}</p>
+        </div>
+      `;
+    });
+    if(reflection) {
+      html += `
+        <div class="reflection-box">
+          <h4>🪞 Reflective Exercise</h4>
+          <p>${reflection}</p>
+        </div>
+      `;
+    }
+    div.innerHTML = html;
+    contents.appendChild(div);
+  });
+}
+
+// ============================================================
+// SECTION 2: SIMULATION STUDIO
+// ============================================================
+function buildSimulation() {
+  const grid = document.getElementById('philChoiceGrid');
+  if(grid.children.length > 0) return;
+  philosophyProfiles.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="choice-label">${p.icon} ${p.name}</span><span class="choice-desc">${p.brief}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll('#philChoiceGrid .choice-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedPhilosophy = p.id;
+    };
+    grid.appendChild(btn);
+  });
+}
+
+function simStep2() {
+  if(!selectedPhilosophy) { alert('Please select a philosophy first.'); return; }
+  currentScenarioIndex = Math.floor(Math.random() * scenarioMatrix.length);
+  const scenario = scenarioMatrix[currentScenarioIndex];
+
+  document.getElementById('simScenarioBox').innerHTML = `
+    <div class="scenario-label">📋 Classroom Scenario</div>
+    <h3>${scenario.context.split('.')[0]}</h3>
+    <p>${scenario.context}</p>
+  `;
+
+  const grid = document.getElementById('strategyGrid');
+  grid.innerHTML = '';
+  selectedStrategy = null;
+  scenario.strategies.forEach(s => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.dataset.id = s.id;
+    btn.innerHTML = `<span class="choice-label">${s.label}</span><span class="choice-desc">${s.desc}</span>`;
+    btn.onclick = () => {
+      document.querySelectorAll('#strategyGrid .choice-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedStrategy = s.id;
+    };
+    grid.appendChild(btn);
+  });
+
+  document.querySelectorAll('.sim-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sim-step-2').classList.add('active');
+  window.scrollTo(0,100);
+}
+
+function simBack() {
+  document.querySelectorAll('.sim-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sim-step-1').classList.add('active');
+}
+
+function simStep3() {
+  if(!selectedStrategy) { alert('Please select a teaching strategy first.'); return; }
+  const scenario = scenarioMatrix[currentScenarioIndex];
+  const strategy = scenario.strategies.find(s=>s.id===selectedStrategy);
+  const philName = philosophyProfiles.find(p=>p.id===selectedPhilosophy)?.name || selectedPhilosophy;
+
+  // Deterministic scoring formula
+  const isAligned = strategy.best.includes(selectedPhilosophy);
+  const partialAlign = strategy.best.some(b => {
+    const relatedPairs = {
+      idealism:['existentialism','humanism'], pragmatism:['constructivism','cbe'],
+      constructivism:['humanism','pragmatism'], critical:['humanism','existentialism'],
+      humanism:['constructivism','existentialism'], cbe:['pragmatism','realism'],
+      realism:['cbe','essentialism'], existentialism:['humanism','critical'],
+      essentialism:['realism','idealism'], holistic:['humanism','constructivism']
+    };
+    return (relatedPairs[selectedPhilosophy]||[]).includes(b);
+  });
+
+  const alignScore = isAligned ? 87 + Math.floor(Math.random()*10) : (partialAlign ? 62 + Math.floor(Math.random()*15) : 38 + Math.floor(Math.random()*20));
+  const engagementScore = isAligned ? 82 + Math.floor(Math.random()*12) : 55 + Math.floor(Math.random()*25);
+  const depthScore = isAligned ? 79 + Math.floor(Math.random()*15) : 50 + Math.floor(Math.random()*25);
+  const assessCompat = isAligned ? 80 + Math.floor(Math.random()*12) : 45 + Math.floor(Math.random()*30);
+
+  const feedback = isAligned
+    ? `Excellent philosophical coherence! The <strong>${strategy.label}</strong> strategy aligns strongly with <strong>${philName}</strong>. This combination creates a coherent pedagogical experience where the teaching method embodies the philosophy's core assumptions about knowledge, learning, and the teacher-student relationship.`
+    : partialAlign
+    ? `Moderate alignment detected. While <strong>${strategy.label}</strong> shares some characteristics with <strong>${philName}</strong>, there are tensions worth reflecting on. Consider how you might adapt this strategy to more fully embody ${philName}'s core principles.`
+    : `Philosophical tension present. <strong>${strategy.label}</strong> is more naturally aligned with ${strategy.best.join(' or ')} philosophy. This does not mean the strategy is wrong — thoughtful eclecticism is valid — but it invites deeper reflection on your philosophical commitments and classroom practice.`;
+
+  document.getElementById('simResults').innerHTML = `
+    <div class="result-card">
+      <h3>📊 Simulation Results</h3>
+      <p><strong>Philosophy:</strong> ${philName} &nbsp;|&nbsp; <strong>Strategy:</strong> ${strategy.label}</p>
+      <div class="score-display">
+        ${[
+          ['Philosophy Alignment','%',alignScore],
+          ['Engagement Index','%',engagementScore],
+          ['Conceptual Depth','%',depthScore],
+          ['Assessment Compatibility','%',assessCompat]
+        ].map(([label,unit,val])=>`
+          <div class="score-item">
+            <span class="score-val">${val}${unit}</span>
+            <div class="score-label">${label}</div>
+            <div class="score-bar"><div class="score-fill" style="width:${val}%"></div></div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <h3>📝 Pedagogical Analysis</h3>
+      <p>${feedback}</p>
+      <p style="margin-top:10px;color:var(--text-muted);font-style:italic;">
+        <strong style="color:var(--gold-light);">Best aligned with:</strong> ${strategy.best.map(b=>philosophyProfiles.find(p=>p.id===b)?.name||b).join(' & ')}
+      </p>
+    </div>
+    <div class="card">
+      <h3>💡 Reform Sustainability Estimate</h3>
+      <p>Based on alignment scores, this philosophical-pedagogical combination has a 
+      <strong style="color:var(--gold);">${Math.round((alignScore+engagementScore)/2)}% sustainability score</strong>
+      — reflecting the likelihood that this approach, if consistently applied, would produce lasting pedagogical transformation.</p>
+    </div>
+  `;
+
+  document.querySelectorAll('.sim-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sim-step-3').classList.add('active');
+  window.scrollTo(0,100);
+}
+
+function simReset() {
+  selectedPhilosophy = null;
+  selectedStrategy = null;
+  document.querySelectorAll('.sim-step').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sim-step-1').classList.add('active');
+  document.querySelectorAll('#philChoiceGrid .choice-btn').forEach(b=>b.classList.remove('selected'));
+  window.scrollTo(0,100);
+}
+
+function saveSimResult() {
+  const results = JSON.parse(localStorage.getItem('simResults')||'[]');
+  results.push({
+    date:new Date().toLocaleDateString(),
+    philosophy:selectedPhilosophy,
+    strategy:selectedStrategy,
+    scenario:currentScenarioIndex,
+    timestamp:Date.now()
+  });
+  localStorage.setItem('simResults', JSON.stringify(results));
+  document.getElementById('simSaveAlert').innerHTML = '<div class="alert">✓ Result saved to local storage successfully.</div>';
+  setTimeout(()=>{ document.getElementById('simSaveAlert').innerHTML=''; },3000);
+}
+
+// ============================================================
+// SECTION 3: COMPARISON LAB
+// ============================================================
+const comparisonDimensions = [
+  {dim:'View of Knowledge', key:'knowledge', map:{
+    idealism:'Eternal, universal — ideas and forms transcend the material world. True knowledge is unchanging truth accessible through reason and contemplation.',
+    realism:'Objective, empirical — knowledge derives from systematic observation of an independently existing material world. Science is the paradigm of genuine knowledge.',
+    pragmatism:'Instrumental and provisional — knowledge is validated by its practical consequences. What works in solving problems is true.',
+    constructivism:'Constructed through experience — learners actively build understanding by relating new experiences to existing mental models. Knowledge is personal and social.',
+    humanism:'Personal and meaningful — knowledge matters insofar as it contributes to the learner\'s self-understanding, growth, and flourishing.',
+    critical:'Socially situated and power-laden — all knowledge reflects particular social positions and interests. Critical examination of whose knowledge counts is essential.',
+    existentialism:'Subjective and existential — authentic knowledge is personally meaningful and connected to the individual\'s lived experience and choices.',
+    essentialism:'Cumulative and canonical — a core body of knowledge exists that every educated person must possess for cultural cohesion and civic participation.',
+    cbe:'Applied and demonstrable — knowledge is valuable insofar as it can be deployed competently in real-world contexts.',
+    holistic:'Multidimensional — genuine knowledge encompasses intellectual, emotional, creative, physical, and spiritual dimensions of human experience.'
+  }},
+  {dim:'Role of Teacher', key:'teacher', map:{
+    idealism:'Socratic guide and moral exemplar who draws out innate understanding through questioning and models intellectual and ethical excellence.',
+    realism:'Expert authority who systematically transmits verified knowledge and trains students in scientific and empirical methods.',
+    pragmatism:'Facilitator of experience who designs problem-centered learning environments and guides students\' active inquiry.',
+    constructivism:'Scaffolder and co-inquirer who structures challenges within students\' ZPD and supports collaborative meaning-making.',
+    humanism:'Empathic companion who creates psychologically safe conditions for authentic self-expression and self-directed growth.',
+    critical:'Co-investigator who interrogates social structures alongside students, modeling critical consciousness and democratic dialogue.',
+    existentialism:'Witness and catalyst who honors student subjectivity and creates spaces for authentic self-exploration and self-creation.',
+    essentialism:'Authoritative transmitter who ensures systematic mastery of essential knowledge and cultural heritage.',
+    cbe:'Designer of mastery pathways who provides personalized feedback and multiple opportunities for students to demonstrate competency.',
+    holistic:'Whole-person mentor who attends to intellectual, emotional, physical, and social dimensions of each student\'s development.'
+  }},
+  {dim:'Role of Student', key:'student', map:{
+    idealism:'Aspiring intellect who engages rigorously with great ideas in pursuit of wisdom, truth, and moral excellence.',
+    realism:'Empirical observer who systematically studies the world, masters established knowledge, and applies scientific reasoning.',
+    pragmatism:'Active problem-solver and democratic citizen who learns through authentic engagement with real challenges.',
+    constructivism:'Active meaning-maker who constructs knowledge through exploration, dialogue, and reflection on experience.',
+    humanism:'Self-actualizing individual who pursues authentic growth, exercises genuine choice, and develops as a whole person.',
+    critical:'Conscientized agent who develops critical awareness of social structures and participates in collective transformation.',
+    existentialism:'Authentic self-creator who takes responsibility for their choices and develops their unique perspective and voice.',
+    essentialism:'Diligent learner who acquires the essential knowledge and skills required for cultural literacy and civic participation.',
+    cbe:'Competency-developer who demonstrates mastery at their own pace through multiple pathways and authentic performance tasks.',
+    holistic:'Whole person whose intellectual, emotional, creative, physical, and ethical capacities are all valued and developed.'
+  }},
+  {dim:'Assessment Model', key:'assessment', map:{
+    idealism:'Essays, oral examinations, Socratic dialogues — focused on depth of reasoning, quality of argument, and evidence of genuine understanding.',
+    realism:'Objective tests, laboratory reports, performance tasks — criterion-referenced, reliable measures of verifiable knowledge and skill.',
+    pragmatism:'Authentic performance tasks, community projects, portfolios — measuring what students can do with knowledge in real-world contexts.',
+    constructivism:'Portfolio, concept maps, peer assessment, reflective journals — capturing the process of knowledge construction over time.',
+    humanism:'Self-assessment, narrative evaluation, portfolio — honoring student voice and reflecting multidimensional growth.',
+    critical:'Community action projects, critical reflection papers, social analysis — evaluating critical consciousness and capacity for transformative action.',
+    existentialism:'Personal projects, reflective narratives, individual presentations — assessing authentic self-expression and personal meaning-making.',
+    essentialism:'Standardized tests, examinations, structured performance tasks — measuring mastery of defined essential content.',
+    cbe:'Competency demonstrations against defined rubrics, mastery assessments, adaptive performance tasks — multiple pathways to evidence competency.',
+    holistic:'Multi-dimensional portfolio across academic, creative, social, emotional, and ethical domains — honoring the full spectrum of human development.'
+  }},
+  {dim:'Curriculum Emphasis', key:'curriculum', map:{
+    idealism:'Humanities, philosophy, mathematics, great literary and artistic traditions — disciplines connecting students to humanity\'s highest intellectual achievements.',
+    realism:'Natural sciences, mathematics, social sciences, vocational subjects — disciplines that reveal the objective structure of the natural and social world.',
+    pragmatism:'Integrated problem-centered units drawing on multiple disciplines — organized around real problems and genuine student questions.',
+    constructivism:'Learner-centered, discovery-oriented units — organized around key concepts and generative questions that invite inquiry.',
+    humanism:'Arts, social-emotional learning, student choice, community service — curriculum integrating personal, interpersonal, and intellectual development.',
+    critical:'Social issues, community investigation, critical media literacy — curriculum emerging from the real contradictions of students\' social lives.',
+    existentialism:'Student-chosen projects, arts, personal narrative — curriculum allowing genuine self-expression and exploration of existential questions.',
+    essentialism:'Core academic disciplines with sequential, systematic content — building the common knowledge base all students need.',
+    cbe:'Competency-organized units with clear outcomes — content selected for its contribution to defined transferable competencies.',
+    holistic:'Integrated across intellectual, artistic, physical, social, and spiritual dimensions — curriculum honoring the whole person.'
+  }},
+  {dim:'Key Strengths', key:'strengths', map:{
+    idealism:'Develops deep reasoning, ethical character, love of ideas; connects students to enduring human wisdom.',
+    realism:'Produces empirically grounded, scientifically literate students; values precision, reliability, and verifiable knowledge.',
+    pragmatism:'Develops genuine problem-solving capacity and democratic citizenship; makes education meaningful and relevant.',
+    constructivism:'Produces deep, transferable understanding; develops metacognition and love of learning; honors student thinking.',
+    humanism:'Nurtures intrinsic motivation, emotional health, creativity; creates positive, caring learning communities.',
+    critical:'Develops critical consciousness and capacity for social transformation; challenges educational reproduction of inequality.',
+    existentialism:'Cultivates authentic selfhood, creative voice, moral responsibility; honors individual uniqueness.',
+    essentialism:'Ensures cultural cohesion and common knowledge base; particularly benefits disadvantaged students by providing cultural capital.',
+    cbe:'Ensures genuine mastery; flexible, personalized pathways; clear, measurable outcomes; directly relevant to professional and civic life.',
+    holistic:'Develops the complete person; cultivates creativity, wellbeing, and wisdom alongside academic achievement.'
+  }},
+  {dim:'Limitations', key:'limitations', map:{
+    idealism:'Can neglect practical skills and marginalize non-Western knowledge traditions; risk of elitism.',
+    realism:'Can reduce education to fact accumulation; may neglect creativity, emotional intelligence, and critical consciousness.',
+    pragmatism:'Risk of presentism — neglecting enduring knowledge in favor of immediate utility; can undervalue contemplation.',
+    constructivism:'Resource and time intensive; risk of romanticizing discovery learning without ensuring necessary guidance.',
+    humanism:'Can understate structural barriers to individual flourishing; risk of individualism neglecting collective responsibility.',
+    critical:'Risk of instrumentalizing education for political ends; can create anxiety without providing constructive pathways.',
+    existentialism:'Perpetual tension with standardized systems; risk of solipsism; difficult to implement at scale.',
+    essentialism:'Can reproduce cultural hegemony; the "core" is often the culture of dominant groups; may stifle creativity.',
+    cbe:'Risk of reducing competencies to measurable behaviors; enormous demands on teacher time and expertise; assessment challenges.',
+    holistic:'Difficult to implement within conventional assessment and accountability structures; requires radical system change.'
+  }}
+];
+
+function buildComparison() {
+  const selA = document.getElementById('compareA');
+  const selB = document.getElementById('compareB');
+  if(selA.options.length > 0) return;
+
+  philosophyProfiles.forEach((p, i) => {
+    selA.add(new Option(p.name, p.id));
+    selB.add(new Option(p.name, p.id));
+  });
+  selB.selectedIndex = 1;
+  generateComparison();
+}
+
+function generateComparison() {
+  const a = document.getElementById('compareA').value;
+  const b = document.getElementById('compareB').value;
+  if(!a || !b) return;
+
+  const pA = philosophyProfiles.find(p=>p.id===a);
+  const pB = philosophyProfiles.find(p=>p.id===b);
+  if(!pA || !pB) return;
+
+  if(a === b) {
+    document.getElementById('comparisonOutput').innerHTML = '<div class="alert">Please select two different philosophies to compare.</div>';
+    return;
+  }
+
+  let html = `
+    <div id="printable-comparison">
+    <div class="card" style="margin-bottom:16px;">
+      <h3 style="text-align:center;margin-bottom:4px;">Comparative Analysis</h3>
+      <p style="text-align:center;color:var(--text-muted);font-style:italic;font-size:0.85rem;">
+        ${pA.name} vs ${pB.name}
+      </p>
+    </div>
+    <div class="table-wrapper">
+    <table class="comparison-table">
+      <tr>
+        <th>Dimension</th>
+        <th>${pA.icon} ${pA.name}</th>
+        <th>${pB.icon} ${pB.name}</th>
+      </tr>
+  `;
+
+  comparisonDimensions.forEach(dim => {
+    html += `
+      <tr>
+        <td class="dimension-col">${dim.dim}</td>
+        <td>${dim.map[a] || '—'}</td>
+        <td>${dim.map[b] || '—'}</td>
+      </tr>
+    `;
+  });
+
+  html += `</table></div></div>`;
+  document.getElementById('comparisonOutput').innerHTML = html;
+}
+
+function printComparison() { window.print(); }
+
+function saveComparison() {
+  const a = document.getElementById('compareA').value;
+  const b = document.getElementById('compareB').value;
+  const reports = JSON.parse(localStorage.getItem('comparisonReports')||'[]');
+  reports.push({ date:new Date().toLocaleDateString(), a, b, timestamp:Date.now() });
+  localStorage.setItem('comparisonReports', JSON.stringify(reports));
+  document.getElementById('compareAlert').innerHTML = '<div class="alert">✓ Comparison report saved.</div>';
+  setTimeout(()=>{ document.getElementById('compareAlert').innerHTML=''; },3000);
+}
+
+// ============================================================
+// SECTION 4: FRAMEWORK
+// ============================================================
+function buildFramework() {
+  buildCurriculumSelector();
+  buildAssessmentModels();
+  buildDilemmaLab();
+  buildIdentityQuestionnaire();
+  buildNEPGrid();
+}
+
+function switchFramework(section, btn) {
+  frameworkSection = section;
+  document.querySelectorAll('.phil-nav .phil-tab').forEach(t=>t.classList.remove('active'));
+  if(btn && btn!=='this') btn.classList.add('active');
+  else {
+    const tabs = document.querySelectorAll('#framework-page .phil-nav .phil-tab');
+    const idx = ['curriculum','assessment','dilemmas','identity','nep'].indexOf(section);
+    if(tabs[idx]) tabs[idx].classList.add('active');
+  }
+  ['curriculum','assessment','dilemmas','identity','nep'].forEach(s => {
+    const el = document.getElementById('fw-'+s);
+    if(el) el.style.display = s===section ? 'block' : 'none';
+  });
+}
+
+// Make tab onclick work correctly
+document.addEventListener('DOMContentLoaded', () => {
+  const fwTabs = document.querySelectorAll('#framework-page .phil-nav .phil-tab');
+  fwTabs.forEach((tab, i) => {
+    const sections = ['curriculum','assessment','dilemmas','identity','nep'];
+    tab.onclick = () => {
+      fwTabs.forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      switchFramework(sections[i], null);
+    };
+  });
+});
+
+// Curriculum Selector
+function buildCurriculumSelector() {
+  const sel = document.getElementById('currPhil');
+  if(sel.options.length > 0) return;
+  philosophyProfiles.forEach(p => sel.add(new Option(p.name, p.id)));
+}
+
+function generateCurriculum() {
+  const phil = document.getElementById('currPhil').value;
+  const grade = document.getElementById('currGrade').value;
+  const subject = document.getElementById('currSubject').value;
+  const rules = curriculumRules[phil];
+  const philData = philosophyProfiles.find(p=>p.id===phil);
+  if(!rules || !philData) return;
+
+  const output = document.getElementById('currOutput');
+  output.classList.add('visible');
+  output.innerHTML = `
+    <h3 style="color:var(--gold);margin-bottom:16px;">${philData.icon} ${philData.name}-Based Curriculum Design</h3>
+    <p style="color:var(--text-muted);font-style:italic;font-size:0.85rem;margin-bottom:16px;">
+      ${grade} | ${subject}
+    </p>
+    <div class="output-section">
+      <h4>Teaching Approach</h4>
+      <p>${rules.approach}</p>
+    </div>
+    <div class="output-section">
+      <h4>Curriculum Structure</h4>
+      <p>Content is organized around the core principles of ${philData.name}: ${philData.brief} 
+      For ${subject} at ${grade}, this means designing units that allow students to engage with content 
+      through ${rules.approach.toLowerCase().split(' ').slice(0,4).join(' ')}, ensuring that learning 
+      is both philosophically coherent and subject-appropriate.</p>
+    </div>
+    <div class="output-section">
+      <h4>Assessment Pattern</h4>
+      <p>${rules.assessment}</p>
+    </div>
+    <div class="output-section">
+      <h4>Expected Learning Outcomes</h4>
+      <ul>${rules.outcomes.map(o=>`<li>${o}</li>`).join('')}</ul>
+    </div>
+    <div class="output-section">
+      <h4>NEP 2020 Alignment</h4>
+      <p>This ${philData.name}-based curriculum design aligns with NEP 2020's emphasis on 
+      ${['holistic development','experiential learning','critical thinking','competency development'][Math.floor(Math.random()*4)]}, 
+      supporting the policy's vision of education that develops students as whole persons capable of 
+      contributing meaningfully to democratic society.</p>
+    </div>
+  `;
+}
+
+// Assessment Models
+function buildAssessmentModels() {
+  const grid = document.getElementById('assessModelGrid');
+  if(grid.children.length > 0) return;
+
+  assessmentModels.forEach(m => {
+    const card = document.createElement('div');
+    card.className = 'model-card';
+    card.innerHTML = `<h3>${m.icon} ${m.name}</h3><p>${m.desc}</p>`;
+    card.onclick = () => {
+      document.querySelectorAll('.model-card').forEach(c=>c.classList.remove('selected'));
+      card.classList.add('selected');
+      showAssessmentAnalysis(m);
+    };
+    grid.appendChild(card);
+  });
+}
+
+function showAssessmentAnalysis(m) {
+  const output = document.getElementById('assessOutput');
+  output.style.display = 'block';
+  const metricsHTML = Object.entries({
+    'Motivation Effect': [m.metrics.motivation, 'fill-gold'],
+    'Equity Effect': [m.metrics.equity, 'fill-green'],
+    'Long-term Retention': [m.metrics.retention, 'fill-blue'],
+    'Reform Sustainability': [m.metrics.sustainability, 'fill-gold'],
+    'Clarity & Reliability': [m.metrics.clarity, 'fill-blue'],
+    'Teacher Workload (lower=better)': [100-m.metrics.teacherLoad, 'fill-green']
+  }).map(([label,[val,cls]])=>`
+    <div class="metric-row">
+      <span>${label}</span>
+      <div class="metric-bar"><div class="metric-fill ${cls}" style="width:${val}%"></div></div>
+      <span class="metric-val">${val}%</span>
+    </div>
+  `).join('');
+
+  output.innerHTML = `
+    <div class="result-card">
+      <h3>${m.icon} ${m.name} — Comparative Analysis</h3>
+      ${metricsHTML}
+      <p style="margin-top:14px;color:var(--text-muted);font-style:italic;font-size:0.88rem;">
+        Analysis based on educational research and NEP 2020 reform alignment frameworks.
+      </p>
+    </div>
+  `;
+}
+
+// Dilemma Lab
+function buildDilemmaLab() {
+  const container = document.getElementById('dilemmaContainer');
+  if(container.children.length > 0) return;
+
+  dilemmas.forEach(d => {
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div class="dilemma-card">
+        <div class="dilemma-type">⚡ ${d.type}</div>
+        <h3>${d.scenario.split('.')[0]}</h3>
+        <p>${d.scenario}</p>
+      </div>
+      <div class="card" style="margin-bottom:24px;">
+        <h3>Your Response:</h3>
+        <div class="choice-grid">
+          ${d.options.map((o,i)=>`
+            <button class="choice-btn" onclick="showDilemmaResult(this, ${o.alignment}, ${o.ethics}, '${o.philosophy}')">
+              <span class="choice-label">${o.label}</span>
+              <span class="choice-desc">Philosophical basis: ${o.philosophy}</span>
+            </button>
+          `).join('')}
+        </div>
+        <div class="dilemma-result-${d.id}" style="margin-top:12px;display:none;"></div>
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function showDilemmaResult(btn, alignment, ethics, philosophy) {
+  const parent = btn.closest('.card');
+  const resultDiv = parent.querySelector('[class^="dilemma-result"]');
+  parent.querySelectorAll('.choice-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  if(resultDiv) {
+    resultDiv.style.display='block';
+    resultDiv.innerHTML = `
+      <div class="result-card" style="margin:0;">
+        <h3>Dilemma Analysis</h3>
+        <div class="score-display">
+          <div class="score-item">
+            <span class="score-val">${alignment}%</span>
+            <div class="score-label">Philosophical Alignment</div>
+            <div class="score-bar"><div class="score-fill" style="width:${alignment}%"></div></div>
+          </div>
+          <div class="score-item">
+            <span class="score-val">${ethics}%</span>
+            <div class="score-label">Ethical Consistency</div>
+            <div class="score-bar"><div class="score-fill" style="width:${ethics}%"></div></div>
+          </div>
+        </div>
+        <p>This response reflects a <strong style="color:var(--gold);">${philosophy}</strong> orientation. 
+        ${alignment >= 80 ? 'Strong philosophical coherence — this response is deeply aligned with its stated philosophical foundation.' : alignment >= 60 ? 'Moderate alignment — the response partially reflects its philosophical basis, with some tensions worth exploring.' : 'Significant philosophical tension — this response may reflect pragmatic compromise rather than philosophical consistency.'}
+        </p>
+      </div>
+    `;
+  }
+}
+
+// Identity Questionnaire
+const identityQuestions = [
+  {id:'q1',dim:'Pedagogical Approach',q:'When designing a lesson, your primary concern is:',
+   opts:['Ensuring all content is covered','Students construct understanding through exploration','Students develop practical problem-solving skills','Students feel emotionally safe and respected']},
+  {id:'q2',dim:'Knowledge Philosophy',q:'You believe knowledge is primarily:',
+   opts:['A fixed body of eternal truths','Actively constructed by each learner','Validated by practical consequences','Embedded in social and cultural contexts']},
+  {id:'q3',dim:'Assessment Orientation',q:'You prefer to assess students through:',
+   opts:['Examinations measuring content mastery','Portfolios showing growth over time','Performance tasks with real-world application','Self-assessment and narrative reflection']},
+  {id:'q4',dim:'Reform Orientation',q:'Education reform should primarily focus on:',
+   opts:['Preserving essential cultural knowledge','Transforming pedagogy toward student-centered learning','Developing competencies for workforce and civic life','Addressing inequity and social justice']},
+  {id:'q5',dim:'Teacher Role',q:'You see your primary role as:',
+   opts:['Expert authority and knowledge transmitter','Facilitator of student inquiry and discovery','Designer of authentic real-world learning experiences','Empathic mentor supporting whole-person development']},
+  {id:'q6',dim:'Curriculum Philosophy',q:'The curriculum should be organized around:',
+   opts:['Core disciplinary content all students must know','Student questions and genuine interests','Real-world problems requiring integrated knowledge','Issues of equity, justice, and social transformation']},
+  {id:'q7',dim:'Learning Theory',q:'You believe deep learning requires:',
+   opts:['Rigorous engagement with demanding content','Active construction through experience and dialogue','Application to authentic, meaningful challenges','Emotional engagement and personal relevance']},
+  {id:'q8',dim:'Equity Orientation',q:'Your approach to diverse student needs primarily involves:',
+   opts:['Ensuring all students master common content','Differentiating to meet individual learning styles','Offering multiple pathways to demonstrate competency','Actively addressing structural barriers and power dynamics']}
+];
+
+function buildIdentityQuestionnaire() {
+  const container = document.getElementById('identityQuestionnaire');
+  if(container.children.length > 0) return;
+  identityQuestions.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'q-item';
+    div.innerHTML = `
+      <p><strong style="color:var(--gold-light);">${q.dim}:</strong> ${q.q}</p>
+      <div class="q-options">
+        ${q.opts.map((o,i)=>`<button class="q-opt" onclick="selectAnswer('${q.id}',${i},this)">${o}</button>`).join('')}
+      </div>
+    `;
+    container.appendChild(div);
+  });
+}
+
+function selectAnswer(qid, idx, btn) {
+  const parent = btn.closest('.q-item');
+  parent.querySelectorAll('.q-opt').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  identityAnswers[qid] = idx;
+}
+
+function generateRadar() {
+  const answered = Object.keys(identityAnswers).length;
+  if(answered < 5) {
+    alert('Please answer at least 5 questions to generate your identity radar.');
+    return;
+  }
+
+  // Map answers to dimensions: Idealist(0), Constructivist(1), Pragmatist(2), Critical(3)
+  const dims = ['Idealist Orientation','Constructivist Orientation','Pragmatist Orientation','Critical Orientation','Humanist Orientation','Holistic Orientation'];
+  const scores = [0,0,0,0,0,0];
+  const maxPerDim = 8;
+
+  Object.values(identityAnswers).forEach(val => {
+    if(val===0) { scores[0]+=2; scores[5]+=1; }
+    else if(val===1) { scores[1]+=2; scores[4]+=1; }
+    else if(val===2) { scores[2]+=2; scores[1]+=1; }
+    else if(val===3) { scores[3]+=2; scores[4]+=1; }
+  });
+
+  const normalized = scores.map(s => Math.min(100, Math.round(s/maxPerDim*100)));
+  drawRadarChart(dims, normalized);
+
+  const dominant = dims[normalized.indexOf(Math.max(...normalized))];
+  document.getElementById('radarSummary').innerHTML = `
+    <div class="content-section">
+      <h3>Your Pedagogical Identity</h3>
+      <p>Your primary philosophical orientation is <strong style="color:var(--gold);">${dominant}</strong>. 
+      This means your instincts as an educator most naturally align with the principles and practices 
+      associated with this tradition. This is a starting point for reflection, not a fixed category — 
+      effective educators draw flexibly on multiple philosophical traditions depending on context and purpose.</p>
+      <p style="margin-top:8px;color:var(--text-muted);font-style:italic;">
+        Scores: ${dims.map((d,i)=>`${d.split(' ')[0]}: ${normalized[i]}%`).join(' | ')}
+      </p>
+    </div>
+  `;
+  document.getElementById('radarContainer').style.display = 'block';
+}
+
+function drawRadarChart(labels, data) {
+  const canvas = document.getElementById('radarChart');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W/2, cy = H/2;
+  const r = Math.min(W,H)/2 - 40;
+  const n = labels.length;
+  const angleStep = (Math.PI*2) / n;
+
+  ctx.clearRect(0,0,W,H);
+
+  // Background rings
+  for(let i=1;i<=5;i++){
+    ctx.beginPath();
+    for(let j=0;j<n;j++){
+      const angle = j*angleStep - Math.PI/2;
+      const ri = r*(i/5);
+      const x = cx+Math.cos(angle)*ri;
+      const y = cy+Math.sin(angle)*ri;
+      j===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(201,168,76,0.2)';
+    ctx.stroke();
+  }
+
+  // Spokes
+  for(let j=0;j<n;j++){
+    const angle = j*angleStep - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx+Math.cos(angle)*r, cy+Math.sin(angle)*r);
+    ctx.strokeStyle = 'rgba(201,168,76,0.3)';
+    ctx.stroke();
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  for(let j=0;j<n;j++){
+    const angle = j*angleStep - Math.PI/2;
+    const ri = r*(data[j]/100);
+    const x = cx+Math.cos(angle)*ri;
+    const y = cy+Math.sin(angle)*ri;
+    j===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(37,88,168,0.4)';
+  ctx.fill();
+  ctx.strokeStyle = '#c9a84c';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Points
+  for(let j=0;j<n;j++){
+    const angle = j*angleStep - Math.PI/2;
+    const ri = r*(data[j]/100);
+    const x = cx+Math.cos(angle)*ri;
+    const y = cy+Math.sin(angle)*ri;
+    ctx.beginPath();
+    ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle = '#e8c56a';
+    ctx.fill();
+  }
+
+  // Labels
+  ctx.fillStyle = '#a8b4c8';
+  ctx.font = '9px sans-serif';
+  ctx.textAlign = 'center';
+  for(let j=0;j<n;j++){
+    const angle = j*angleStep - Math.PI/2;
+    const lx = cx+Math.cos(angle)*(r+16);
+    const ly = cy+Math.sin(angle)*(r+16);
+    const shortLabel = labels[j].split(' ')[0];
+    ctx.fillText(shortLabel, lx, ly+3);
+  }
+}
+
+function saveIdentity() {
+  const profile = {
+    date:new Date().toLocaleDateString(),
+    answers:identityAnswers,
+    timestamp:Date.now()
+  };
+  localStorage.setItem('identityProfile', JSON.stringify(profile));
+  document.getElementById('identityAlert').innerHTML = '<div class="alert">✓ Identity profile saved to local storage.</div>';
+  setTimeout(()=>{ document.getElementById('identityAlert').innerHTML=''; },3000);
+}
+
+// NEP Grid
+function buildNEPGrid() {
+  const grid = document.getElementById('nepGrid');
+  if(grid.children.length > 0) return;
+  nepMapping.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'nep-component';
+    div.innerHTML = `
+      <h3>📌 ${item.title}</h3>
+      <div class="nep-desc">${item.desc}</div>
+      <div class="nep-detail">
+        <div class="nep-detail-row">
+          <span class="dr-label">🏛️ Philosophical Foundation</span>
+          <p>${item.philosophy}</p>
+        </div>
+        <div class="nep-detail-row">
+          <span class="dr-label">📚 Theory Alignment</span>
+          <p>${item.theory}</p>
+        </div>
+        <div class="nep-detail-row">
+          <span class="dr-label">🏫 Classroom Translation</span>
+          <p>${item.classroom}</p>
+        </div>
+        <div class="nep-detail-row">
+          <span class="dr-label">⚖️ Equity Dimension</span>
+          <p>${item.equity}</p>
+        </div>
+      </div>
+    `;
+    div.onclick = () => {
+      const detail = div.querySelector('.nep-detail');
+      const isVisible = detail.classList.contains('visible');
+      document.querySelectorAll('.nep-detail').forEach(d=>d.classList.remove('visible'));
+      document.querySelectorAll('.nep-component').forEach(c=>c.classList.remove('expanded'));
+      if(!isVisible) {
+        detail.classList.add('visible');
+        div.classList.add('expanded');
+      }
+    };
+    grid.appendChild(div);
+  });
+}
+
+// ============================================================
+// SERVICE WORKER REGISTRATION (inline blob — no external file needed)
+// ============================================================
+if('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    try {
+      // Try registering the external SW file first (works when hosted locally)
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => {}) // silent success
+        .catch(() => {
+          // Fallback: register an inline SW via blob URL (works in any environment)
+          const swCode = `
+            const CACHE='eduphi-v1';
+            self.addEventListener('install',e=>{self.skipWaiting();});
+            self.addEventListener('activate',e=>{self.clients.claim();});
+            self.addEventListener('fetch',e=>{
+              e.respondWith(
+                caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>new Response('Offline',{status:200})))
+              );
+            });
+          `;
+          const blob = new Blob([swCode], {type:'application/javascript'});
+          const url = URL.createObjectURL(blob);
+          navigator.serviceWorker.register(url).catch(()=>{});
+        });
+    } catch(e) {
+      // Silently ignore — app works fully without service worker
+    }
+  });
+}
+</script>
+</body>
+</html>

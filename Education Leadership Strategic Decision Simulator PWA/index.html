@@ -1,0 +1,2424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a1628">
+<meta name="description" content="Education Leadership Strategic Decision Simulator - NEP 2020 | NCF 2023">
+<title>Education Leadership Strategic Decision Simulator</title>
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&family=Source+Sans+3:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #122040;
+    --navy-light: #1a3060;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --gold-dim: #8a6f2e;
+    --white: #f5f0e8;
+    --white-pure: #ffffff;
+    --gray: #8a9bb5;
+    --gray-light: #c8d0de;
+    --success: #2ecc71;
+    --warning: #f39c12;
+    --danger: #e74c3c;
+    --accent: #3498db;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --shadow-lg: 0 8px 48px rgba(0,0,0,0.6);
+    --radius: 8px;
+    --radius-lg: 16px;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TYPOGRAPHY ── */
+  h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+
+  /* ── SCREENS ── */
+  .screen { display:none; min-height:100vh; }
+  .screen.active { display:block; }
+
+  /* ══════════════════════════════════════════
+     TITLE / HOME SCREEN
+  ══════════════════════════════════════════ */
+  #screen-home {
+    background: linear-gradient(160deg, #0a1628 0%, #122040 40%, #0d1f3a 100%);
+    position: relative; overflow: hidden;
+  }
+  #screen-home::before {
+    content:'';
+    position:absolute; inset:0;
+    background: radial-gradient(ellipse at 70% 30%, rgba(201,168,76,0.08) 0%, transparent 60%),
+                radial-gradient(ellipse at 20% 80%, rgba(52,152,219,0.06) 0%, transparent 50%);
+  }
+
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+  @media(max-width:768px){ .home-grid{ grid-template-columns:1fr; } }
+
+  .home-left {
+    padding: 60px 48px;
+    display: flex; flex-direction:column; justify-content:center;
+    position:relative; z-index:1;
+  }
+  .home-badge {
+    display: inline-flex; align-items:center; gap:8px;
+    background: rgba(201,168,76,0.15);
+    border: 1px solid rgba(201,168,76,0.4);
+    color: var(--gold-light);
+    padding: 8px 16px; border-radius: 40px;
+    font-size: 11px; font-weight:600; letter-spacing:1.5px;
+    text-transform:uppercase; margin-bottom:32px;
+    width: fit-content;
+  }
+  .home-badge::before { content:'◆'; font-size:8px; }
+
+  .home-title {
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: var(--white-pure);
+    margin-bottom: 16px;
+  }
+  .home-title span { color: var(--gold); }
+
+  .home-subtitle {
+    font-size: 15px; color: var(--gray-light);
+    line-height: 1.7; margin-bottom: 12px;
+  }
+  .home-byline {
+    font-size:13px; color:var(--gray); margin-bottom:48px;
+    font-style:italic;
+  }
+  .home-byline strong { color: var(--gold-light); font-style:normal; }
+
+  .home-nav {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+  }
+  .nav-btn {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--white);
+    padding: 20px 24px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.3s ease;
+    position: relative; overflow:hidden;
+  }
+  .nav-btn::before {
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), transparent);
+    opacity:0; transition:opacity 0.3s;
+  }
+  .nav-btn:hover { border-color: var(--gold); transform:translateY(-2px); box-shadow: var(--shadow); }
+  .nav-btn:hover::before { opacity:1; }
+  .nav-btn-icon { font-size:28px; margin-bottom:12px; display:block; }
+  .nav-btn-title { font-size:14px; font-weight:600; color:var(--white-pure); margin-bottom:4px; }
+  .nav-btn-desc { font-size:11px; color:var(--gray); line-height:1.4; }
+
+  .home-right {
+    display:flex; align-items:center; justify-content:center;
+    padding:60px 48px; position:relative; z-index:1;
+  }
+  @media(max-width:768px){ .home-right{ display:none; } }
+
+  .author-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: var(--radius-lg);
+    overflow:hidden; max-width:340px; width:100%;
+    box-shadow: var(--shadow-lg);
+  }
+  .author-img-wrap {
+    position:relative; overflow:hidden; height:260px;
+    background: var(--navy-mid);
+  }
+  .author-img-wrap img { width:100%; height:100%; object-fit:cover; object-position:top; }
+  .author-overlay {
+    position:absolute; bottom:0; left:0; right:0;
+    background: linear-gradient(transparent, rgba(10,22,40,0.95));
+    padding:40px 24px 20px;
+  }
+  .author-name { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--white-pure); }
+  .author-role { font-size:12px; color:var(--gold-light); margin-top:4px; }
+  .author-info { padding:20px 24px; }
+  .author-info p { font-size:12px; color:var(--gray-light); line-height:1.6; }
+  .nep-badges { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+  .nep-badge {
+    font-size:10px; padding:4px 10px; border-radius:20px;
+    background: rgba(201,168,76,0.15); color:var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.3); font-weight:600;
+  }
+
+  /* ── SECTION INDICATORS ── */
+  .home-sections {
+    margin-top:40px;
+    display:flex; gap:12px; flex-wrap:wrap;
+  }
+  .section-chip {
+    font-size:11px; padding:6px 14px; border-radius:20px;
+    background: rgba(52,152,219,0.1);
+    border: 1px solid rgba(52,152,219,0.3);
+    color: #7ec8f7;
+  }
+
+  /* ══════════════════════════════════════════
+     COMMON PAGE LAYOUT
+  ══════════════════════════════════════════ */
+  .page-header {
+    background: var(--navy-mid);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    padding: 20px 40px;
+    display:flex; align-items:center; justify-content:space-between;
+    position:sticky; top:0; z-index:100;
+  }
+  @media(max-width:600px){ .page-header{ padding:16px 20px; } }
+
+  .page-header-left { display:flex; align-items:center; gap:16px; }
+  .back-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color:var(--white); padding:8px 16px; border-radius:6px;
+    cursor:pointer; font-size:13px; font-family:inherit;
+    transition: all 0.2s;
+  }
+  .back-btn:hover { background: rgba(201,168,76,0.2); border-color:var(--gold); }
+  .page-title-small {
+    font-family:'Playfair Display',serif;
+    font-size:16px; color:var(--gold-light); font-weight:600;
+  }
+  .header-badge {
+    font-size:11px; padding:4px 12px; border-radius:20px;
+    background: rgba(201,168,76,0.15); color:var(--gold-light);
+    border: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .page-content { padding: 40px; max-width:1200px; margin:0 auto; }
+  @media(max-width:600px){ .page-content{ padding:20px; } }
+
+  /* ══════════════════════════════════════════
+     POLICY FOUNDATION (15 PAGES)
+  ══════════════════════════════════════════ */
+  #screen-policy .page-content { max-width:900px; }
+
+  .policy-nav {
+    display:grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap:12px;
+    margin-bottom:40px;
+  }
+  .policy-nav-item {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius);
+    padding:16px; cursor:pointer;
+    transition: all 0.2s;
+  }
+  .policy-nav-item:hover, .policy-nav-item.active {
+    border-color:var(--gold); background:rgba(201,168,76,0.1);
+  }
+  .policy-nav-item .page-num { font-size:11px; color:var(--gold); font-weight:700; margin-bottom:4px; }
+  .policy-nav-item .page-name { font-size:12px; color:var(--white); line-height:1.3; }
+
+  .policy-article {
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:var(--radius-lg);
+    padding:48px;
+  }
+  @media(max-width:600px){ .policy-article{ padding:24px; } }
+
+  .policy-article h1 {
+    font-size:clamp(22px,3vw,32px); color:var(--white-pure);
+    border-bottom: 2px solid var(--gold); padding-bottom:16px; margin-bottom:32px;
+  }
+  .policy-article h2 {
+    font-size:20px; color:var(--gold-light);
+    margin-top:36px; margin-bottom:16px;
+  }
+  .policy-article h3 {
+    font-size:16px; color:var(--gray-light);
+    margin-top:24px; margin-bottom:12px;
+  }
+  .policy-article p { font-size:15px; line-height:1.8; color:#c8d0de; margin-bottom:16px; }
+  .policy-article ul { margin:0 0 16px 24px; }
+  .policy-article ul li { font-size:14px; line-height:1.7; color:#b8c4d8; margin-bottom:8px; }
+
+  .callout {
+    background: rgba(201,168,76,0.08);
+    border-left:4px solid var(--gold);
+    padding:20px 24px; margin:24px 0;
+    border-radius:0 var(--radius) var(--radius) 0;
+  }
+  .callout-label { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:8px; }
+  .callout p { font-size:14px; color:var(--white); margin:0; font-style:italic; }
+
+  .action-box {
+    background: rgba(52,152,219,0.08);
+    border:1px solid rgba(52,152,219,0.3);
+    border-radius:var(--radius);
+    padding:20px 24px; margin-top:32px;
+  }
+  .action-box h4 { color:#7ec8f7; font-size:14px; margin-bottom:12px; font-family:'Source Sans 3',sans-serif; font-weight:700; }
+  .action-box ol { margin-left:20px; }
+  .action-box ol li { font-size:14px; color:#c0d8ef; margin-bottom:6px; }
+
+  .policy-page-nav {
+    display:flex; justify-content:space-between; margin-top:40px; gap:16px;
+  }
+  .policy-nav-btn {
+    background: rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.15);
+    color:var(--white); padding:12px 24px;
+    border-radius:var(--radius); cursor:pointer;
+    font-family:inherit; font-size:14px;
+    transition:all 0.2s; flex:1; text-align:center;
+  }
+  .policy-nav-btn:hover { border-color:var(--gold); background:rgba(201,168,76,0.1); }
+  .policy-nav-btn:disabled { opacity:0.3; cursor:not-allowed; }
+
+  /* ══════════════════════════════════════════
+     SIMULATION SCREEN
+  ══════════════════════════════════════════ */
+  .scenario-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px;
+    margin-bottom:40px;
+  }
+  .scenario-card {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:24px; cursor:pointer;
+    transition:all 0.3s; position:relative; overflow:hidden;
+  }
+  .scenario-card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px;
+    background: linear-gradient(90deg, var(--gold), var(--accent));
+    transform:scaleX(0); transform-origin:left; transition:transform 0.3s;
+  }
+  .scenario-card:hover { border-color:var(--gold); transform:translateY(-4px); box-shadow:var(--shadow); }
+  .scenario-card:hover::before { transform:scaleX(1); }
+  .scenario-num { font-size:11px; color:var(--gold); font-weight:700; letter-spacing:2px; margin-bottom:12px; }
+  .scenario-title { font-family:'Playfair Display',serif; font-size:18px; color:var(--white-pure); margin-bottom:12px; }
+  .scenario-desc { font-size:13px; color:var(--gray-light); line-height:1.6; }
+  .scenario-tags { display:flex; gap:8px; flex-wrap:wrap; margin-top:16px; }
+  .scenario-tag {
+    font-size:10px; padding:3px 10px; border-radius:20px;
+    background:rgba(52,152,219,0.15); color:#7ec8f7;
+    border:1px solid rgba(52,152,219,0.3);
+  }
+
+  /* Active simulation */
+  .sim-layout { display:grid; grid-template-columns:1fr 320px; gap:24px; }
+  @media(max-width:900px){ .sim-layout{ grid-template-columns:1fr; } }
+
+  .sim-main {}
+  .sim-scenario-box {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(201,168,76,0.3);
+    border-radius:var(--radius-lg); padding:32px; margin-bottom:24px;
+  }
+  .sim-label { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:2px; text-transform:uppercase; margin-bottom:16px; }
+  .sim-scenario-title { font-family:'Playfair Display',serif; font-size:24px; color:var(--white-pure); margin-bottom:16px; }
+  .sim-scenario-desc { font-size:15px; color:var(--gray-light); line-height:1.7; margin-bottom:24px; }
+  .sim-context-list { list-style:none; }
+  .sim-context-list li {
+    padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.07);
+    font-size:14px; color:#c8d0de; display:flex; align-items:flex-start; gap:10px;
+  }
+  .sim-context-list li::before { content:'▸'; color:var(--gold); flex-shrink:0; margin-top:2px; }
+
+  .decision-options { }
+  .decision-option {
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius); padding:20px 24px;
+    margin-bottom:12px; cursor:pointer; transition:all 0.2s;
+  }
+  .decision-option:hover { border-color:var(--accent); background:rgba(52,152,219,0.06); }
+  .decision-option.selected { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .decision-option-code { font-size:11px; font-weight:700; color:var(--gold); margin-bottom:8px; letter-spacing:1px; }
+  .decision-option-text { font-size:14px; color:var(--white); line-height:1.5; font-weight:500; }
+  .decision-option-detail { font-size:13px; color:var(--gray); margin-top:6px; line-height:1.5; }
+
+  .submit-decision-btn {
+    width:100%; padding:16px; margin-top:20px;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border:none; border-radius:var(--radius); color:var(--navy);
+    font-size:15px; font-weight:700; font-family:inherit;
+    cursor:pointer; transition:all 0.2s; letter-spacing:0.5px;
+  }
+  .submit-decision-btn:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(201,168,76,0.4); }
+  .submit-decision-btn:disabled { opacity:0.4; cursor:not-allowed; transform:none; }
+
+  /* Impact panel */
+  .sim-sidebar {}
+  .impact-panel {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:24px;
+    position:sticky; top:80px;
+  }
+  .impact-panel h3 { font-size:14px; font-weight:700; color:var(--gold-light); margin-bottom:20px; letter-spacing:0.5px; }
+
+  .impact-metric { margin-bottom:20px; }
+  .impact-metric-label { font-size:12px; color:var(--gray); margin-bottom:6px; display:flex; justify-content:space-between; }
+  .impact-metric-label span { font-weight:700; color:var(--white); }
+  .progress-bar { height:8px; background:rgba(255,255,255,0.1); border-radius:4px; overflow:hidden; }
+  .progress-fill { height:100%; border-radius:4px; transition:width 1s ease; }
+  .fill-good { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+  .fill-warn { background: linear-gradient(90deg, #e67e22, #f39c12); }
+  .fill-bad { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+  .fill-blue { background: linear-gradient(90deg, #2980b9, #3498db); }
+  .fill-gold { background: linear-gradient(90deg, var(--gold-dim), var(--gold)); }
+
+  .result-box {
+    background: rgba(46,204,113,0.08);
+    border:1px solid rgba(46,204,113,0.3);
+    border-radius:var(--radius); padding:16px;
+    margin-top:20px; display:none;
+  }
+  .result-box.show { display:block; }
+  .result-box h4 { font-size:13px; color:var(--success); margin-bottom:8px; font-family:'Source Sans 3',sans-serif; font-weight:700; }
+  .result-box p { font-size:12px; color:#a8d5b8; line-height:1.6; }
+
+  /* Cost indicator */
+  .cost-indicator { display:flex; gap:8px; align-items:center; margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.08); }
+  .cost-label { font-size:12px; color:var(--gray); }
+  .cost-pills { display:flex; gap:6px; }
+  .cost-pill { width:24px; height:8px; border-radius:4px; background:rgba(255,255,255,0.15); }
+  .cost-pill.filled { background: var(--gold); }
+
+  /* ══════════════════════════════════════════
+     RESOURCE ALLOCATION PLANNER
+  ══════════════════════════════════════════ */
+  .planner-form {
+    display:grid; grid-template-columns: 1fr 1fr; gap:24px;
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:var(--radius-lg); padding:32px; margin-bottom:32px;
+  }
+  @media(max-width:700px){ .planner-form{ grid-template-columns:1fr; } }
+
+  .form-group { }
+  .form-label { font-size:13px; color:var(--gray-light); font-weight:600; margin-bottom:10px; display:block; }
+  .form-input {
+    width:100%; padding:12px 16px;
+    background: rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.15);
+    border-radius:var(--radius); color:var(--white);
+    font-size:14px; font-family:inherit;
+    transition:border-color 0.2s;
+  }
+  .form-input:focus { outline:none; border-color:var(--gold); background:rgba(201,168,76,0.06); }
+  .form-input option { background:var(--navy-mid); color:var(--white); }
+
+  .form-range-wrap { position:relative; }
+  .form-range {
+    width:100%; -webkit-appearance:none; appearance:none;
+    height:6px; background:rgba(255,255,255,0.15); border-radius:3px;
+    cursor:pointer; margin-bottom:6px;
+  }
+  .form-range::-webkit-slider-thumb {
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background: var(--gold); cursor:pointer;
+  }
+  .range-labels { display:flex; justify-content:space-between; font-size:11px; color:var(--gray); }
+  .range-value { font-size:24px; font-family:'Playfair Display',serif; color:var(--gold-light); font-weight:700; text-align:center; margin-bottom:4px; }
+
+  .calc-btn {
+    grid-column: 1/-1;
+    padding:16px; background:linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border:none; border-radius:var(--radius); color:var(--navy);
+    font-size:16px; font-weight:700; font-family:inherit;
+    cursor:pointer; transition:all 0.2s;
+  }
+  .calc-btn:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(201,168,76,0.4); }
+
+  .allocation-result {
+    display:none;
+    background: rgba(255,255,255,0.03);
+    border:1px solid rgba(201,168,76,0.2);
+    border-radius:var(--radius-lg); padding:32px;
+  }
+  .allocation-result.show { display:block; }
+
+  .allocation-grid {
+    display:grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap:16px;
+    margin-bottom:32px;
+  }
+  .allocation-card {
+    background: rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius); padding:20px; text-align:center;
+  }
+  .allocation-card-icon { font-size:32px; margin-bottom:12px; }
+  .allocation-card-value { font-family:'Playfair Display',serif; font-size:28px; font-weight:700; color:var(--gold-light); }
+  .allocation-card-unit { font-size:11px; color:var(--gray); margin-bottom:6px; }
+  .allocation-card-label { font-size:13px; color:var(--white); font-weight:600; }
+
+  .tradeoff-table { width:100%; border-collapse:collapse; }
+  .tradeoff-table th {
+    text-align:left; padding:12px 16px;
+    background:rgba(255,255,255,0.06); color:var(--gold-light);
+    font-size:12px; text-transform:uppercase; letter-spacing:1px;
+    border-bottom:1px solid rgba(255,255,255,0.1);
+  }
+  .tradeoff-table td {
+    padding:12px 16px; font-size:14px; color:#c8d0de;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+  }
+  .tradeoff-table tr:last-child td { border-bottom:none; }
+  .tag-high { color:var(--danger); font-weight:700; }
+  .tag-med { color:var(--warning); font-weight:700; }
+  .tag-low { color:var(--success); font-weight:700; }
+
+  /* ══════════════════════════════════════════
+     POLICY DECISION LAB
+  ══════════════════════════════════════════ */
+  .policy-lab-grid {
+    display:grid; grid-template-columns: 1fr 1fr; gap:24px;
+    margin-bottom:32px;
+  }
+  @media(max-width:768px){ .policy-lab-grid{ grid-template-columns:1fr; } }
+
+  .lab-selector-group { }
+  .lab-cards { display:grid; gap:12px; }
+  .lab-card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius); padding:20px; cursor:pointer; transition:all 0.2s;
+  }
+  .lab-card:hover, .lab-card.active { border-color:var(--gold); background:rgba(201,168,76,0.08); }
+  .lab-card-icon { font-size:24px; margin-bottom:8px; }
+  .lab-card-title { font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .lab-card-desc { font-size:12px; color:var(--gray); line-height:1.4; }
+
+  .lab-output { }
+  .roadmap {
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:var(--radius-lg); padding:24px; display:none;
+  }
+  .roadmap.show { display:block; }
+  .roadmap h3 { font-size:18px; color:var(--gold-light); margin-bottom:20px; }
+
+  .timeline { position:relative; padding-left:32px; }
+  .timeline::before {
+    content:''; position:absolute; left:8px; top:0; bottom:0;
+    width:2px; background:linear-gradient(180deg, var(--gold), var(--accent), transparent);
+  }
+  .timeline-item { position:relative; margin-bottom:24px; }
+  .timeline-item::before {
+    content:''; position:absolute; left:-28px; top:4px;
+    width:12px; height:12px; border-radius:50%;
+    background:var(--gold); border:2px solid var(--navy);
+    box-shadow:0 0 0 2px var(--gold);
+  }
+  .timeline-phase { font-size:11px; font-weight:700; color:var(--gold); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:4px; }
+  .timeline-title { font-size:14px; font-weight:600; color:var(--white); margin-bottom:4px; }
+  .timeline-desc { font-size:13px; color:var(--gray-light); line-height:1.5; }
+
+  .risk-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:24px; }
+  @media(max-width:600px){ .risk-grid{ grid-template-columns:1fr; } }
+  .risk-item {
+    background:rgba(231,76,60,0.06);
+    border:1px solid rgba(231,76,60,0.2);
+    border-radius:var(--radius); padding:16px;
+  }
+  .risk-item.medium { background:rgba(243,156,18,0.06); border-color:rgba(243,156,18,0.2); }
+  .risk-item.low { background:rgba(46,204,113,0.06); border-color:rgba(46,204,113,0.2); }
+  .risk-level { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px; }
+  .risk-item .risk-level { color:var(--danger); }
+  .risk-item.medium .risk-level { color:var(--warning); }
+  .risk-item.low .risk-level { color:var(--success); }
+  .risk-title { font-size:13px; font-weight:600; color:var(--white); margin-bottom:4px; }
+  .risk-desc { font-size:12px; color:var(--gray-light); }
+
+  /* ══════════════════════════════════════════
+     RISK ANALYZER
+  ══════════════════════════════════════════ */
+  .risk-scenario-grid {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px;
+    margin-bottom:32px;
+  }
+  .risk-scenario-card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:20px; cursor:pointer;
+    transition:all 0.2s; text-align:center;
+  }
+  .risk-scenario-card:hover, .risk-scenario-card.active { border-color:var(--danger); background:rgba(231,76,60,0.06); }
+  .risk-icon { font-size:36px; margin-bottom:12px; }
+  .risk-name { font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .risk-desc2 { font-size:12px; color:var(--gray); line-height:1.4; }
+
+  .risk-analysis-output { display:none; }
+  .risk-analysis-output.show { display:block; }
+
+  .stability-meter {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:32px;
+    margin-bottom:24px; text-align:center;
+  }
+  .stability-num {
+    font-family:'Playfair Display',serif; font-size:72px; font-weight:900;
+    line-height:1; margin-bottom:8px;
+  }
+  .stability-label { font-size:14px; color:var(--gray-light); margin-bottom:24px; }
+  .stability-gauge {
+    height:12px; background:rgba(255,255,255,0.1);
+    border-radius:6px; overflow:hidden; max-width:400px; margin:0 auto;
+  }
+  .stability-gauge-fill { height:100%; border-radius:6px; transition:width 1.5s ease; }
+
+  .corrective-steps { }
+  .step-item {
+    display:flex; gap:16px; padding:16px 0;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .step-item:last-child { border-bottom:none; }
+  .step-num {
+    width:36px; height:36px; border-radius:50%;
+    background:rgba(201,168,76,0.2); border:1px solid var(--gold);
+    display:flex; align-items:center; justify-content:center;
+    font-size:14px; font-weight:700; color:var(--gold); flex-shrink:0;
+  }
+  .step-content { flex:1; }
+  .step-title { font-size:14px; font-weight:700; color:var(--white); margin-bottom:4px; }
+  .step-desc { font-size:13px; color:var(--gray-light); line-height:1.5; }
+  .step-priority {
+    font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:1px;
+    padding:3px 10px; border-radius:10px; align-self:flex-start; flex-shrink:0;
+  }
+  .priority-critical { background:rgba(231,76,60,0.2); color:var(--danger); }
+  .priority-high { background:rgba(243,156,18,0.2); color:var(--warning); }
+  .priority-medium { background:rgba(52,152,219,0.2); color:var(--accent); }
+
+  /* ══════════════════════════════════════════
+     DASHBOARD
+  ══════════════════════════════════════════ */
+  .dashboard-grid {
+    display:grid; grid-template-columns: 2fr 1fr; gap:24px;
+  }
+  @media(max-width:900px){ .dashboard-grid{ grid-template-columns:1fr; } }
+
+  .metric-cards {
+    display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-bottom:24px;
+  }
+  .metric-card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:24px;
+  }
+  .metric-card-value {
+    font-family:'Playfair Display',serif; font-size:42px; font-weight:700;
+    color:var(--gold-light); line-height:1;
+  }
+  .metric-card-label { font-size:12px; color:var(--gray); margin-top:8px; }
+  .metric-card-trend { font-size:12px; margin-top:4px; }
+  .trend-up { color:var(--success); }
+  .trend-down { color:var(--danger); }
+
+  /* Radar chart */
+  .radar-container {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:24px;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .radar-container h3 { font-size:16px; color:var(--gold-light); margin-bottom:20px; text-align:center; }
+
+  canvas#radarChart { max-width:280px; max-height:280px; }
+
+  .leadership-profile {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:24px; margin-top:24px;
+  }
+  .profile-dimension { display:flex; align-items:center; gap:16px; margin-bottom:14px; }
+  .profile-dim-label { font-size:12px; color:var(--gray-light); width:140px; flex-shrink:0; }
+  .profile-dim-bar { flex:1; height:6px; background:rgba(255,255,255,0.1); border-radius:3px; overflow:hidden; }
+  .profile-dim-fill { height:100%; border-radius:3px; background:linear-gradient(90deg, var(--gold-dim), var(--gold-light)); transition:width 1.2s ease; }
+  .profile-dim-val { font-size:12px; font-weight:700; color:var(--gold-light); width:36px; text-align:right; }
+
+  .decision-history { }
+  .history-item {
+    padding:12px 16px;
+    background:rgba(255,255,255,0.03);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:var(--radius); margin-bottom:8px;
+  }
+  .history-item-title { font-size:13px; font-weight:600; color:var(--white); margin-bottom:4px; }
+  .history-item-meta { font-size:12px; color:var(--gray); display:flex; gap:12px; }
+  .history-score { font-size:12px; font-weight:700; color:var(--gold); }
+
+  /* ══════════════════════════════════════════
+     SCORECARD
+  ══════════════════════════════════════════ */
+  .scorecard-hero {
+    background: linear-gradient(135deg, rgba(201,168,76,0.1), rgba(52,152,219,0.06));
+    border:1px solid rgba(201,168,76,0.3);
+    border-radius:var(--radius-lg); padding:40px;
+    text-align:center; margin-bottom:32px;
+  }
+  .sli-score {
+    font-family:'Playfair Display',serif; font-size:96px; font-weight:900;
+    color:var(--gold-light); line-height:1;
+  }
+  .sli-label { font-size:16px; color:var(--gray-light); margin-top:8px; }
+  .sli-grade {
+    display:inline-block; margin-top:16px;
+    padding:8px 24px; border-radius:30px;
+    background:rgba(201,168,76,0.2); color:var(--gold-light);
+    border:1px solid var(--gold); font-weight:700; font-size:15px;
+  }
+
+  .scorecard-breakdown {
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:20px;
+  }
+  .score-card {
+    background:rgba(255,255,255,0.04);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:var(--radius-lg); padding:28px;
+  }
+  .score-card-icon { font-size:32px; margin-bottom:12px; }
+  .score-card-category { font-size:11px; color:var(--gray); text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px; font-weight:700; }
+  .score-card-value { font-family:'Playfair Display',serif; font-size:52px; font-weight:700; color:var(--white-pure); line-height:1; }
+  .score-card-max { font-size:14px; color:var(--gray); }
+  .score-card-bar { height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin:16px 0; overflow:hidden; }
+  .score-card-fill { height:100%; border-radius:2px; transition:width 1.5s ease; }
+  .score-card-desc { font-size:13px; color:var(--gray-light); line-height:1.5; }
+
+  .reset-btn {
+    display:block; margin:40px auto 0;
+    padding:14px 40px;
+    background:transparent; border:1px solid rgba(231,76,60,0.4);
+    border-radius:var(--radius); color:#e87c70; font-family:inherit;
+    font-size:14px; cursor:pointer; transition:all 0.2s;
+  }
+  .reset-btn:hover { background:rgba(231,76,60,0.1); border-color:var(--danger); }
+
+  /* ══════════════════════════════════════════
+     UTILITY
+  ══════════════════════════════════════════ */
+  .section-heading {
+    font-size:clamp(22px,3vw,32px); color:var(--white-pure); margin-bottom:8px;
+  }
+  .section-sub { font-size:14px; color:var(--gray); margin-bottom:32px; line-height:1.5; }
+
+  .empty-state {
+    text-align:center; padding:60px 20px;
+    color:var(--gray);
+  }
+  .empty-state-icon { font-size:48px; margin-bottom:16px; }
+  .empty-state p { font-size:15px; }
+
+  .toast {
+    position:fixed; bottom:24px; right:24px;
+    background:var(--navy-mid); border:1px solid var(--gold);
+    border-radius:var(--radius); padding:16px 24px;
+    color:var(--white); font-size:14px; z-index:9999;
+    transform:translateY(100px); opacity:0; transition:all 0.4s;
+    max-width:320px;
+  }
+  .toast.show { transform:translateY(0); opacity:1; }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width:6px; }
+  ::-webkit-scrollbar-track { background:rgba(255,255,255,0.05); }
+  ::-webkit-scrollbar-thumb { background:rgba(201,168,76,0.3); border-radius:3px; }
+
+  @media print {
+    .page-header, .back-btn, .submit-decision-btn { display:none!important; }
+    body { background:white; color:black; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════
+     HOME SCREEN
+══════════════════════════ -->
+<div id="screen-home" class="screen active">
+  <div class="home-grid">
+    <div class="home-left">
+      <div class="home-badge">NEP 2020 &nbsp;|&nbsp; NCF 2023 &nbsp;|&nbsp; Strategic School Leadership</div>
+      <h1 class="home-title">Education Leadership<br><span>Strategic Decision</span><br>Simulator</h1>
+      <p class="home-subtitle">A professional simulation platform for school heads, academic coordinators, and education administrators — aligned with India's National Education Policy 2020 and NCF 2023.</p>
+      <p class="home-byline">Developed by <strong>Mateen Yousuf</strong> · Teacher, School Education Department Kashmir</p>
+
+      <div class="home-nav">
+        <button class="nav-btn" onclick="showScreen('screen-simulation')">
+          <span class="nav-btn-icon">🎯</span>
+          <div class="nav-btn-title">Start Leadership Simulation</div>
+          <div class="nav-btn-desc">Engage with real-world school scenarios and make strategic decisions</div>
+        </button>
+        <button class="nav-btn" onclick="showScreen('screen-policy-lab')">
+          <span class="nav-btn-icon">🔬</span>
+          <div class="nav-btn-title">Policy Decision Lab</div>
+          <div class="nav-btn-desc">Generate implementation roadmaps and risk forecasts for policy areas</div>
+        </button>
+        <button class="nav-btn" onclick="showScreen('screen-resource')">
+          <span class="nav-btn-icon">📊</span>
+          <div class="nav-btn-title">Resource Allocation Planner</div>
+          <div class="nav-btn-desc">Optimize budget and human resources for maximum academic impact</div>
+        </button>
+        <button class="nav-btn" onclick="showScreen('screen-policy')">
+          <span class="nav-btn-icon">📖</span>
+          <div class="nav-btn-title">Framework & Leadership Theory</div>
+          <div class="nav-btn-desc">15 structured pages on NEP 2020 leadership frameworks</div>
+        </button>
+      </div>
+
+      <div class="home-sections">
+        <span class="section-chip">🛡️ Risk Analyzer</span>
+        <span class="section-chip">📈 Leadership Dashboard</span>
+        <span class="section-chip">🏆 Transformation Scorecard</span>
+        <span class="section-chip">📴 100% Offline</span>
+      </div>
+    </div>
+
+    <div class="home-right">
+      <div class="author-card">
+        <div class="author-img-wrap">
+          <img src="author.jpg" alt="Mateen Yousuf - Author" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';">
+          <div style="display:none;align-items:center;justify-content:center;height:100%;background:rgba(201,168,76,0.1);flex-direction:column;gap:8px;">
+            <div style="font-size:64px;">👨‍🏫</div>
+          </div>
+          <div class="author-overlay">
+            <div class="author-name">Mateen Yousuf</div>
+            <div class="author-role">Author & Education Leadership Expert</div>
+          </div>
+        </div>
+        <div class="author-info">
+          <p>Teacher with the School Education Department Kashmir. Specialist in NEP 2020 implementation, strategic school leadership, and competency-based education reform.</p>
+          <div class="nep-badges">
+            <span class="nep-badge">NEP 2020</span>
+            <span class="nep-badge">NCF 2023</span>
+            <span class="nep-badge">SED Kashmir</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     POLICY FOUNDATION SCREEN
+══════════════════════════ -->
+<div id="screen-policy" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">Framework & Leadership Theory</div>
+    </div>
+    <div class="header-badge">15 Policy Pages</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">Policy & Leadership Foundation</h2>
+    <p class="section-sub">Comprehensive academic content aligned with NEP 2020 and NCF 2023 — structured for school leaders and education administrators.</p>
+
+    <div class="policy-nav" id="policyNav"></div>
+
+    <div class="policy-article" id="policyContent"></div>
+
+    <div class="policy-page-nav">
+      <button class="policy-nav-btn" id="prevPageBtn" onclick="changePolicyPage(-1)">← Previous</button>
+      <button class="policy-nav-btn" id="nextPageBtn" onclick="changePolicyPage(1)">Next →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     SIMULATION SCREEN
+══════════════════════════ -->
+<div id="screen-simulation" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="backToScenarios()">← Back</button>
+      <div class="page-title-small" id="simHeaderTitle">Leadership Simulation</div>
+    </div>
+    <div class="header-badge" id="simHeaderBadge">Select Scenario</div>
+  </div>
+  <div class="page-content">
+    <!-- Scenario selection -->
+    <div id="scenarioSelection">
+      <h2 class="section-heading">Strategic Simulation Mode</h2>
+      <p class="section-sub">Select a real-world school leadership scenario. Analyze the context, choose your strategic response, and see the impact across multiple dimensions.</p>
+      <div class="scenario-grid" id="scenarioGrid"></div>
+    </div>
+
+    <!-- Active simulation -->
+    <div id="activeSimulation" style="display:none;">
+      <div class="sim-layout">
+        <div class="sim-main">
+          <div class="sim-scenario-box">
+            <div class="sim-label" id="activeScenarioNum"></div>
+            <div class="sim-scenario-title" id="activeScenarioTitle"></div>
+            <div class="sim-scenario-desc" id="activeScenarioDesc"></div>
+            <ul class="sim-context-list" id="activeContextList"></ul>
+          </div>
+
+          <div>
+            <div class="sim-label" style="margin-bottom:16px;">CHOOSE YOUR LEADERSHIP RESPONSE</div>
+            <div id="decisionOptions"></div>
+            <button class="submit-decision-btn" id="submitDecisionBtn" onclick="submitDecision()" disabled>
+              Evaluate Decision Impact
+            </button>
+          </div>
+        </div>
+
+        <div class="sim-sidebar">
+          <div class="impact-panel">
+            <h3>⚡ IMPACT METRICS</h3>
+            <div class="impact-metric">
+              <div class="impact-metric-label">Academic Impact <span id="scoreAcademic">—</span></div>
+              <div class="progress-bar"><div class="progress-fill fill-good" id="barAcademic" style="width:0%"></div></div>
+            </div>
+            <div class="impact-metric">
+              <div class="impact-metric-label">Staff Morale <span id="scoreMorale">—</span></div>
+              <div class="progress-bar"><div class="progress-fill fill-blue" id="barMorale" style="width:0%"></div></div>
+            </div>
+            <div class="impact-metric">
+              <div class="impact-metric-label">Reform Sustainability <span id="scoreSustain">—</span></div>
+              <div class="progress-bar"><div class="progress-fill fill-gold" id="barSustain" style="width:0%"></div></div>
+            </div>
+            <div class="impact-metric">
+              <div class="impact-metric-label">Equity Impact <span id="scoreEquity">—</span></div>
+              <div class="progress-bar"><div class="progress-fill fill-warn" id="barEquity" style="width:0%"></div></div>
+            </div>
+            <div class="impact-metric">
+              <div class="impact-metric-label">Stakeholder Buy-in <span id="scoreStake">—</span></div>
+              <div class="progress-bar"><div class="progress-fill fill-good" id="barStake" style="width:0%"></div></div>
+            </div>
+
+            <div class="cost-indicator">
+              <div class="cost-label">Resource Cost:</div>
+              <div class="cost-pills" id="costPills">
+                <div class="cost-pill"></div><div class="cost-pill"></div><div class="cost-pill"></div>
+              </div>
+            </div>
+
+            <div class="result-box" id="resultBox">
+              <h4>🎯 Strategic Outcome</h4>
+              <p id="resultText"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     RESOURCE PLANNER
+══════════════════════════ -->
+<div id="screen-resource" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">Resource Allocation Planner</div>
+    </div>
+    <div class="header-badge">Budget Optimizer</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">Resource Allocation Planner</h2>
+    <p class="section-sub">Input your available resources and let the system calculate the optimal allocation across academic interventions, CPD programs, and community initiatives.</p>
+
+    <div class="planner-form">
+      <div class="form-group">
+        <label class="form-label">Total Budget Units (₹ thousands)</label>
+        <div class="range-value" id="budgetDisplay">50</div>
+        <div class="form-range-wrap">
+          <input type="range" class="form-range" id="budgetRange" min="10" max="500" value="50" oninput="updateRange('budget',this.value)">
+          <div class="range-labels"><span>₹10k</span><span>₹500k</span></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Available Teacher Hours/Week</label>
+        <div class="range-value" id="hoursDisplay">40</div>
+        <div class="form-range-wrap">
+          <input type="range" class="form-range" id="hoursRange" min="5" max="200" value="40" oninput="updateRange('hours',this.value)">
+          <div class="range-labels"><span>5 hrs</span><span>200 hrs</span></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">School Enrollment</label>
+        <div class="range-value" id="enrollDisplay">300</div>
+        <div class="form-range-wrap">
+          <input type="range" class="form-range" id="enrollRange" min="50" max="2000" value="300" oninput="updateRange('enroll',this.value)">
+          <div class="range-labels"><span>50</span><span>2000</span></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Priority Focus</label>
+        <select class="form-input" id="priorityFocus">
+          <option value="academic">Academic Excellence</option>
+          <option value="equity">Equity & Inclusion</option>
+          <option value="infrastructure">Infrastructure</option>
+          <option value="community">Community Linkage</option>
+          <option value="cpd">Teacher Development</option>
+        </select>
+      </div>
+      <button class="calc-btn" onclick="calculateAllocation()">
+        ⚡ Calculate Optimal Allocation
+      </button>
+    </div>
+
+    <div class="allocation-result" id="allocationResult">
+      <h3 style="font-family:'Playfair Display',serif;font-size:22px;color:var(--gold-light);margin-bottom:24px;">📊 Allocation Breakdown</h3>
+      <div class="allocation-grid" id="allocationGrid"></div>
+
+      <h4 style="color:var(--gold-light);margin-bottom:16px;margin-top:32px;">Trade-off Analysis</h4>
+      <table class="tradeoff-table">
+        <thead>
+          <tr><th>Intervention Area</th><th>Budget %</th><th>Hours</th><th>Expected Impact</th><th>Cost Level</th></tr>
+        </thead>
+        <tbody id="tradeoffBody"></tbody>
+      </table>
+
+      <div style="margin-top:24px;padding:20px;background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.2);border-radius:var(--radius);">
+        <div style="font-size:12px;color:var(--gold);font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;">Resource Efficiency Index</div>
+        <div style="font-family:'Playfair Display',serif;font-size:48px;font-weight:700;color:var(--gold-light);" id="efficiencyScore">—</div>
+        <div style="font-size:13px;color:var(--gray-light);margin-top:4px;" id="efficiencyLabel">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     POLICY LAB
+══════════════════════════ -->
+<div id="screen-policy-lab" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">Policy Decision Lab</div>
+    </div>
+    <div class="header-badge">Implementation Roadmap Generator</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">Policy Decision Lab</h2>
+    <p class="section-sub">Select a policy focus area to generate a detailed implementation roadmap, risk forecast, monitoring indicators, and timeline plan.</p>
+
+    <div class="policy-lab-grid">
+      <div class="lab-selector-group">
+        <div class="sim-label" style="margin-bottom:16px;">SELECT POLICY FOCUS AREA</div>
+        <div class="lab-cards" id="labCards"></div>
+      </div>
+      <div class="lab-output">
+        <div class="roadmap" id="roadmapOutput">
+          <h3 id="roadmapTitle">—</h3>
+          <div class="sim-label" style="margin-bottom:16px;">IMPLEMENTATION TIMELINE</div>
+          <div class="timeline" id="roadmapTimeline"></div>
+          <div style="margin-top:32px;">
+            <div class="sim-label" style="margin-bottom:16px;">RISK FORECAST</div>
+            <div class="risk-grid" id="riskForecast"></div>
+          </div>
+          <div style="margin-top:32px;">
+            <div class="sim-label" style="margin-bottom:16px;">KEY MONITORING INDICATORS</div>
+            <div id="monitoringIndicators"></div>
+          </div>
+        </div>
+        <div class="empty-state" id="labEmptyState">
+          <div class="empty-state-icon">🔬</div>
+          <p>Select a policy area to generate your implementation roadmap</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     RISK ANALYZER
+══════════════════════════ -->
+<div id="screen-risk" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">Risk & Resilience Analyzer</div>
+    </div>
+    <div class="header-badge">Crisis Simulation</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">Risk & Resilience Analyzer</h2>
+    <p class="section-sub">Simulate institutional shocks and calculate your school's stability index, adaptation capacity, and required corrective actions.</p>
+
+    <div class="risk-scenario-grid" id="riskScenarioGrid"></div>
+
+    <div class="risk-analysis-output" id="riskAnalysisOutput">
+      <div class="stability-meter">
+        <div class="stability-num" id="stabilityNum">—</div>
+        <div class="stability-label">Institutional Stability Index (0–100)</div>
+        <div class="stability-gauge"><div class="stability-gauge-fill" id="stabilityGaugeFill" style="width:0%;background:var(--success);"></div></div>
+        <div style="margin-top:20px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap;">
+          <div style="text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--accent);" id="adaptScore">—</div>
+            <div style="font-size:12px;color:var(--gray);">Adaptation Capacity</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--warning);" id="riskExposure">—</div>
+            <div style="font-size:12px;color:var(--gray);">Risk Exposure Index</div>
+          </div>
+          <div style="text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:28px;font-weight:700;color:var(--danger);" id="recoveryTime">—</div>
+            <div style="font-size:12px;color:var(--gray);">Recovery Weeks</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-label" style="margin-bottom:20px;">CORRECTIVE ACTION PLAN</div>
+      <div id="correctiveSteps"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     DASHBOARD
+══════════════════════════ -->
+<div id="screen-dashboard" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">Leadership Profile Dashboard</div>
+    </div>
+    <div class="header-badge">Personal Analytics</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">Leadership Profile Dashboard</h2>
+    <p class="section-sub">Your decision tendencies, risk appetite, and reform aggressiveness — derived from simulation history stored locally.</p>
+
+    <div class="dashboard-grid">
+      <div>
+        <div class="metric-cards" id="metricCards"></div>
+        <div class="sim-label" style="margin-bottom:16px;">DECISION HISTORY</div>
+        <div id="decisionHistoryList"></div>
+      </div>
+      <div>
+        <div class="radar-container">
+          <h3>Leadership Style Radar</h3>
+          <canvas id="radarChart" width="280" height="280"></canvas>
+        </div>
+        <div class="leadership-profile" style="margin-top:20px;">
+          <div class="sim-label" style="margin-bottom:16px;">PROFILE DIMENSIONS</div>
+          <div id="profileDimensions"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════
+     SCORECARD
+══════════════════════════ -->
+<div id="screen-scorecard" class="screen">
+  <div class="page-header">
+    <div class="page-header-left">
+      <button class="back-btn" onclick="showScreen('screen-home')">← Back</button>
+      <div class="page-title-small">School Transformation Scorecard</div>
+    </div>
+    <div class="header-badge">Strategic Leadership Index</div>
+  </div>
+  <div class="page-content">
+    <h2 class="section-heading">School Transformation Scorecard</h2>
+    <p class="section-sub">Your aggregate Strategic Leadership Index — computed from all simulation decisions, resource plans, and policy choices.</p>
+
+    <div class="scorecard-hero">
+      <div class="sli-score" id="sliScore">—</div>
+      <div class="sli-label">Strategic Leadership Index (0–100)</div>
+      <div class="sli-grade" id="sliGrade">Complete simulations to generate your score</div>
+    </div>
+
+    <div class="scorecard-breakdown" id="scorecardBreakdown"></div>
+
+    <button class="reset-btn" onclick="resetAllData()">🔄 Reset All Simulation Data</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Hidden nav links from Home buttons -->
+<nav style="display:none">
+  <a onclick="showScreen('screen-risk')">Risk</a>
+  <a onclick="showScreen('screen-dashboard')">Dashboard</a>
+  <a onclick="showScreen('screen-scorecard')">Scorecard</a>
+</nav>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+
+const POLICY_PAGES = [
+  {
+    num:1, title:"NEP 2020 and Institutional Leadership",
+    content:`
+<h1>NEP 2020 and Institutional Leadership</h1>
+<p>The National Education Policy 2020 represents the most comprehensive reform of India's education system in three decades. At its core, NEP 2020 recognizes that institutional leadership is the single most decisive factor in determining whether reform reaches classrooms or remains confined to policy documents. For school heads and academic coordinators in Jammu & Kashmir and across India, understanding the leadership mandate embedded within NEP 2020 is not optional — it is foundational.</p>
+
+<h2>The Leadership Imperative in NEP 2020</h2>
+<p>NEP 2020 explicitly shifts authority toward institutions. Section 7.6 of the policy calls for "school principals to lead academic and administrative reforms" with a new emphasis on professional autonomy and accountability. This is a fundamental departure from the traditional model of school headship, which was primarily administrative and compliance-focused. The new model demands that school leaders function as educational architects — designing learning environments, mentoring teachers, engaging communities, and making data-informed decisions.</p>
+<p>The policy envisions school heads not as bureaucratic managers but as "instructional leaders" — individuals who understand pedagogy deeply, who can interpret student outcome data, and who have the courage to challenge mediocrity in their institutions. This requires a complete reimagining of the role, the preparation, and the ongoing professional development of school leaders.</p>
+
+<h2>Institutional Autonomy as a Leadership Challenge</h2>
+<p>NEP 2020's emphasis on institutional autonomy is both an opportunity and a challenge. Schools are granted greater flexibility in curriculum implementation, assessment design, and teacher deployment. This flexibility, however, requires leaders who can exercise judgment wisely. Autonomy without accountability produces chaos; accountability without autonomy produces compliance without quality. The policy seeks to balance these twin imperatives by establishing clear outcome frameworks while giving schools discretion over processes.</p>
+<p>For school leaders in resource-constrained environments — common across rural India and Union Territories like J&K — this autonomy must be exercised with particular care. The risk is that schools with weaker leadership capacity will make choices that exacerbate existing inequities, while stronger institutions accelerate ahead. Cluster-level leadership support structures, also mandated by NEP 2020, are designed to mitigate this risk by creating peer learning networks among schools.</p>
+
+<h2>Competency-Based Reform and Leadership Alignment</h2>
+<p>The shift from content-heavy, rote-learning-dominated schooling to competency-based education (CBE) requires school leaders to understand what CBE actually means in practice. It is not merely changing what is taught but how learning is evidenced. Leaders must champion formative assessment, embrace the idea that students can take multiple pathways to demonstrate competency, and build school cultures that celebrate mastery over mere completion.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>In your current institution, is decision-making about curriculum and pedagogy primarily compliance-driven or outcome-driven? What is one specific change you could make this term to shift that balance?</p>
+</div>
+
+<h2>The School Complex System</h2>
+<p>One of NEP 2020's most innovative structural reforms is the school complex system — grouping one secondary school with surrounding primary and upper-primary schools to create resource-sharing clusters. For school heads designated as complex leaders, this requires an entirely new set of competencies: inter-institutional coordination, shared resource management, collective professional development, and cross-school data analysis.</p>
+<p>The complex model reflects a key insight: no single school has all the human, material, and intellectual resources it needs. By pooling resources across a complex of 5–10 schools, the system creates economies of scale that can bring specialist teachers, laboratory equipment, digital infrastructure, and library resources to schools that could never sustain them individually.</p>
+
+<h2>Leadership Accountability in the NEP Framework</h2>
+<p>NEP 2020 is explicit that increased autonomy must be matched by increased accountability. The policy calls for transparent school performance disclosure, annual self-evaluation reports, and external reviews by State School Standards Authorities (SSSAs). For school heads, this means learning to tell the honest story of their institution — its strengths, its gaps, and its improvement trajectory — rather than managing perceptions for compliance purposes.</p>
+<p>Authentic accountability requires psychological safety within the institution. Leaders who model honest self-assessment, who welcome feedback, and who treat data as a tool for improvement rather than punishment will build the kind of culture where NEP's accountability mechanisms strengthen rather than demoralize.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Audit your current decision-making processes: which decisions do you make unilaterally vs. collaboratively?</li>
+<li>Map the schools in your potential cluster complex and identify three resource-sharing opportunities.</li>
+<li>Review your school's last self-assessment report: is it honest or primarily compliance-focused?</li>
+<li>Identify one NEP 2020 mandate that your institution has genuinely internalized versus one that exists only on paper.</li>
+</ol>
+</div>`
+  },
+  {
+    num:2, title:"Academic Leadership vs Administrative Control",
+    content:`
+<h1>Academic Leadership vs Administrative Control</h1>
+<p>One of the most persistent tensions in school governance is the divide between administrative management and genuine academic leadership. In the Indian context — and particularly in government school systems — the role of the school head has historically been defined primarily through administrative functions: maintaining registers, processing transfers, managing infrastructure, and ensuring compliance with departmental directives. NEP 2020 and NCF 2023 collectively demand a radical rebalancing: the school head must become, first and foremost, an academic leader.</p>
+
+<h2>Defining the Distinction</h2>
+<p>Administrative control focuses on inputs, processes, and compliance. It asks: Are teachers present? Is the syllabus being covered? Are records up to date? These are necessary functions, but they are not sufficient for improving learning outcomes. Academic leadership, by contrast, focuses on the quality of teaching and learning itself. It asks: Are students developing genuine understanding? Are teachers growing professionally? Is the curriculum relevant and engaging? Is the school creating equitable opportunities for all learners?</p>
+<p>The critical insight is that administrative functions, when done efficiently, enable academic leadership. But in practice, administrative burden often crowns out the time and mental energy needed for instructional leadership. School heads in India frequently report spending 60–70% of their time on administrative tasks, leaving little capacity for classroom observation, teacher mentoring, curriculum review, or strategic planning.</p>
+
+<h2>Instructional Leadership: The Evidence Base</h2>
+<p>International research is unambiguous: the quality of school leadership is the second most powerful predictor of student outcomes, after the quality of teaching. Studies from McKinsey, OECD, and the World Bank consistently show that schools in which the principal functions as an instructional leader — observing classrooms, providing structured feedback to teachers, facilitating collaborative professional development — outperform schools with administratively-focused leadership, controlling for all other variables.</p>
+<p>The Vivek and Harber model of instructional leadership identifies five core behaviors: defining and communicating the school's academic vision; managing the instructional program; promoting a positive learning climate; developing teacher capacity; and monitoring student progress. Each of these requires the principal to spend time in academic spaces — classrooms, staff meetings, data analysis sessions — rather than behind a desk processing paperwork.</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A government secondary school in Anantnag district reduced its administrative processing time by 40% by creating a dedicated administrative assistant role (through re-deployment) and introducing digital registers. The principal used the recovered time for weekly classroom observations and monthly teacher feedback sessions. Within two academic sessions, Grade 9 pass rates improved from 67% to 84%.</p>
+</div>
+
+<h2>NCF 2023 and the Teacher-Leader Partnership</h2>
+<p>The National Curriculum Framework for School Education 2023 introduces a conception of the school as a "professional learning community" — a place where teachers collectively inquire into their practice, share strategies, and support each other's growth. This vision requires school leaders who function as facilitators of professional learning rather than supervisors of compliance. The principal's role shifts from evaluator to partner-in-learning.</p>
+
+<h2>Strategic Delegation as Academic Leadership</h2>
+<p>Effective academic leaders achieve the balance between administration and instruction through strategic delegation. This does not mean abdicating responsibility — it means building the capacity of the school team so that administrative functions can be managed by capable staff, freeing the head for high-leverage academic work. Distributed leadership, where subject coordinators, senior teachers, and department heads share responsibility for academic monitoring and development, is a key strategy.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Conduct a time audit for one week: categorize every activity as administrative, academic, or other. What proportion is genuinely instructional?</li>
+<li>Identify three administrative tasks that could be delegated to capable staff this term.</li>
+<li>Schedule at least two classroom observations per week and prepare structured feedback templates.</li>
+<li>Initiate one structured professional dialogue session per month with your teaching team.</li>
+</ol>
+</div>`
+  },
+  {
+    num:3, title:"Competency-Based School Reform",
+    content:`
+<h1>Competency-Based School Reform</h1>
+<p>Competency-based education (CBE) represents a fundamental shift in how schools conceptualize learning, assess progress, and credential achievement. Rather than measuring seat time or syllabus coverage, CBE focuses on demonstrated mastery of clearly defined competencies — knowledge, skills, and dispositions that students must genuinely develop, not merely be exposed to. For school leaders committed to NEP 2020's vision, understanding and championing CBE is non-negotiable.</p>
+
+<h2>What CBE Actually Means in Practice</h2>
+<p>CBE is frequently misunderstood as simply a curriculum redesign exercise. In reality, it requires simultaneous transformation across four dimensions: curriculum (what is intended to be learned), pedagogy (how learning is facilitated), assessment (how learning is evidenced), and culture (how the school community values mastery versus performance). Changing curriculum without transforming assessment, or transforming assessment without changing pedagogy, produces reform that is superficial and unsustainable.</p>
+<p>At the classroom level, CBE manifests in teachers designing learning experiences that build specific, observable competencies; in formative assessments that generate actionable data about where students are in their learning; and in flexible pacing that allows students who need more time or different approaches to achieve mastery before advancing. This requires a level of professional sophistication that most teachers will need structured support to develop.</p>
+
+<h2>The NCF 2023 Competency Framework</h2>
+<p>NCF 2023 articulates learning outcomes across four stages of schooling — Foundational (3–8 years), Preparatory (8–11 years), Middle (11–14 years), and Secondary (14–18 years) — with clearly defined competencies at each stage. For school leaders, these frameworks provide the architectural blueprint for curriculum alignment. The critical task is ensuring that what happens in classrooms genuinely builds toward these competencies, rather than merely treating them as additional compliance checkboxes.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>Can your teachers articulate the top 5 competencies students in each grade should demonstrate by year-end? Can your students? If not, where does the gap in communication lie?</p>
+</div>
+
+<h2>Leading the CBE Transition</h2>
+<p>The transition to CBE is a multi-year change process that requires strong, sustained leadership. School heads who have successfully navigated this transition consistently report three factors as decisive: building deep teacher understanding of what CBE means (not just compliance with new forms); creating structured time for collaborative planning and assessment design; and celebrating early wins visibly to build momentum and overcome resistance.</p>
+<p>Teacher resistance to CBE is predictable and understandable. Teachers who have developed their professional identity around content delivery and exam preparation may experience CBE as a devaluation of their existing expertise. Effective leaders reframe CBE as building on teachers' deep subject knowledge while adding new dimensions of pedagogical sophistication — an addition, not a replacement.</p>
+
+<h2>Assessment Reform as the Leverage Point</h2>
+<p>Among all the dimensions of CBE reform, assessment transformation has the highest leverage and the highest resistance. Moving from annual high-stakes examinations to continuous, competency-mapped formative assessment requires teachers to develop new skills in observation, documentation, and feedback. It requires school leaders to create systems for aggregating and using assessment data at the school level. And it requires communicating the rationale to parents who may feel that the familiar examination system provides clearer signals about their child's progress.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Map your current assessment practices against NCF 2023 competency frameworks for at least two subjects.</li>
+<li>Identify two teachers who are ready to pilot competency-aligned formative assessment and provide them dedicated support.</li>
+<li>Design a parent communication strategy explaining the shift from marks-based to competency-based progress reporting.</li>
+<li>Create a school-level competency tracking system — even a simple spreadsheet — to visualize where students are relative to grade-level expectations.</li>
+</ol>
+</div>`
+  },
+  {
+    num:4, title:"Strategic Planning in Education",
+    content:`
+<h1>Strategic Planning in Education</h1>
+<p>Strategic planning in education is the disciplined process by which school leaders translate vision into action through structured analysis, priority-setting, and resource allocation. Unlike operational planning — which schedules routine activities — strategic planning answers the fundamental questions: Where are we now? Where do we need to be? How will we get there? And how will we know we have arrived? For school heads operating within NEP 2020's mandate for institutional improvement, strategic planning is a core leadership competency, not an optional exercise.</p>
+
+<h2>The Strategic Planning Cycle</h2>
+<p>Effective school strategic planning follows a well-established cycle: environmental scan (understanding internal strengths and weaknesses, external opportunities and threats); diagnosis (identifying the root causes of priority challenges); goal-setting (establishing measurable, time-bound improvement targets); strategy formulation (designing interventions with evidence of effectiveness); implementation planning (assigning responsibilities, timelines, and resources); and monitoring and evaluation (tracking progress and adapting as needed). This cycle should be completed annually, with mid-year review points built in.</p>
+<p>In the Indian school context, strategic plans are often developed as compliance documents — submitted to district offices, then filed away unused. The hallmark of genuine strategic planning is that it is a living document, regularly consulted by school leadership, used to make resource allocation decisions, and updated based on evidence of what is working.</p>
+
+<h2>Data as the Foundation of Strategy</h2>
+<p>Strategic planning without data is strategic wishful thinking. School leaders need access to three categories of data: outcome data (student learning results, attendance, dropout rates, transition rates); process data (lesson observations, assessment practices, teacher attendance, community engagement); and perception data (student, teacher, and parent satisfaction and sense of safety). Together, these three data streams provide a comprehensive picture of school health that can ground strategic priorities in reality rather than assumption.</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A cluster leader in Kupwara analyzed attendance data by subject, gender, and grade — a level of disaggregation that had never been done before. The analysis revealed that female students in Grades 6–8 had significantly lower Science and Mathematics attendance than males. This finding became the foundation for a targeted attendance intervention that combined community outreach, schedule adjustment, and the appointment of a female Science teacher — resulting in a 23% improvement in girl attendance in STEM subjects within two terms.</p>
+</div>
+
+<h2>Priority-Setting: The Discipline of Focus</h2>
+<p>One of the most common strategic planning failures is over-ambitious priority lists. A school that identifies 15 strategic priorities will make progress on none of them, because attention and resources will be dissipated across too many fronts. Effective school leaders practice the discipline of focus — identifying the two or three highest-leverage priorities that, if addressed, will create momentum across multiple dimensions of school improvement.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Conduct a school data audit: list all the data you currently have access to and identify three significant gaps.</li>
+<li>Facilitate a team SWOT analysis — not just by yourself, but with teachers, student representatives, and parent leaders.</li>
+<li>Draft a one-page strategic plan with no more than three priorities for the next academic year.</li>
+<li>Identify one decision you have made this year that was based on assumption rather than data, and plan how to get the data next time.</li>
+</ol>
+</div>`
+  },
+  {
+    num:5, title:"Decision-Making Models in Schools",
+    content:`
+<h1>Decision-Making Models in Schools</h1>
+<p>School leadership is, fundamentally, a continuous exercise in decision-making. From daily operational choices to long-term strategic commitments, the quality of a school head's decisions shapes every dimension of institutional performance. Understanding the theoretical models that underpin decision-making enables school leaders to choose the right process for each type of decision, avoid cognitive biases that distort judgment, and build organizational cultures where good decisions become the norm rather than the exception.</p>
+
+<h2>The Rational Model</h2>
+<p>The rational decision-making model posits that leaders identify problems clearly, generate all possible solutions, evaluate each solution against defined criteria, and select the optimal option. In practice, this model is aspirational — it represents how decisions should be made when time, information, and cognitive capacity are unlimited. While rarely achievable in pure form, the rational model provides a useful aspiration and a set of questions that any decision process should attempt to address: What exactly is the problem? What are our options? What are the likely consequences of each? What do our values and priorities indicate as the best choice?</p>
+
+<h2>Bounded Rationality and Satisficing</h2>
+<p>Herbert Simon's concept of "bounded rationality" more accurately describes how decisions are actually made in complex organizations like schools. Leaders operate with incomplete information, limited time, and cognitive constraints. Rather than finding the optimal solution, they "satisfice" — finding a solution that is good enough given the constraints. Recognizing this helps school leaders design better decision-support systems: structures that bring in relevant information systematically, processes that slow down important decisions to allow deliberation, and norms that encourage challenge and alternative perspectives before commitment.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>Think of a significant decision you made last year that, in retrospect, was not optimal. At which stage did the process break down: problem diagnosis, option generation, evaluation, or commitment?</p>
+</div>
+
+<h2>Collaborative Decision-Making</h2>
+<p>Many of the most consequential decisions in schools — about curriculum priorities, teacher deployment, disciplinary approaches, community engagement strategies — are too complex and too value-laden to be made well by a single individual. Collaborative decision-making, which involves systematically incorporating the perspectives of teachers, students, parents, and community members, produces better decisions and stronger implementation because stakeholders feel ownership of outcomes they helped shape.</p>
+<p>The challenge is that collaborative processes take time and require facilitation skill. School heads need to develop the capacity to design and facilitate genuine consultation processes — not rubber-stamp exercises where the decision has already been made, but authentic inquiries into complex choices where participant input genuinely influences the outcome.</p>
+
+<h2>Ethical Dimensions of School Decisions</h2>
+<p>School decisions are never purely technical — they always carry ethical weight, because they affect children, families, and communities in significant ways. School leaders must develop the habit of asking ethical questions about their decisions: Who benefits and who is disadvantaged? Are we honoring our commitments to the most vulnerable students? Are we treating all members of the school community with dignity and fairness? These questions are not soft or peripheral — they are central to the leadership role.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Classify your regular decisions into three categories: those you should make individually, those that need teacher consultation, and those that need broader stakeholder input.</li>
+<li>Identify one recent decision that was made too quickly and consider what a more deliberate process might have looked like.</li>
+<li>Design a simple consultation process for one upcoming significant decision — specify who to consult, what questions to ask, and how input will influence the final choice.</li>
+<li>Review your last three major decisions through an equity lens: who benefited and who may have been disadvantaged?</li>
+</ol>
+</div>`
+  },
+  {
+    num:6, title:"Data-Informed Leadership",
+    content:`
+<h1>Data-Informed Leadership</h1>
+<p>Data-informed leadership is the practice of systematically using evidence to guide decisions, evaluate programs, and improve school performance. It is a cornerstone of NEP 2020's vision for accountable, effective school management, and it represents a significant departure from the tradition of intuition-based and compliance-driven school governance. For school heads committed to genuine improvement, developing data literacy and building data-rich school cultures is one of the highest-leverage investments they can make.</p>
+
+<h2>Types of Data in School Leadership</h2>
+<p>School leaders need to develop fluency with several categories of data. Academic outcome data includes examination results, learning level assessments (like NAS and SLAS), competency progress tracking, and diagnostic assessment results. These tell the story of where students are relative to learning expectations. Attendance and engagement data — including student attendance, teacher attendance, and participation in co-curricular activities — provides indicators of school climate and student motivation. Demographic and equity data, disaggregated by gender, caste, disability status, and economic background, reveals whether the school is serving all students equitably or whether patterns of advantage and disadvantage are being replicated.</p>
+
+<h2>From Data Collection to Data Use</h2>
+<p>The critical challenge in data-informed leadership is not collecting data — most schools collect abundant data — but using it effectively. The transition from data collection to data use requires three capacities: data literacy (the ability to read, interpret, and question data); collaborative inquiry (the ability to engage teachers and other stakeholders in analyzing data together); and action orientation (the discipline to translate data insights into concrete changes in practice).</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A government high school in Pulwama began monthly "data walks" where the principal and department heads reviewed grade-level competency data together. Within two terms, this practice had shifted teacher conversations from "who is a weak student" to "which competencies are we not developing effectively and why." The resulting pedagogical adjustments contributed to a 31% improvement in foundational literacy scores in Grade 6.</p>
+</div>
+
+<h2>Building a Data Culture</h2>
+<p>A data culture is one where questions about evidence are normalized — where it is routine to ask "what does the data show?" before making claims or decisions, and where data is treated as a tool for learning rather than a weapon for blame. Building this culture requires school leaders to model data use visibly: referencing data in meetings, asking data questions in observation feedback, and celebrating data-driven successes publicly.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Map all the data your school currently collects and identify what is actually being used for decisions.</li>
+<li>Introduce one new data practice this term: a monthly learning review meeting, a simple student progress dashboard, or a teacher-level outcome tracking system.</li>
+<li>Practice disaggregation: take any existing dataset and break it down by gender, grade, and subject. What patterns emerge?</li>
+<li>Ask your teachers: "What data would help you teach more effectively?" Use their answers to design a school data system that genuinely serves instructional needs.</li>
+</ol>
+</div>`
+  },
+  {
+    num:7, title:"Resource Optimization in Low-Budget Settings",
+    content:`
+<h1>Resource Optimization in Low-Budget Settings</h1>
+<p>The majority of India's 1.5 million government schools operate in conditions of significant resource constraint. School heads in these settings must develop the capacity to optimize the impact of limited human, financial, and material resources — extracting maximum learning value from available inputs while advocating strategically for additional support. Resource optimization is not about accepting inadequacy; it is about maximizing impact within real constraints while building the case for greater investment.</p>
+
+<h2>The Resource Optimization Mindset</h2>
+<p>Resource optimization begins with a mindset shift: from "we don't have enough" to "how do we make the most of what we have while systematically building our resource base?" This is not passive acceptance of scarcity — it is active, creative problem-solving. It means looking at existing resources with fresh eyes, identifying underutilized assets, and designing systems that generate greater output from existing inputs.</p>
+<p>Common underutilized resources in government schools include: experienced teachers whose expertise is not systematically shared; mid-day meal kitchens that could support nutrition education; school grounds that could be developed as outdoor learning environments; alumni networks that could provide mentoring and career guidance; and community knowledge holders who could enrich curriculum delivery.</p>
+
+<h2>Human Resource Optimization</h2>
+<p>In most schools, teaching staff represent 80–90% of total resource investment. Optimizing human resources means ensuring that teacher time is deployed against the highest-priority learning objectives; that teacher expertise is matched to student need (not just to administrative convenience); and that teacher professional capacity is continuously growing. Strategies include peer coaching pairs, structured lesson planning time, cross-grade or cross-subject collaboration, and systematic observation and feedback cycles.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>If you could redesign your school's timetable from scratch — without changing the number of teachers, periods, or students — what would you change to better align teacher expertise with the highest-priority learning needs?</p>
+</div>
+
+<h2>Financial Resource Management</h2>
+<p>School heads who manage financial resources effectively — whether school development grants, composite grants, or community contributions — share several practices: transparent accounting that builds stakeholder trust; participatory planning that ensures resources are aligned to genuine priorities; systematic tracking of expenditure against outcomes; and creative leveraging of small resources to attract larger investments (from CSR, NGOs, alumni, or government schemes).</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Conduct a resource mapping exercise: list all financial, human, material, and community resources available to your school.</li>
+<li>Identify three resources that are currently underutilized and design a plan to activate them this term.</li>
+<li>Develop a simple school budget that explicitly links each expenditure category to a specific learning outcome.</li>
+<li>Research one government scheme or CSR program for which your school is eligible and has not yet applied.</li>
+</ol>
+</div>`
+  },
+  {
+    num:8, title:"Risk Management in Reform",
+    content:`
+<h1>Risk Management in Reform</h1>
+<p>Educational reform is inherently risky. Every significant change initiative introduces uncertainty, disrupts established routines, and encounters resistance from stakeholders who are comfortable with the status quo. School leaders who understand risk management are not those who avoid change to avoid risk — they are those who anticipate, analyze, and mitigate risks systematically while maintaining momentum toward improvement goals.</p>
+
+<h2>Types of Risk in School Reform</h2>
+<p>Risks in educational reform can be categorized across several dimensions. Implementation risks arise when change initiatives are poorly planned, under-resourced, or inadequately communicated, resulting in partial or distorted implementation. Stakeholder risks emerge when key actors — teachers, parents, students, or community leaders — resist, undermine, or fail to engage with reform. Institutional capacity risks occur when the organization lacks the skills, systems, or time to sustain change alongside existing responsibilities. Political and policy risks arise from changes in leadership, policy direction, or resource commitments that undermine long-term reform projects.</p>
+
+<h2>The Risk Assessment Framework</h2>
+<p>Effective risk management begins with systematic risk identification — mapping all the ways a reform initiative could fail before it begins. For each identified risk, leaders assess two dimensions: probability (how likely is this risk to materialize?) and impact (if it does materialize, how serious are the consequences?). High-probability, high-impact risks require active mitigation strategies. Low-probability, low-impact risks may need only monitoring. The most dangerous category is high-impact risks that are dismissed as unlikely — these are the ones that produce catastrophic reform failures.</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A school head planning to implement a new continuous assessment system identified teacher resistance as a high-probability, high-impact risk. Rather than proceeding on the assumption that mandate would ensure compliance, she designed a risk mitigation strategy: a six-month pilot with volunteer teachers, structured sharing of early results with the full staff, and a phased rollout that incorporated teacher feedback. The reform was successfully implemented with significantly less resistance than similar initiatives at comparable schools.</p>
+</div>
+
+<h2>Building Reform Resilience</h2>
+<p>Resilient reform initiatives are those designed to absorb setbacks without collapsing. Resilience is built through distributed ownership (reform initiatives that depend on one person collapse when that person leaves or loses energy); documentation of progress and learning (so that what has been achieved is not lost during difficult periods); and regular celebration of incremental wins that maintain motivation during the slow middle phases of change.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>For your current priority reform initiative, complete a risk matrix: list all potential risks, rate each on probability and impact, and identify mitigation strategies for the top three.</li>
+<li>Identify who, beyond you, has deep ownership of your school's key reform initiatives. What would happen to each initiative if you were transferred?</li>
+<li>Design a documentation system for capturing the progress, learning, and successes of your reform work.</li>
+</ol>
+</div>`
+  },
+  {
+    num:9, title:"Stakeholder Engagement Strategy",
+    content:`
+<h1>Stakeholder Engagement Strategy</h1>
+<p>Effective school improvement requires the active engagement of a broad ecosystem of stakeholders: teachers, students, parents, community leaders, local government, NGOs, alumni, and employers. School leaders who excel at stakeholder engagement build institutions that are responsive, legitimate, resource-rich, and resilient. Those who neglect stakeholder relationships find themselves implementing reforms in isolation, encountering resistance they could have avoided, and missing the community knowledge and resources that could have strengthened their work.</p>
+
+<h2>Mapping the Stakeholder Ecosystem</h2>
+<p>Stakeholder engagement begins with mapping — identifying who has a stake in the school's performance, what their interests are, what their level of influence is, and what their current relationship with the school looks like. This mapping exercise typically reveals stakeholders who are powerful but disengaged (a significant untapped resource), stakeholders who are engaged but disempowered (a potential source of community energy that needs to be channeled), and stakeholders who are neither engaged nor influential (requiring communication strategies to build awareness and interest).</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>When did you last have a substantive conversation with a parent who did not come to you with a specific problem? What would it take to have regular, proactive engagement with parents about the school's academic direction?</p>
+</div>
+
+<h2>The School Management Committee</h2>
+<p>The School Management Committee (SMC), mandated under the Right to Education Act and strengthened under NEP 2020, is the primary formal structure for stakeholder participation in school governance. In many schools, SMCs function as rubber-stamp bodies that meet irregularly and exercise no genuine oversight or advisory function. Transforming the SMC into an effective governance body requires school heads who are willing to genuinely share information, invite challenge, and act on community input — even when it is uncomfortable.</p>
+
+<h2>Community as Learning Resource</h2>
+<p>NEP 2020 emphasizes the role of local knowledge and community expertise in enriching curriculum delivery. Every community contains professionals, craftspeople, farmers, artisans, and elders whose knowledge can make learning more relevant, contextual, and engaging for students. School leaders who systematically map and leverage community expertise — inviting practitioners into classrooms, connecting learning to local industries and ecosystems, and designing projects that link academic competencies to real community challenges — build schools that students want to attend and communities that feel ownership over.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Complete a stakeholder mapping exercise: list your 10 most significant stakeholders, their interests, their influence level, and your current engagement quality with each.</li>
+<li>Review the minutes of your last three SMC meetings. Were substantive issues discussed? Were decisions actually made? What would a genuinely empowered SMC have added?</li>
+<li>Identify three community experts or practitioners who could enrich learning in specific subject areas and design a calendar for their involvement.</li>
+</ol>
+</div>`
+  },
+  {
+    num:10, title:"Change Management in Schools",
+    content:`
+<h1>Change Management in Schools</h1>
+<p>Change management is the structured approach to transitioning individuals, teams, and organizations from a current state to a desired future state. For school leaders implementing NEP 2020 reforms, change management is not a peripheral skill — it is central to the job. Research consistently shows that the majority of organizational change initiatives fail not because of poor strategy but because of poor change management: insufficient attention to the human dimensions of transition, to the emotional responses that change provokes, and to the systemic factors that determine whether new practices are sustained or abandoned.</p>
+
+<h2>Kotter's 8-Step Model Applied to Schools</h2>
+<p>John Kotter's widely used change model identifies eight conditions for successful organizational transformation. Creating urgency — helping stakeholders understand why the status quo is inadequate and why change is needed now — is often the most underinvested step in school reform. Without genuine urgency, change efforts dissipate in the face of competing priorities and the comfort of familiar routines. Building a guiding coalition of influential, capable change champions who can sustain momentum across the organization is equally critical, particularly in schools where the principal cannot be everywhere.</p>
+<p>The subsequent steps — developing a clear vision, communicating it relentlessly, empowering broad-based action by removing obstacles, generating short-term wins to maintain motivation, consolidating gains and producing more change, and anchoring new approaches in school culture — provide a practical roadmap for school leaders navigating complex reform processes.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>For your current priority reform initiative, at which of Kotter's 8 steps are you currently stuck? What would it take to move forward?</p>
+</div>
+
+<h2>Resistance as Information</h2>
+<p>Teacher resistance to reform is typically treated as an obstacle to be overcome. A more sophisticated perspective treats resistance as information — data about what the proposed change is missing, what concerns have not been addressed, what support has not been provided, or what the change process has failed to communicate clearly. Leaders who listen to resistance and respond to its substantive concerns are more likely to achieve genuine implementation than those who rely on authority or pressure to secure nominal compliance.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Apply Kotter's 8-step model to your current most significant reform initiative. Rate your progress at each step on a scale of 1–10.</li>
+<li>Identify the three teachers who are most resistant to a key reform. Schedule individual conversations to understand their concerns.</li>
+<li>Identify three "quick wins" that you could generate in the next three months to build momentum for your change agenda.</li>
+<li>Design a communication plan for your key reform initiative: what messages need to reach which audiences, through which channels, and how often?</li>
+</ol>
+</div>`
+  },
+  {
+    num:11, title:"Ethical Leadership",
+    content:`
+<h1>Ethical Leadership</h1>
+<p>Ethical leadership in education is the foundation upon which all other leadership qualities rest. A technically skilled leader who lacks ethical grounding may improve metrics in the short term while doing profound damage to school culture, to individual students and teachers, and to the social trust that educational institutions depend upon. NEP 2020's vision of "equitable, inclusive, and high-quality education" is inherently an ethical vision — one that demands leaders who hold justice, honesty, and care as non-negotiable commitments, not aspirational values to be balanced against expediency.</p>
+
+<h2>Core Ethical Principles for School Leaders</h2>
+<p>Several ethical principles are particularly salient in the school leadership context. Justice and equity demand that school leaders make decisions that actively work against the reproduction of social advantage — ensuring that the school's best teachers are not consistently deployed to its most advantaged classes, that disciplinary processes do not disproportionately target marginalized students, and that school culture actively challenges rather than reflects social discrimination. Integrity requires that school leaders model the honesty and transparency they expect of their staff and students — presenting data truthfully, acknowledging mistakes openly, and refusing to participate in the gaming of metrics that has corrupted accountability systems in many parts of India.</p>
+
+<h2>Care as an Ethical Commitment</h2>
+<p>Nel Noddings' ethics of care, while developed in the context of classroom relationships, has powerful implications for school leadership. Care in the leadership context means attending to the wellbeing and development of every member of the school community — not just the high-performing students and the compliant teachers, but those who are struggling, resistant, or marginalized. It means making structural decisions — about time, space, resources, and attention — that reflect a genuine commitment to every child's flourishing.</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A school head in a rural district discovered that the school's limited computer lab was being used almost exclusively by senior students preparing for board examinations, while younger students had virtually no digital literacy exposure. Recognizing this as an equity issue, she redesigned the lab schedule to ensure that every grade had regular, structured access — accepting the resistance from senior students and their parents as a necessary cost of ethical resource allocation.</p>
+</div>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Conduct an equity audit of your school's resource allocation: do your most experienced teachers work with your most struggling students, or the reverse?</li>
+<li>Identify one structural feature of your school that inadvertently disadvantages a particular group of students. Design a plan to address it.</li>
+<li>Reflect on a decision you have made in the past year primarily for political or compliance reasons rather than for the genuine benefit of students. What would you do differently?</li>
+</ol>
+</div>`
+  },
+  {
+    num:12, title:"School Complex Governance",
+    content:`
+<h1>School Complex Governance</h1>
+<p>The school complex system, one of NEP 2020's most structurally innovative provisions, creates networked clusters of schools sharing leadership, resources, and professional development infrastructure. A school complex typically comprises one secondary or higher secondary school serving as the hub, with five to ten feeder primary and upper-primary schools. The complex model is designed to address some of the most persistent challenges in Indian school education: isolated small schools with inadequate resources, teacher subject-matter gaps, and the absence of horizontal learning across institutions.</p>
+
+<h2>The Complex Leader's Mandate</h2>
+<p>The school head designated as the complex leader carries responsibilities that extend beyond their own institution to encompass the educational health of the entire cluster. This includes: ensuring that students transition smoothly between levels within the complex; organizing shared professional development for teachers across all complex schools; managing shared resources such as laboratories, libraries, sports facilities, and specialist teachers; facilitating data sharing and collective problem-solving across complex schools; and representing the complex's needs and achievements to district-level authorities.</p>
+
+<h2>Resource Sharing Models</h2>
+<p>The most tangible benefit of the complex model is resource sharing. A single science laboratory, properly maintained and scheduled, can serve 8–10 schools. A specialist art or music teacher can rotate across the complex. A shared library can make 5,000 books available to children in schools that individually could afford 200. Realizing these benefits requires careful coordination, transparent scheduling, robust maintenance systems, and the interpersonal skill to manage competing demands from multiple school heads.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>If your school is designated as a complex hub, which three resources could realistically be shared with feeder schools this year? What are the logistical and relational challenges you would need to address?</p>
+</div>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Map the schools in your potential or current complex: identify each school's key strengths and most significant resource gaps.</li>
+<li>Design a quarterly complex-level meeting agenda that addresses both administrative coordination and professional learning.</li>
+<li>Identify one shared resource initiative that could be piloted this term with the agreement of two or three complex schools.</li>
+</ol>
+</div>`
+  },
+  {
+    num:13, title:"Monitoring & Evaluation Framework",
+    content:`
+<h1>Monitoring & Evaluation Framework</h1>
+<p>A school's Monitoring and Evaluation (M&E) framework is the systematic architecture by which it tracks progress toward its goals, identifies problems early, learns from its experience, and demonstrates accountability to stakeholders. In the NEP 2020 era, school-level M&E is not an optional reporting function — it is the engine of continuous improvement. Without effective M&E, reform initiatives produce activity without learning, and schools cannot distinguish between what is working and what merely appears to be working.</p>
+
+<h2>Designing the M&E Framework</h2>
+<p>An effective school M&E framework begins with clarity about what is being measured and why. For each strategic priority, leaders should identify: the outcome indicators that will show whether the goal has been achieved; the process indicators that will signal whether implementation is on track; the data sources and collection methods for each indicator; the frequency of data collection; the roles and responsibilities for data collection, analysis, and reporting; and the decision-making forums where M&E data will be reviewed and acted upon.</p>
+
+<h2>Formative vs. Summative Evaluation</h2>
+<p>Formative evaluation happens during implementation — it generates learning that can be used to adapt and improve an ongoing initiative. Summative evaluation happens at the end — it determines whether a program achieved its intended outcomes. Effective school M&E systems require both. Formative monitoring enables agile leadership — catching problems early and adjusting course before small issues become large failures. Summative evaluation enables honest accountability and informs decisions about whether to continue, scale, or discontinue a particular intervention.</p>
+
+<div class="callout">
+<div class="callout-label">Case Example</div>
+<p>A school complex leader introduced a monthly "learning dashboard" — a one-page summary of key academic and engagement metrics across all complex schools. Initially resisted as additional administrative burden, the dashboard became the centerpiece of monthly complex meetings. Within a year, the practice of collective M&E had fundamentally shifted how complex leaders talked about their work — from activity reporting to outcome analysis.</p>
+</div>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Design a simple school M&E dashboard for your top three strategic priorities: list the key indicator, the data source, the target, and the current status for each.</li>
+<li>Identify the most significant monitoring gap in your current practice: what important dimension of school performance are you flying blind on?</li>
+<li>Schedule a formal mid-year review of your strategic plan — with teachers, not just individually — where M&E data is presented and interpreted collectively.</li>
+</ol>
+</div>`
+  },
+  {
+    num:14, title:"Building Reform Culture",
+    content:`
+<h1>Building Reform Culture</h1>
+<p>Culture eats strategy for breakfast — Peter Drucker's observation has particular resonance in the school context. A school's culture — its shared beliefs, norms, rituals, and stories — determines more powerfully than any policy or strategy whether genuine improvement is possible. School leaders who understand culture know that sustainable reform requires not just changing what people do but shifting what people believe about their work, their students, and their collective capacity to improve.</p>
+
+<h2>Diagnosing School Culture</h2>
+<p>Before attempting to build a reform culture, leaders need to honestly diagnose the existing culture. Several dimensions are particularly relevant: the theory of intelligence that dominates (fixed vs. growth mindset); the attitude toward failure and experimentation (risk-averse compliance vs. learning orientation); the quality of professional relationships (collegial and collaborative vs. isolated and competitive); the beliefs about students' learning potential (high expectations for all vs. fatalistic acceptance of differential outcomes); and the orientation toward change (welcoming of innovation vs. defensive of tradition).</p>
+
+<h2>Culture Change Strategies</h2>
+<p>Culture change is slow, but it is possible with sustained, consistent leadership. The most powerful culture change levers available to school heads include: visible modeling — demonstrating the values and behaviors that define the desired culture in their own practice; storytelling — deliberately identifying and amplifying stories that illustrate the culture being built; symbol management — ensuring that the school's physical environment, rituals, ceremonies, and public communications reflect reform values; hiring and recognition — over time, making appointment and recognition decisions that favor the dispositions that define the desired culture; and structural change — redesigning systems, routines, and meeting agendas to make the desired behaviors the path of least resistance.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>What is the single most powerful cultural norm in your school that, if shifted, would create the most positive cascade of change? What makes it so resistant to change?</p>
+</div>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Conduct a culture diagnostic: interview 5 teachers and 5 students with the same questions about the school's norms and values. Compare their responses to your own perception.</li>
+<li>Identify one school ritual or ceremony that currently reinforces unhelpful cultural norms. Redesign it to reinforce the culture you are building.</li>
+<li>For the next month, deliberately tell one positive story at every staff meeting about a teacher or student demonstrating the values you want to build.</li>
+</ol>
+</div>`
+  },
+  {
+    num:15, title:"Leadership Sustainability Model",
+    content:`
+<h1>Leadership Sustainability Model</h1>
+<p>The final challenge of school leadership is sustainability — ensuring that improvement gains are maintained, that reform capacity grows rather than depletes, and that the institution is stronger and more capable at the end of a leader's tenure than at the beginning. The antithesis of sustainable leadership is heroic individual leadership — the school that improves rapidly under a charismatic, high-energy head, then collapses when that person is transferred. Sustainable leadership builds institutional rather than individual capacity.</p>
+
+<h2>Distributed Leadership as Sustainability Infrastructure</h2>
+<p>Distributed leadership — the systematic distribution of leadership responsibilities across a capable, developed team — is the most important structural feature of sustainable improvement. When subject coordinators, senior teachers, and student leaders have genuine ownership of specific aspects of school improvement, the institution's capacity for self-renewal extends far beyond the headmaster's own energy and expertise. Building distributed leadership requires intentional investment in staff development, clear role definition, genuine delegation (not task assignment), and the psychological security to allow others to exercise leadership even when their approaches differ from your own.</p>
+
+<h2>Succession Planning</h2>
+<p>In the government school context, where transfers are frequent and often unpredictable, succession planning is not an optional luxury. School heads who are serious about sustainable reform identify and develop their potential successors, document the school's improvement journey and current trajectory, build in systems and structures that can survive personnel changes, and create a culture of accountability to outcomes that outlasts any individual leader's presence.</p>
+
+<div class="callout">
+<div class="callout-label">Reflection Prompt</div>
+<p>If you were transferred tomorrow, which of your school's improvements would survive? Which would not? What does your answer tell you about the sustainability of your leadership approach?</p>
+</div>
+
+<h2>Leader Wellbeing and Sustainable Practice</h2>
+<p>The final dimension of leadership sustainability is the leader's own wellbeing. School leadership in resource-constrained, high-accountability environments is inherently demanding. Leaders who do not manage their own physical and psychological wellbeing cannot sustain high-quality leadership over the long term. Sustainable leadership practice includes regular reflection time, peer support networks (with other school heads or cluster leaders), physical health practices, and the clarity of purpose that allows leaders to find meaning in their work even when the challenges are overwhelming.</p>
+
+<div class="action-box">
+<h4>🎯 Action Notes for School Leaders</h4>
+<ol>
+<li>Map your current distributed leadership structure: who has genuine ownership of which aspects of school improvement? Where are the critical single points of failure?</li>
+<li>Write a two-page "school improvement handover document" as if you were being transferred in three months. What would your successor need to know?</li>
+<li>Identify one leadership practice that is depleting your energy without proportionate impact. Design a plan to delegate or discontinue it.</li>
+<li>Connect with two or three peer school heads for regular mutual support and professional reflection conversations.</li>
+</ol>
+</div>`
+  }
+];
+
+const SCENARIOS = [
+  {
+    id:1, num:"SCENARIO 01", title:"Low Competency Scores in Grade 8",
+    desc:"Recent diagnostic assessment data reveals that only 34% of Grade 8 students have achieved expected literacy competencies and 28% have achieved numeracy competencies. The school faces pressure from district authorities to improve before the annual performance review.",
+    context:["Grade 8 enrollment: 156 students across 4 sections","3 of 5 English teachers have less than 3 years experience","No structured remedial program currently in place","District review is scheduled in 8 weeks"],
+    tags:["Academic","Assessment","Urgency"],
+    options:[
+      { code:"A", text:"Launch intensive remedial program", detail:"Reallocate 2 periods daily across all Grade 8 sections for focused literacy and numeracy remediation. Deploy experienced teachers to lead sessions.", impact:{academic:82,morale:55,sustain:60,equity:78,stake:65}, cost:2, outcome:"Strong short-term gains likely. Teacher workload increases significantly. Risk of surface-level drilling without addressing root pedagogical gaps." },
+      { code:"B", text:"Redesign pedagogy across all subjects", detail:"Conduct emergency CPD to integrate literacy and numeracy development into all subject teaching. Restructure lesson planning protocols.", impact:{academic:70,morale:72,sustain:88,equity:72,stake:60}, cost:2, outcome:"Slower initial impact but builds sustainable capacity. Requires strong teacher buy-in and skilled facilitation of the CPD process." },
+      { code:"C", text:"Implement diagnostic-driven grouping", detail:"Use detailed diagnostic data to create flexible learning groups matched to competency levels, with differentiated instruction across groups.", impact:{academic:75,morale:68,sustain:75,equity:85,stake:70}, cost:1, outcome:"High equity impact through personalized attention. Requires careful management to avoid stigmatization of lower-level groups." },
+      { code:"D", text:"Community and peer tutoring mobilization", detail:"Organize trained senior students and educated community volunteers as tutors for Grade 8 struggling students in targeted after-school sessions.", impact:{academic:60,morale:78,sustain:70,equity:80,stake:88}, cost:0, outcome:"Builds community engagement and peer leadership. Modest academic impact in short term. Strong long-term sustainability if institutionalized." }
+    ]
+  },
+  {
+    id:2, num:"SCENARIO 02", title:"Budget Limitation with Infrastructure Gap",
+    desc:"The school has received ₹180,000 in annual development grant — 40% less than the previous year due to state budget constraints. The building has a leaking roof affecting three classrooms, the science lab equipment is non-functional, and the library has not been updated in six years.",
+    context:["Three classrooms partially unusable during monsoon","Science lab affects Grade 9–12 practical examination readiness","Library serves 620 students with outdated resources","Grant is the only discretionary budget available"],
+    tags:["Resource","Infrastructure","Trade-off"],
+    options:[
+      { code:"A", text:"Prioritize structural repair (roof)", detail:"Allocate ₹120,000 to emergency roof repair, restoring three classrooms to full use. Defer lab and library with documented plan for next cycle.", impact:{academic:55,morale:65,sustain:80,equity:70,stake:75}, cost:3, outcome:"Addresses most urgent safety and usability issue. Lab and library continue to constrain quality but foundation is secured." },
+      { code:"B", text:"Lab rehabilitation first", detail:"Allocate ₹90,000 to restore lab functionality, protecting exam performance for senior students. Partial roof repair with remaining funds.", impact:{academic:80,morale:60,sustain:55,equity:45,stake:55}, cost:3, outcome:"Strong academic impact for senior students. Inequitable — primarily benefits examination cohort. Roof issue remains a risk." },
+      { code:"C", text:"Distributed improvement strategy", detail:"Allocate ₹60,000 roof (temporary fix), ₹70,000 lab core equipment, ₹50,000 library digital resources. Accept partial solutions across all areas.", impact:{academic:68,morale:70,sustain:65,equity:75,stake:80}, cost:3, outcome:"Visible improvement across all areas builds morale and community confidence. No single area fully resolved. Satisficing approach." },
+      { code:"D", text:"Mobilize additional resources", detail:"Use ₹30,000 for immediate roof patch, spend 3 months pursuing CSR, alumni, and scheme funding before allocating remainder. Full solutions may follow.", impact:{academic:45,morale:55,sustain:90,equity:65,stake:85}, cost:1, outcome:"Highest long-term sustainability if additional resources materialize. Significant risk if mobilization efforts fail. Requires strong external engagement skills." }
+    ]
+  },
+  {
+    id:3, num:"SCENARIO 03", title:"Teacher Resistance to Assessment Reform",
+    desc:"The district has directed schools to implement continuous, competency-mapped formative assessment in place of monthly written tests. Seven of your twelve teachers are openly resistant, citing workload concerns, lack of clarity, and skepticism about the pedagogical value of the new system.",
+    context:["District mandate requires implementation within one academic quarter","Two teachers have informally contacted union representatives","Two teachers are enthusiastic early adopters","Assessment reform is linked to NCF 2023 implementation requirements"],
+    tags:["Reform","Resistance","Change Management"],
+    options:[
+      { code:"A", text:"Mandate compliance, monitor strictly", detail:"Issue formal directive requiring all teachers to implement new assessment framework by specified deadline. Introduce observation schedule to verify compliance.", impact:{academic:50,morale:28,sustain:35,equity:55,stake:40}, cost:1, outcome:"Achieves surface compliance but risks building resentment and passive resistance. Likely to produce pro forma assessment documentation without genuine practice change." },
+      { code:"B", text:"Build understanding before implementation", detail:"Conduct 3 structured workshops on formative assessment rationale and methods. Delay full implementation by 6 weeks. Begin with volunteer teacher pilots.", impact:{academic:65,morale:72,sustain:82,equity:68,stake:65}, cost:2, outcome:"Builds genuine understanding and buy-in. Later implementation timeline carries some district risk. Pilot evidence can accelerate broader adoption." },
+      { code:"C", text:"Address resistance as diagnostic information", detail:"Hold individual conversations with resistant teachers to identify specific concerns. Redesign CPD to address those concerns directly. Modify implementation timeline accordingly.", impact:{academic:70,morale:80,sustain:85,equity:70,stake:72}, cost:1, outcome:"Highest morale and sustainability impact. Demonstrates respect for teacher professional concerns. Requires significant leadership time and interpersonal skill." },
+      { code:"D", text:"Leverage early adopters as internal champions", detail:"Provide enthusiastic teachers with additional support and visibility. Create structured peer learning opportunities where resistant teachers can observe positive examples.", impact:{academic:72,morale:75,sustain:80,equity:65,stake:68}, cost:1, outcome:"Organic change process with strong sustainability. Social proof more persuasive than authority for professional change. May be too slow for district timeline." }
+    ]
+  },
+  {
+    id:4, num:"SCENARIO 04", title:"High Dropout Risk",
+    desc:"Attendance tracking shows 47 students (18% of enrollment) have attended less than 60% of school days in the current year. Community mapping reveals economic pressure, domestic responsibilities, and perceived irrelevance of schooling as primary drivers.",
+    context:["47 students identified as high dropout risk","Economic driver: 22 students (primarily male, Grade 9–10)","Domestic responsibility driver: 14 students (primarily female, Grade 6–8)","Perceived irrelevance driver: 11 students (mixed)"],
+    tags:["Equity","Dropout","Community"],
+    options:[
+      { code:"A", text:"Conditional support program", detail:"Establish attendance incentive scheme with merit-based scholarships, mid-day meal enhancements, and school material provision tied to attendance targets.", impact:{academic:60,morale:65,sustain:58,equity:80,stake:75}, cost:2, outcome:"Direct material incentives address economic barriers. Risk of creating dependency and gaming without addressing root causes. Strong equity impact if well-targeted." },
+      { code:"B", text:"Family engagement and home visits", detail:"Deploy teachers and trained community volunteers for structured home visits to all 47 high-risk families. Address parental concerns directly and build school-family trust.", impact:{academic:55,morale:60,sustain:72,equity:85,stake:90}, cost:1, outcome:"Strongest community and stakeholder impact. Directly addresses root causes for domestic responsibility and perceived irrelevance drivers. Resource-intensive but sustainable." },
+      { code:"C", text:"Curriculum relevance redesign", detail:"Introduce vocational and life-skills components, village problem-solving projects, and guest practitioner sessions to make schooling feel purposeful for at-risk students.", impact:{academic:68,morale:72,sustain:80,equity:75,stake:70}, cost:2, outcome:"Addresses perceived irrelevance driver most directly. Longer implementation timeline. Strong alignment with NEP 2020's vision of holistic, contextualized education." },
+      { code:"D", text:"Comprehensive multi-strategy approach", detail:"Combine targeted family visits (for domestic responsibility cases), conditional support (for economic cases), and curriculum adaptation (for relevance cases) based on driver mapping.", impact:{academic:72,morale:68,sustain:75,equity:90,stake:82}, cost:3, outcome:"Highest equity impact by addressing each driver appropriately. Requires significant coordination capacity. Most resource-intensive but most likely to produce sustained retention." }
+    ]
+  },
+  {
+    id:5, num:"SCENARIO 05", title:"Gender Disparity in Academic Performance",
+    desc:"Analysis of examination results and classroom observation data reveals significant gender gaps: female students outperform males in Languages and Social Sciences, while male students outperform females in Mathematics and Science. The gaps are widening year on year.",
+    context:["Gender gap in Maths/Science: 18 percentage points (male advantage)","Gender gap in Languages: 14 percentage points (female advantage)","No female teacher currently teaches STEM subjects","Community attitudes around girls' education in STEM are a known factor"],
+    tags:["Equity","Gender","STEM"],
+    options:[
+      { code:"A", text:"STEM confidence program for girls", detail:"Launch structured STEM confidence intervention: role model sessions, all-female STEM clubs, modified assessment environment, and specific encouragement strategies for female students.", impact:{academic:72,morale:65,sustain:70,equity:90,stake:75}, cost:2, outcome:"Directly addresses identified gap. Requires female STEM role models — may need to address teacher deployment. Strong equity impact." },
+      { code:"B", text:"Teacher recruitment and deployment reform", detail:"Prioritize appointment of female STEM teachers as vacancies arise. Immediately redeploy any available female teacher with STEM background to priority STEM sections.", impact:{academic:65,morale:70,sustain:85,equity:85,stake:65}, cost:2, outcome:"Structural approach addresses root cause. Personnel deployment decisions constrained by government posting system. Long-term highest sustainability." },
+      { code:"C", text:"Pedagogy and assessment redesign", detail:"CPD focused on gender-responsive pedagogy: cooperative learning, varied assessment formats, explicit stereotype threat mitigation strategies.", impact:{academic:68,morale:75,sustain:78,equity:82,stake:68}, cost:1, outcome:"Builds teacher capacity that benefits all students. Does not address structural female role model gap. Moderate impact, high sustainability." },
+      { code:"D", text:"Community mindset engagement", detail:"Structured parent and community leader engagement on gender equity in STEM. Use data to demonstrate community benefits of girls' STEM achievement.", impact:{academic:55,morale:65,sustain:82,equity:78,stake:92}, cost:1, outcome:"Addresses cultural root cause — essential for sustainable change. Slowest to produce academic impact. Highest stakeholder engagement impact." }
+    ]
+  }
+];
+
+const POLICY_LAB_DATA = [
+  {
+    id:'assessment', icon:'📝', title:'Assessment Reform', desc:'Shift to competency-based continuous assessment',
+    phases:[
+      {phase:'PHASE 1 — WEEKS 1–4', title:'Diagnostic & Design', desc:'Audit current assessment practices, map against NCF 2023 competency frameworks, design new formative assessment tools.'},
+      {phase:'PHASE 2 — WEEKS 5–10', title:'Pilot Implementation', desc:'Volunteer teacher pilots across 2–3 subjects, structured observation, weekly reflection sessions.'},
+      {phase:'PHASE 3 — WEEKS 11–20', title:'Scaled Rollout', desc:'School-wide implementation with modified timeline for resistant teachers. Introduce student progress portfolios.'},
+      {phase:'PHASE 4 — WEEKS 21–30', title:'Parent Communication', desc:'Parent orientation on competency-based reporting. Introduce new progress card format.'},
+      {phase:'PHASE 5 — WEEK 31+', title:'Review & Institutionalize', desc:'Annual review of assessment system. Update policies. Integrate into teacher appraisal criteria.'}
+    ],
+    risks:[
+      {level:'HIGH', title:'Teacher Resistance', desc:'Significant workload perception and professional identity threat. Mitigation: structured CPD and peer champions.'},
+      {level:'HIGH', title:'Parent Confusion', desc:'Parents unfamiliar with competency-based reporting. Mitigation: proactive communication campaign.'},
+      {level:'MEDIUM', title:'Inconsistent Implementation', desc:'Variable uptake across teachers. Mitigation: shared exemplars and peer observation.'},
+      {level:'LOW', title:'Policy Reversal', desc:'Low risk given alignment with NCF 2023 national mandate.'}
+    ],
+    indicators:['% students with documented competency progress records','Frequency of formative assessment per week per subject','Teacher satisfaction with assessment system (survey)','Parent understanding of competency reports (survey)','Grade-level competency achievement rates by subject']
+  },
+  {
+    id:'curriculum', icon:'📚', title:'Curriculum Redesign', desc:'Contextualizing curriculum with local knowledge and vocational integration',
+    phases:[
+      {phase:'PHASE 1 — WEEKS 1–6', title:'Community Knowledge Mapping', desc:'Survey community practitioners, local industry, traditional knowledge holders to identify curriculum enrichment opportunities.'},
+      {phase:'PHASE 2 — WEEKS 7–12', title:'Curriculum Integration Design', desc:'Teacher teams design at least 2 contextually enriched units per subject using local knowledge resources.'},
+      {phase:'PHASE 3 — WEEKS 13–22', title:'Implementation with Mentoring', desc:'Classroom implementation with peer observation and structured reflection. Document student engagement evidence.'},
+      {phase:'PHASE 4 — WEEKS 23–30', title:'Student Showcase', desc:'Interdisciplinary exhibition linking academic competencies to community projects. Parent and community attendance.'},
+      {phase:'PHASE 5 — WEEK 31+', title:'Annual Cycle Integration', desc:'Embed local curriculum enrichment into annual planning cycle. Train new teachers on approach.'}
+    ],
+    risks:[
+      {level:'MEDIUM', title:'Syllabus Coverage Anxiety', desc:'Teachers fear local enrichment will compromise examination syllabus completion. Mitigation: demonstrate integration, not replacement.'},
+      {level:'MEDIUM', title:'Community Participation Variation', desc:'Some community knowledge holders may not engage. Mitigation: build relationships over time.'},
+      {level:'LOW', title:'Teacher Design Capacity', desc:'Some teachers may lack confidence in curriculum design. Mitigation: collaborative design processes and templates.'},
+      {level:'LOW', title:'Resource Requirements', desc:'Minimal additional resources required for most enrichment activities.'}
+    ],
+    indicators:['Number of locally-enriched curriculum units per grade level','Student attendance at contextually enriched lessons vs. standard lessons','Community practitioner sessions held per term','Student project quality against competency rubrics','Teacher confidence in contextual curriculum design (survey)']
+  },
+  {
+    id:'mentoring', icon:'🧑‍🏫', title:'Teacher Mentoring', desc:'Build structured peer mentoring and professional learning communities',
+    phases:[
+      {phase:'PHASE 1 — WEEKS 1–4', title:'Mentor Identification & Preparation', desc:'Identify experienced teachers willing to serve as mentors. Conduct initial mentor training on observation and feedback skills.'},
+      {phase:'PHASE 2 — WEEKS 5–8', title:'Pair Formation & Contracting', desc:'Form mentor-mentee pairs. Facilitate professional dialogue to establish goals, norms, and observation schedules.'},
+      {phase:'PHASE 3 — WEEKS 9–20', title:'Active Mentoring Cycle', desc:'Regular classroom observation, structured debrief conversations, collaborative lesson planning. Monthly whole-school sharing sessions.'},
+      {phase:'PHASE 4 — WEEKS 21–28', title:'Professional Learning Community', desc:'Transition from individual mentoring to cross-grade professional learning communities organized by student learning challenges.'},
+      {phase:'PHASE 5 — WEEK 29+', title:'Review & Next Cycle Planning', desc:'Individual reflection on growth. School-level review of mentoring impact data. Plan next cycle with revised pairings.'}
+    ],
+    risks:[
+      {level:'HIGH', title:'Time Constraints', desc:'Teachers cite lack of time for structured mentoring. Mitigation: schedule mentoring explicitly into timetable; protect it from administrative displacement.'},
+      {level:'MEDIUM', title:'Power Imbalance', desc:'Hierarchical culture may undermine peer learning norms. Mitigation: frame as mutual learning; include principal as mentee.'},
+      {level:'MEDIUM', title:'Mentor Burnout', desc:'Additional responsibility without recognition. Mitigation: reduced other duties; formal recognition; stipend if possible.'},
+      {level:'LOW', title:'Quality of Mentoring Conversations', desc:'Low risk with structured frameworks and initial training.'}
+    ],
+    indicators:['Observation cycles completed per mentor pair per term','Teacher-reported growth in identified areas (self-assessment)','Student outcome data in mentor and mentee classrooms','Quality of lesson planning documentation','% of teachers participating in professional learning community sessions']
+  },
+  {
+    id:'community', icon:'🏘️', title:'Community Linkage', desc:'Strengthen school-community partnership for shared educational responsibility',
+    phases:[
+      {phase:'PHASE 1 — WEEKS 1–6', title:'Stakeholder Mapping & SMC Activation', desc:'Complete stakeholder ecosystem map. Revitalize SMC with active parent representatives. Conduct community listening sessions.'},
+      {phase:'PHASE 2 — WEEKS 7–14', title:'Partnership Agreements', desc:'Formalize partnerships with local businesses, NGOs, and community organizations for resource sharing, career exposure, and volunteer support.'},
+      {phase:'PHASE 3 — WEEKS 15–24', title:'Community Learning Initiatives', desc:'Implement community practitioner classroom sessions, career exposure visits, and service-learning projects linking school to community needs.'},
+      {phase:'PHASE 4 — WEEKS 25–32', title:'Annual Community Forum', desc:'School performance sharing event with community. Present data transparently. Invite community input on priorities.'},
+      {phase:'PHASE 5 — WEEK 33+', title:'Institutionalize Partnership', desc:'Embed community engagement in annual school calendar. Establish community resource register updated annually.'}
+    ],
+    risks:[
+      {level:'MEDIUM', title:'Community Disengagement', desc:'Lack of established trust from previous negative experiences. Mitigation: start with quick wins and transparent communication.'},
+      {level:'MEDIUM', title:'Unsustainable Dependencies', desc:'Community support may be inconsistent. Mitigation: build diverse partnership portfolio, not reliance on single partners.'},
+      {level:'LOW', title:'Political Sensitivities', desc:'Community engagement may encounter local political dynamics. Mitigation: maintain strict educational focus and apolitical positioning.'},
+      {level:'LOW', title:'Resource Expectations', desc:'Community may expect financial benefits. Mitigation: clarify nature of partnership from the outset.'}
+    ],
+    indicators:['SMC meeting attendance and decision-making quality','Community practitioner sessions per term','Student attendance at community-linked activities','Parent satisfaction with school communication (survey)','Number of active community partnership agreements']
+  },
+  {
+    id:'digital', icon:'💻', title:'Digital Integration', desc:'Thoughtful integration of digital tools for learning and administration',
+    phases:[
+      {phase:'PHASE 1 — WEEKS 1–6', title:'Infrastructure & Access Audit', desc:'Map existing digital infrastructure, internet access quality, device availability, and teacher digital literacy baseline.'},
+      {phase:'PHASE 2 — WEEKS 7–12', title:'Teacher Digital Literacy Building', desc:'Structured CPD on core digital tools. Focus on tools that work in low-connectivity environments. Peer learning pairs.'},
+      {phase:'PHASE 3 — WEEKS 13–22', title:'Classroom Digital Integration', desc:'Piloting digital resources in specific lessons. Focus on quality over quantity. Document impact on student engagement and learning.'},
+      {phase:'PHASE 4 — WEEKS 23–30', title:'Student Digital Literacy Curriculum', desc:'Introduce structured digital literacy sessions for all grades. Emphasize responsible use, information evaluation, and creation.'},
+      {phase:'PHASE 5 — WEEK 31+', title:'Digital Leadership & Advocacy', desc:'School becomes demonstrator for digital integration in cluster. Document learning and share with complex schools. Advocate for infrastructure investment.'}
+    ],
+    risks:[
+      {level:'HIGH', title:'Infrastructure Unreliability', desc:'Electricity and internet connectivity unreliable in many settings. Mitigation: prioritize offline-capable tools; solar backup where feasible.'},
+      {level:'HIGH', title:'Equity of Access', desc:'Students without home digital access disadvantaged. Mitigation: ensure all digital learning happens in school; no homework requiring devices.'},
+      {level:'MEDIUM', title:'Technology for Technology's Sake', desc:'Digital tools used as novelty without pedagogical purpose. Mitigation: require explicit competency links for all digital tool integration.'},
+      {level:'LOW', title:'Device Maintenance', desc:'Technical support capacity. Mitigation: train school-based device champion and establish maintenance protocols.'}
+    ],
+    indicators:['Teacher digital tool use frequency (observed lessons per week)','Student digital literacy assessment scores by grade','Device uptime and maintenance records','% of digital lessons with explicit competency learning goals','Student and teacher satisfaction with digital learning environment']
+  }
+];
+
+const RISK_SCENARIOS = [
+  {
+    id:'enrollment', icon:'📉', name:'Sudden Enrollment Drop',
+    desc:'Enrollment falls 25% in one term due to migration, competing school, or crisis event.',
+    stability:45, adapt:60, riskExposure:72, recovery:16,
+    gaugeColor:'#e74c3c',
+    steps:[
+      {num:1, title:'Emergency Retention Campaign', desc:'Immediate home visit to all withdrawn families. Identify specific barriers and address directly. Mobilize SMC and community leaders.', priority:'critical'},
+      {num:2, title:'Rapid Cause Analysis', desc:'Map withdrawal reasons by category. Differentiate reversible from structural causes. Prioritize highest-volume reversible causes for immediate action.', priority:'critical'},
+      {num:3, title:'Resource Reallocation', desc:'Adjust teacher deployment and timetable to maintain quality with reduced student numbers. Protect specialist subjects despite enrollment pressure.', priority:'high'},
+      {num:4, title:'District Notification & Support Request', desc:'Report situation to cluster and district leadership immediately. Request additional support resources and authority for emergency interventions.', priority:'high'},
+      {num:5, title:'Medium-Term Attraction Strategy', desc:'Identify what would attract students back and differentiate school from competitors. Build visible quality improvements.', priority:'medium'}
+    ]
+  },
+  {
+    id:'budget', icon:'✂️', name:'Emergency Budget Cut',
+    desc:'Mid-year 50% budget cut announced. Planned programs cannot be funded.',
+    stability:58, adapt:70, riskExposure:65, recovery:8,
+    gaugeColor:'#f39c12',
+    steps:[
+      {num:1, title:'Priority-Based Reallocation', desc:'Immediately classify all planned expenditures by impact on student learning outcomes. Protect highest-impact activities first.', priority:'critical'},
+      {num:2, title:'Resource Mobilization Sprint', desc:'Emergency outreach to CSR partners, alumni, NGOs, and community donors. Present specific funding needs with impact evidence.', priority:'high'},
+      {num:3, title:'Activity Consolidation', desc:'Combine planned programs where possible to achieve similar outcomes with lower combined cost. Eliminate low-impact high-cost activities.', priority:'high'},
+      {num:4, title:'Teacher Communication & Morale', desc:'Transparent communication with staff about budget situation. Protect CPD investments even under pressure — teacher quality is the school\'s core asset.', priority:'medium'},
+      {num:5, title:'Documentation for Future Advocacy', desc:'Document the specific student impact of cuts for future budget advocacy. Quantified evidence is essential for recovering resources in next cycle.', priority:'medium'}
+    ]
+  },
+  {
+    id:'policy', icon:'🔄', name:'Major Policy Change',
+    desc:'New assessment or curriculum mandate requires implementation within one quarter.',
+    stability:65, adapt:75, riskExposure:55, recovery:6,
+    gaugeColor:'#3498db',
+    steps:[
+      {num:1, title:'Policy Deep-Dive & Translation', desc:'Read and interpret the policy carefully before communicating to staff. Identify what specifically must change and what remains the school\'s discretion.', priority:'critical'},
+      {num:2, title:'Staged Staff Communication', desc:'Present the policy to senior teachers first. Build their understanding and anticipated questions before all-staff communication.', priority:'high'},
+      {num:3, title:'Quick CPD Design', desc:'Identify the specific capacity gaps the new mandate creates. Design the most efficient possible professional development to address those gaps.', priority:'high'},
+      {num:4, title:'Quick Win Identification', desc:'Find elements of the new policy that experienced teachers can implement immediately with little change. Start there to build confidence.', priority:'medium'},
+      {num:5, title:'Progress Monitoring', desc:'Weekly check-in on implementation progress. Identify struggles early and provide targeted support before they become systemic failures.', priority:'medium'}
+    ]
+  },
+  {
+    id:'turnover', icon:'🚶', name:'Staff Turnover Crisis',
+    desc:'Three key teachers transfer mid-year, including the science head and two senior teachers.',
+    stability:40, adapt:55, riskExposure:80, recovery:20,
+    gaugeColor:'#e74c3c',
+    steps:[
+      {num:1, title:'Emergency Timetable Revision', desc:'Immediately map which sections and subjects are most affected. Design revised timetable that distributes burden fairly across remaining staff.', priority:'critical'},
+      {num:2, title:'Complex Network Activation', desc:'Contact cluster schools immediately for temporary teacher sharing arrangements. Prioritize examination-linked subjects for relief.', priority:'critical'},
+      {num:3, title:'Knowledge Transfer Emergency', desc:'Before departing teachers leave, schedule intensive knowledge handover sessions covering assessment records, student needs, curriculum progress, and ongoing projects.', priority:'high'},
+      {num:4, title:'Remaining Staff Morale Protection', desc:'Acknowledge the pressure on remaining staff directly. Involve them in problem-solving. Ensure remaining burden is distributed with equity and respect.', priority:'high'},
+      {num:5, title:'Succession System Design', desc:'Use this crisis to build a permanent distributed leadership system. No single teacher should ever again be an irreplaceable point of failure.', priority:'medium'}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+let currentPolicyPage = 0;
+let currentScenario = null;
+let selectedOption = null;
+let simulationResults = JSON.parse(localStorage.getItem('simResults') || '[]');
+let resourcePlans = JSON.parse(localStorage.getItem('resourcePlans') || '[]');
+let leadershipProfile = JSON.parse(localStorage.getItem('leaderProfile') || '{"strategic":50,"analytical":50,"reform":50,"equity":50,"community":50,"resilience":50}');
+
+// ═══════════════════════════════════════════════
+//  SCREEN NAVIGATION
+// ═══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+
+  if (id === 'screen-policy') renderPolicyNav();
+  if (id === 'screen-simulation') renderScenarios();
+  if (id === 'screen-resource') {}
+  if (id === 'screen-policy-lab') renderPolicyLab();
+  if (id === 'screen-risk') renderRiskScenarios();
+  if (id === 'screen-dashboard') renderDashboard();
+  if (id === 'screen-scorecard') renderScorecard();
+}
+
+// ═══════════════════════════════════════════════
+//  POLICY PAGES
+// ═══════════════════════════════════════════════
+function renderPolicyNav() {
+  const nav = document.getElementById('policyNav');
+  nav.innerHTML = POLICY_PAGES.map((p,i) => `
+    <div class="policy-nav-item ${i===currentPolicyPage?'active':''}" onclick="loadPolicyPage(${i})">
+      <div class="page-num">PAGE ${p.num}</div>
+      <div class="page-name">${p.title}</div>
+    </div>
+  `).join('');
+  loadPolicyPage(currentPolicyPage);
+}
+
+function loadPolicyPage(idx) {
+  currentPolicyPage = idx;
+  const page = POLICY_PAGES[idx];
+  document.getElementById('policyContent').innerHTML = page.content;
+  document.querySelectorAll('.policy-nav-item').forEach((el,i) => {
+    el.classList.toggle('active', i===idx);
+  });
+  document.getElementById('prevPageBtn').disabled = idx === 0;
+  document.getElementById('nextPageBtn').disabled = idx === POLICY_PAGES.length - 1;
+  window.scrollTo(0, document.querySelector('.page-header').offsetHeight + 20);
+}
+
+function changePolicyPage(dir) {
+  const next = currentPolicyPage + dir;
+  if (next >= 0 && next < POLICY_PAGES.length) loadPolicyPage(next);
+}
+
+// ═══════════════════════════════════════════════
+//  SIMULATION
+// ═══════════════════════════════════════════════
+function renderScenarios() {
+  document.getElementById('scenarioGrid').innerHTML = SCENARIOS.map(s => `
+    <div class="scenario-card" onclick="startScenario(${s.id})">
+      <div class="scenario-num">${s.num}</div>
+      <div class="scenario-title">${s.title}</div>
+      <div class="scenario-desc">${s.desc.substring(0,120)}…</div>
+      <div class="scenario-tags">${s.tags.map(t=>`<span class="scenario-tag">${t}</span>`).join('')}</div>
+    </div>
+  `).join('');
+  document.getElementById('scenarioSelection').style.display='block';
+  document.getElementById('activeSimulation').style.display='none';
+  document.getElementById('simHeaderTitle').textContent='Leadership Simulation';
+  document.getElementById('simHeaderBadge').textContent='Select Scenario';
+}
+
+function startScenario(id) {
+  currentScenario = SCENARIOS.find(s=>s.id===id);
+  selectedOption = null;
+  document.getElementById('scenarioSelection').style.display='none';
+  document.getElementById('activeSimulation').style.display='block';
+  document.getElementById('simHeaderTitle').textContent=currentScenario.title;
+  document.getElementById('simHeaderBadge').textContent=currentScenario.num;
+
+  document.getElementById('activeScenarioNum').textContent=currentScenario.num;
+  document.getElementById('activeScenarioTitle').textContent=currentScenario.title;
+  document.getElementById('activeScenarioDesc').textContent=currentScenario.desc;
+  document.getElementById('activeContextList').innerHTML=currentScenario.context.map(c=>`<li>${c}</li>`).join('');
+
+  document.getElementById('decisionOptions').innerHTML = currentScenario.options.map(o=>`
+    <div class="decision-option" onclick="selectOption('${o.code}')" id="opt-${o.code}">
+      <div class="decision-option-code">OPTION ${o.code}</div>
+      <div class="decision-option-text">${o.text}</div>
+      <div class="decision-option-detail">${o.detail}</div>
+    </div>
+  `).join('');
+
+  // Reset impact panel
+  ['Academic','Morale','Sustain','Equity','Stake'].forEach(k=>{
+    document.getElementById('score'+k).textContent='—';
+    document.getElementById('bar'+k).style.width='0%';
+  });
+  document.getElementById('resultBox').classList.remove('show');
+  document.getElementById('submitDecisionBtn').disabled=true;
+  document.querySelectorAll('.cost-pill').forEach(p=>p.classList.remove('filled'));
+}
+
+function backToScenarios() {
+  document.getElementById('scenarioSelection').style.display='block';
+  document.getElementById('activeSimulation').style.display='none';
+  document.getElementById('simHeaderTitle').textContent='Leadership Simulation';
+  document.getElementById('simHeaderBadge').textContent='Select Scenario';
+}
+
+function selectOption(code) {
+  selectedOption = code;
+  document.querySelectorAll('.decision-option').forEach(el=>el.classList.remove('selected'));
+  document.getElementById('opt-'+code).classList.add('selected');
+  document.getElementById('submitDecisionBtn').disabled=false;
+}
+
+function submitDecision() {
+  if(!selectedOption || !currentScenario) return;
+  const opt = currentScenario.options.find(o=>o.code===selectedOption);
+  const imp = opt.impact;
+
+  // Animate bars
+  setTimeout(()=>{ document.getElementById('barAcademic').style.width=imp.academic+'%'; document.getElementById('scoreAcademic').textContent=imp.academic+'/100'; }, 100);
+  setTimeout(()=>{ document.getElementById('barMorale').style.width=imp.morale+'%'; document.getElementById('scoreMorale').textContent=imp.morale+'/100'; }, 300);
+  setTimeout(()=>{ document.getElementById('barSustain').style.width=imp.sustain+'%'; document.getElementById('scoreSustain').textContent=imp.sustain+'/100'; }, 500);
+  setTimeout(()=>{ document.getElementById('barEquity').style.width=imp.equity+'%'; document.getElementById('scoreEquity').textContent=imp.equity+'/100'; }, 700);
+  setTimeout(()=>{ document.getElementById('barStake').style.width=imp.stake+'%'; document.getElementById('scoreStake').textContent=imp.stake+'/100'; }, 900);
+
+  // Cost pills
+  const pills = document.querySelectorAll('.cost-pill');
+  for(let i=0;i<opt.cost;i++) pills[i].classList.add('filled');
+
+  // Result
+  setTimeout(()=>{
+    document.getElementById('resultText').textContent=opt.outcome;
+    document.getElementById('resultBox').classList.add('show');
+  }, 1200);
+
+  // Save to history
+  const result = {
+    scenario: currentScenario.title,
+    option: `Option ${selectedOption}: ${opt.text}`,
+    scores: imp,
+    timestamp: new Date().toLocaleDateString()
+  };
+  simulationResults.unshift(result);
+  if(simulationResults.length > 20) simulationResults.pop();
+  localStorage.setItem('simResults', JSON.stringify(simulationResults));
+
+  // Update leadership profile
+  updateLeadershipProfile(opt);
+
+  showToast('Decision evaluated! Review your impact metrics →');
+  document.getElementById('submitDecisionBtn').disabled=true;
+}
+
+function updateLeadershipProfile(opt) {
+  const avg = (a,b,c) => Math.round((a+b+c)/3);
+  leadershipProfile.strategic = Math.min(100, Math.round((leadershipProfile.strategic * 0.8) + (avg(opt.impact.academic, opt.impact.sustain, opt.impact.equity) * 0.2)));
+  leadershipProfile.analytical = Math.min(100, Math.round((leadershipProfile.analytical * 0.8) + (avg(opt.impact.academic, opt.impact.morale, opt.impact.stake) * 0.2)));
+  leadershipProfile.reform = Math.min(100, Math.round((leadershipProfile.reform * 0.8) + (opt.impact.sustain * 0.2)));
+  leadershipProfile.equity = Math.min(100, Math.round((leadershipProfile.equity * 0.8) + (opt.impact.equity * 0.2)));
+  leadershipProfile.community = Math.min(100, Math.round((leadershipProfile.community * 0.8) + (opt.impact.stake * 0.2)));
+  leadershipProfile.resilience = Math.min(100, Math.round((leadershipProfile.resilience * 0.8) + (opt.impact.sustain * 0.2)));
+  localStorage.setItem('leaderProfile', JSON.stringify(leadershipProfile));
+}
+
+// ═══════════════════════════════════════════════
+//  RESOURCE PLANNER
+// ═══════════════════════════════════════════════
+function updateRange(type, val) {
+  if(type==='budget') document.getElementById('budgetDisplay').textContent=val;
+  if(type==='hours') document.getElementById('hoursDisplay').textContent=val;
+  if(type==='enroll') document.getElementById('enrollDisplay').textContent=val;
+}
+
+function calculateAllocation() {
+  const budget = parseInt(document.getElementById('budgetRange').value);
+  const hours = parseInt(document.getElementById('hoursRange').value);
+  const enroll = parseInt(document.getElementById('enrollRange').value);
+  const priority = document.getElementById('priorityFocus').value;
+
+  const weights = {
+    academic:   {academic:0.40,remedial:0.25,cpd:0.20,community:0.10,infra:0.05},
+    equity:     {academic:0.25,remedial:0.35,cpd:0.15,community:0.20,infra:0.05},
+    infrastructure:{academic:0.15,remedial:0.15,cpd:0.10,community:0.10,infra:0.50},
+    community:  {academic:0.20,remedial:0.15,cpd:0.15,community:0.40,infra:0.10},
+    cpd:        {academic:0.25,remedial:0.20,cpd:0.40,community:0.10,infra:0.05}
+  };
+  const w = weights[priority];
+
+  const alloc = {
+    academic: Math.round(budget * w.academic),
+    remedial: Math.round(budget * w.remedial),
+    cpd: Math.round(budget * w.cpd),
+    community: Math.round(budget * w.community),
+    infra: Math.round(budget * w.infra)
+  };
+
+  const hoursAlloc = {
+    academic: Math.round(hours * w.academic),
+    remedial: Math.round(hours * w.remedial),
+    cpd: Math.round(hours * w.cpd),
+    community: Math.round(hours * w.community),
+    infra: Math.round(hours * w.infra)
+  };
+
+  const perStudentBudget = (budget * 1000 / enroll).toFixed(0);
+  const efficiencyIndex = Math.round(60 + (budget/enroll)*0.5 + (hours/enroll)*20);
+  const eff = Math.min(100, efficiencyIndex);
+
+  document.getElementById('allocationGrid').innerHTML = [
+    {icon:'🎓',label:'Academic Interventions',val:alloc.academic,unit:'₹ thousands'},
+    {icon:'🔧',label:'Remedial Programs',val:alloc.remedial,unit:'₹ thousands'},
+    {icon:'📖',label:'CPD Workshops',val:alloc.cpd,unit:'₹ thousands'},
+    {icon:'🏘️',label:'Community Initiatives',val:alloc.community,unit:'₹ thousands'},
+    {icon:'🏗️',label:'Infrastructure',val:alloc.infra,unit:'₹ thousands'},
+    {icon:'👤',label:'Per Student Investment',val:perStudentBudget,unit:'₹ per student'}
+  ].map(item=>`
+    <div class="allocation-card">
+      <div class="allocation-card-icon">${item.icon}</div>
+      <div class="allocation-card-value">${item.val}</div>
+      <div class="allocation-card-unit">${item.unit}</div>
+      <div class="allocation-card-label">${item.label}</div>
+    </div>
+  `).join('');
+
+  const tradeoffs = [
+    {area:'Academic Interventions', pct:Math.round(w.academic*100), hrs:hoursAlloc.academic, impact:'High',cost:'Low'},
+    {area:'Remedial Programs', pct:Math.round(w.remedial*100), hrs:hoursAlloc.remedial, impact:'High (equity)',cost:'Moderate'},
+    {area:'CPD Workshops', pct:Math.round(w.cpd*100), hrs:hoursAlloc.cpd, impact:'Medium (long-term)',cost:'Low'},
+    {area:'Community Initiatives', pct:Math.round(w.community*100), hrs:hoursAlloc.community, impact:'Medium (engagement)',cost:'Low'},
+    {area:'Infrastructure', pct:Math.round(w.infra*100), hrs:hoursAlloc.infra, impact:'Enabling',cost:'High'},
+  ];
+  document.getElementById('tradeoffBody').innerHTML = tradeoffs.map(t=>`
+    <tr>
+      <td>${t.area}</td>
+      <td><strong>${t.pct}%</strong></td>
+      <td>${t.hrs} hrs</td>
+      <td>${t.impact}</td>
+      <td class="${t.cost==='High'?'tag-high':t.cost==='Moderate'?'tag-med':'tag-low'}">${t.cost}</td>
+    </tr>
+  `).join('');
+
+  document.getElementById('efficiencyScore').textContent = eff + '/100';
+  const effLabels = ['Critically under-resourced — cannot achieve quality outcomes','Constrained — focus on highest leverage only','Adequate — standard programs achievable','Well-resourced — can invest in innovation and sustainability'];
+  document.getElementById('efficiencyLabel').textContent = eff < 40 ? effLabels[0] : eff < 60 ? effLabels[1] : eff < 80 ? effLabels[2] : effLabels[3];
+
+  document.getElementById('allocationResult').classList.add('show');
+
+  const plan = {budget, hours, enroll, priority, alloc, eff, timestamp: new Date().toLocaleDateString()};
+  resourcePlans.unshift(plan);
+  localStorage.setItem('resourcePlans', JSON.stringify(resourcePlans));
+}
+
+// ═══════════════════════════════════════════════
+//  POLICY LAB
+// ═══════════════════════════════════════════════
+function renderPolicyLab() {
+  document.getElementById('labCards').innerHTML = POLICY_LAB_DATA.map(p=>`
+    <div class="lab-card" onclick="selectPolicyFocus('${p.id}')" id="lab-${p.id}">
+      <div class="lab-card-icon">${p.icon}</div>
+      <div class="lab-card-title">${p.title}</div>
+      <div class="lab-card-desc">${p.desc}</div>
+    </div>
+  `).join('');
+}
+
+function selectPolicyFocus(id) {
+  document.querySelectorAll('.lab-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('lab-'+id).classList.add('active');
+  const data = POLICY_LAB_DATA.find(p=>p.id===id);
+
+  document.getElementById('roadmapTitle').textContent = data.title + ' — Implementation Roadmap';
+
+  document.getElementById('roadmapTimeline').innerHTML = data.phases.map(ph=>`
+    <div class="timeline-item">
+      <div class="timeline-phase">${ph.phase}</div>
+      <div class="timeline-title">${ph.title}</div>
+      <div class="timeline-desc">${ph.desc}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('riskForecast').innerHTML = data.risks.map(r=>`
+    <div class="risk-item ${r.level==='MEDIUM'?'medium':r.level==='LOW'?'low':''}">
+      <div class="risk-level">${r.level} RISK</div>
+      <div class="risk-title">${r.title}</div>
+      <div class="risk-desc">${r.desc}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('monitoringIndicators').innerHTML = data.indicators.map((ind,i)=>`
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.07);">
+      <span style="color:var(--gold);font-weight:700;flex-shrink:0;">${i+1}.</span>
+      <span style="font-size:14px;color:var(--gray-light);line-height:1.5;">${ind}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('roadmapOutput').classList.add('show');
+  document.getElementById('labEmptyState').style.display='none';
+}
+
+// ═══════════════════════════════════════════════
+//  RISK ANALYZER
+// ═══════════════════════════════════════════════
+function renderRiskScenarios() {
+  document.getElementById('riskScenarioGrid').innerHTML = RISK_SCENARIOS.map(r=>`
+    <div class="risk-scenario-card" onclick="analyzeRisk('${r.id}')" id="rsk-${r.id}">
+      <div class="risk-icon">${r.icon}</div>
+      <div class="risk-name">${r.name}</div>
+      <div class="risk-desc2">${r.desc}</div>
+    </div>
+  `).join('');
+  document.getElementById('riskAnalysisOutput').classList.remove('show');
+}
+
+function analyzeRisk(id) {
+  document.querySelectorAll('.risk-scenario-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('rsk-'+id).classList.add('active');
+  const data = RISK_SCENARIOS.find(r=>r.id===id);
+
+  const stabEl = document.getElementById('stabilityNum');
+  stabEl.textContent = data.stability;
+  stabEl.style.color = data.stability < 50 ? 'var(--danger)' : data.stability < 70 ? 'var(--warning)' : 'var(--success)';
+  document.getElementById('adaptScore').textContent = data.adapt + '/100';
+  document.getElementById('riskExposure').textContent = data.riskExposure + '/100';
+  document.getElementById('recoveryTime').textContent = data.recovery + ' wks';
+
+  setTimeout(()=>{
+    document.getElementById('stabilityGaugeFill').style.width = data.stability+'%';
+    document.getElementById('stabilityGaugeFill').style.background = data.gaugeColor;
+  }, 100);
+
+  document.getElementById('correctiveSteps').innerHTML = data.steps.map(s=>`
+    <div class="step-item">
+      <div class="step-num">${s.num}</div>
+      <div class="step-content">
+        <div class="step-title">${s.title}</div>
+        <div class="step-desc">${s.desc}</div>
+      </div>
+      <span class="step-priority priority-${s.priority}">${s.priority}</span>
+    </div>
+  `).join('');
+
+  document.getElementById('riskAnalysisOutput').classList.add('show');
+}
+
+// ═══════════════════════════════════════════════
+//  DASHBOARD
+// ═══════════════════════════════════════════════
+function renderDashboard() {
+  const count = simulationResults.length;
+  const avgAcad = count > 0 ? Math.round(simulationResults.reduce((s,r)=>s+r.scores.academic,0)/count) : 0;
+  const avgEq = count > 0 ? Math.round(simulationResults.reduce((s,r)=>s+r.scores.equity,0)/count) : 0;
+  const avgSust = count > 0 ? Math.round(simulationResults.reduce((s,r)=>s+r.scores.sustain,0)/count) : 0;
+
+  document.getElementById('metricCards').innerHTML = [
+    {val:count, label:'Simulations Completed', trend:''},
+    {val:avgAcad, label:'Avg Academic Impact Score', trend:avgAcad>70?'↑ Strong':'↓ Needs Work'},
+    {val:avgEq, label:'Avg Equity Impact Score', trend:avgEq>70?'↑ Equitable':'↓ Review approach'},
+    {val:avgSust, label:'Avg Sustainability Score', trend:avgSust>70?'↑ Sustainable':'↓ Build resilience'}
+  ].map(m=>`
+    <div class="metric-card">
+      <div class="metric-card-value">${m.val}</div>
+      <div class="metric-card-label">${m.label}</div>
+      ${m.trend ? `<div class="metric-card-trend ${m.trend.includes('↑')?'trend-up':'trend-down'}">${m.trend}</div>` : ''}
+    </div>
+  `).join('');
+
+  if(count === 0) {
+    document.getElementById('decisionHistoryList').innerHTML='<div class="empty-state"><div class="empty-state-icon">🎯</div><p>Complete simulations to see your decision history here</p></div>';
+  } else {
+    document.getElementById('decisionHistoryList').innerHTML = simulationResults.slice(0,8).map(r=>`
+      <div class="history-item">
+        <div class="history-item-title">${r.scenario}</div>
+        <div class="history-item-meta">
+          <span>${r.option}</span>
+          <span class="history-score">Academic: ${r.scores.academic} | Equity: ${r.scores.equity}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  const dims = [
+    {label:'Strategic Thinking', key:'strategic'},
+    {label:'Analytical Orientation', key:'analytical'},
+    {label:'Reform Aggressiveness', key:'reform'},
+    {label:'Equity Focus', key:'equity'},
+    {label:'Community Engagement', key:'community'},
+    {label:'Resilience Building', key:'resilience'}
+  ];
+  document.getElementById('profileDimensions').innerHTML = dims.map(d=>`
+    <div class="profile-dimension">
+      <div class="profile-dim-label">${d.label}</div>
+      <div class="profile-dim-bar"><div class="profile-dim-fill" style="width:${leadershipProfile[d.key]}%"></div></div>
+      <div class="profile-dim-val">${leadershipProfile[d.key]}</div>
+    </div>
+  `).join('');
+
+  drawRadarChart();
+}
+
+function drawRadarChart() {
+  const canvas = document.getElementById('radarChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const cx=140, cy=140, r=100;
+  const dims = ['Strategic','Analytical','Reform','Equity','Community','Resilience'];
+  const vals = [leadershipProfile.strategic, leadershipProfile.analytical, leadershipProfile.reform, leadershipProfile.equity, leadershipProfile.community, leadershipProfile.resilience];
+  const n=6;
+
+  ctx.clearRect(0,0,280,280);
+
+  // Rings
+  for(let ring=1;ring<=4;ring++){
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const angle=(i/n)*2*Math.PI - Math.PI/2;
+      const px=cx+Math.cos(angle)*(r*ring/4);
+      const py=cy+Math.sin(angle)*(r*ring/4);
+      if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(255,255,255,0.1)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+
+  // Axes
+  for(let i=0;i<n;i++){
+    const angle=(i/n)*2*Math.PI - Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(angle)*r, cy+Math.sin(angle)*r);
+    ctx.strokeStyle='rgba(255,255,255,0.15)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+
+  // Data polygon
+  ctx.beginPath();
+  for(let i=0;i<n;i++){
+    const angle=(i/n)*2*Math.PI - Math.PI/2;
+    const val=vals[i]/100;
+    const px=cx+Math.cos(angle)*r*val;
+    const py=cy+Math.sin(angle)*r*val;
+    if(i===0) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+  }
+  ctx.closePath();
+  ctx.fillStyle='rgba(201,168,76,0.25)';
+  ctx.fill();
+  ctx.strokeStyle='rgba(201,168,76,0.8)';
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  // Points
+  for(let i=0;i<n;i++){
+    const angle=(i/n)*2*Math.PI - Math.PI/2;
+    const val=vals[i]/100;
+    ctx.beginPath();
+    ctx.arc(cx+Math.cos(angle)*r*val, cy+Math.sin(angle)*r*val, 4,0,2*Math.PI);
+    ctx.fillStyle='var(--gold)';
+    ctx.fill();
+  }
+
+  // Labels
+  ctx.font='11px Source Sans 3';
+  ctx.fillStyle='rgba(200,208,222,0.9)';
+  ctx.textAlign='center';
+  for(let i=0;i<n;i++){
+    const angle=(i/n)*2*Math.PI - Math.PI/2;
+    const lx=cx+Math.cos(angle)*(r+20);
+    const ly=cy+Math.sin(angle)*(r+20);
+    ctx.fillText(dims[i],lx,ly+4);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  SCORECARD
+// ═══════════════════════════════════════════════
+function renderScorecard() {
+  const count = simulationResults.length;
+  if(count === 0) {
+    document.getElementById('sliScore').textContent='—';
+    document.getElementById('sliGrade').textContent='Complete simulations to generate your score';
+    document.getElementById('scorecardBreakdown').innerHTML='<div class="empty-state"><div class="empty-state-icon">🏆</div><p>Complete at least one simulation to see your transformation scorecard</p></div>';
+    return;
+  }
+
+  const avgAcad = Math.round(simulationResults.reduce((s,r)=>s+r.scores.academic,0)/count);
+  const avgEquity = Math.round(simulationResults.reduce((s,r)=>s+r.scores.equity,0)/count);
+  const avgSust = Math.round(simulationResults.reduce((s,r)=>s+r.scores.sustain,0)/count);
+  const avgMorale = Math.round(simulationResults.reduce((s,r)=>s+r.scores.morale,0)/count);
+  const avgStake = Math.round(simulationResults.reduce((s,r)=>s+r.scores.stake,0)/count);
+  const resEff = resourcePlans.length>0 ? Math.min(100,Math.round(resourcePlans.reduce((s,r)=>s+r.eff,0)/resourcePlans.length)) : 50;
+
+  // Strategic Leadership Index formula
+  const sli = Math.round(
+    avgAcad * 0.25 +
+    avgEquity * 0.20 +
+    avgSust * 0.20 +
+    avgMorale * 0.15 +
+    avgStake * 0.10 +
+    resEff * 0.10
+  );
+
+  document.getElementById('sliScore').textContent = sli;
+  const grade = sli>=85?'Distinguished Leader':sli>=70?'Effective Leader':sli>=55?'Developing Leader':'Emerging Leader';
+  document.getElementById('sliGrade').textContent = grade;
+
+  const breakdown = [
+    {icon:'🎓',cat:'Academic Impact',val:avgAcad,max:100,color:'#2ecc71',desc:'Average academic impact across all scenarios attempted. Reflects ability to choose decisions that improve student learning outcomes.'},
+    {icon:'⚖️',cat:'Equity Improvement',val:avgEquity,max:100,color:'#3498db',desc:'Average equity impact. Measures consistent attention to marginalized students and reduction of learning gaps.'},
+    {icon:'🔄',cat:'Reform Sustainability',val:avgSust,max:100,color:'#c9a84c',desc:'Average reform sustainability score. Reflects preference for decisions that build lasting change rather than short-term fixes.'},
+    {icon:'🤝',cat:'Staff & Stakeholder Relations',val:Math.round((avgMorale+avgStake)/2),max:100,color:'#9b59b6',desc:'Combined staff morale and stakeholder engagement score. Measures quality of relationship-building across decisions.'},
+    {icon:'📊',cat:'Resource Efficiency',val:resEff,max:100,color:'#e67e22',desc:'Resource allocation efficiency from planner sessions. Measures ability to extract maximum impact from available resources.'},
+    {icon:'🏆',cat:'Strategic Leadership Index',val:sli,max:100,color:'#c9a84c',desc:'Composite score aggregating all dimensions of leadership performance across simulations and planning exercises.'}
+  ];
+
+  document.getElementById('scorecardBreakdown').innerHTML = breakdown.map(b=>`
+    <div class="score-card">
+      <div class="score-card-icon">${b.icon}</div>
+      <div class="score-card-category">${b.cat}</div>
+      <div><span class="score-card-value">${b.val}</span><span class="score-card-max">/100</span></div>
+      <div class="score-card-bar"><div class="score-card-fill" style="width:${b.val}%;background:${b.color}"></div></div>
+      <div class="score-card-desc">${b.desc}</div>
+    </div>
+  `).join('');
+}
+
+function resetAllData() {
+  if(!confirm('Reset all simulation data? This cannot be undone.')) return;
+  simulationResults=[];
+  resourcePlans=[];
+  leadershipProfile={strategic:50,analytical:50,reform:50,equity:50,community:50,resilience:50};
+  localStorage.removeItem('simResults');
+  localStorage.removeItem('resourcePlans');
+  localStorage.removeItem('leaderProfile');
+  renderScorecard();
+  showToast('All simulation data has been reset.');
+}
+
+// ═══════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 4000);
+}
+
+// ═══════════════════════════════════════════════
+//  HOME EXTRA NAVIGATION (Risk, Dashboard, Scorecard)
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', ()=>{
+  // Add extra nav buttons to home
+  const homeNav = document.querySelector('.home-nav');
+  const extras = [
+    {icon:'🛡️', title:'Risk & Resilience Analyzer', desc:'Simulate institutional shocks and plan corrective actions', screen:'screen-risk'},
+    {icon:'📈', title:'Leadership Dashboard', desc:'Track your decision tendencies and leadership style profile', screen:'screen-dashboard'},
+    {icon:'🏆', title:'Transformation Scorecard', desc:'View your aggregate Strategic Leadership Index', screen:'screen-scorecard'}
+  ];
+  extras.forEach(e=>{
+    const btn = document.createElement('button');
+    btn.className='nav-btn';
+    btn.innerHTML=`<span class="nav-btn-icon">${e.icon}</span><div class="nav-btn-title">${e.title}</div><div class="nav-btn-desc">${e.desc}</div>`;
+    btn.onclick=()=>showScreen(e.screen);
+    homeNav.appendChild(btn);
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  PWA SERVICE WORKER REGISTRATION
+// ═══════════════════════════════════════════════
+if('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

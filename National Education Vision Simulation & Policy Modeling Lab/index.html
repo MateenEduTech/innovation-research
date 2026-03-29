@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0"/>
+<meta name="theme-color" content="#0a1628"/>
+<meta name="description" content="National Education Vision Simulation & Policy Modeling Lab – NEP 2020 | NCF 2023"/>
+<link rel="manifest" href="manifest.json"/>
+<title>National Education Vision Simulation Lab</title>
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy2: #0f2040;
+    --blue: #1a3a6b;
+    --accent: #c8a96e;
+    --platinum: #d8dde6;
+    --white: #f0f4fb;
+    --teal: #1e6fa8;
+    --success: #2ecc71;
+    --warn: #e67e22;
+    --danger: #e74c3c;
+    --card-bg: rgba(26,58,107,0.35);
+    --border: rgba(200,169,110,0.25);
+    --shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;font-family:'Georgia',serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+  
+  /* ===== SCROLLBAR ===== */
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:var(--navy2)}
+  ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+  /* ===== SCREENS ===== */
+  .screen{display:none;min-height:100vh;animation:fadeIn 0.5s ease}
+  .screen.active{display:block}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+  /* ===== HEADER ===== */
+  .top-bar{background:var(--navy2);border-bottom:2px solid var(--accent);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+  .top-bar-title{font-size:12px;color:var(--accent);font-weight:bold;letter-spacing:1px;text-transform:uppercase}
+  .back-btn{background:var(--blue);border:1px solid var(--accent);color:var(--accent);padding:6px 14px;border-radius:4px;cursor:pointer;font-size:12px;font-family:inherit}
+  .back-btn:hover{background:var(--accent);color:var(--navy)}
+
+  /* ===== HOME SCREEN ===== */
+  #home{background:linear-gradient(160deg,#0a1628 0%,#0f2040 40%,#0a1628 100%);position:relative;overflow:hidden}
+  .bg-pattern{position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(200,169,110,0.04) 0%,transparent 50%),radial-gradient(circle at 80% 80%,rgba(30,111,168,0.08) 0%,transparent 50%);pointer-events:none}
+  .home-inner{max-width:480px;margin:0 auto;padding:40px 20px 60px;text-align:center;position:relative}
+  
+  .badge-strip{display:inline-block;background:rgba(200,169,110,0.12);border:1px solid var(--accent);border-radius:20px;padding:6px 16px;font-size:10px;color:var(--accent);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px}
+  
+  .emblem{width:90px;height:90px;margin:0 auto 20px;position:relative}
+  .emblem-ring{width:90px;height:90px;border-radius:50%;border:2px solid var(--accent);display:flex;align-items:center;justify-content:center;background:rgba(200,169,110,0.08);animation:pulse 3s ease-in-out infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(200,169,110,0.3)}50%{box-shadow:0 0 0 14px rgba(200,169,110,0)}}
+  .emblem-icon{font-size:40px}
+  
+  .home-title{font-size:22px;font-weight:bold;color:var(--white);line-height:1.3;margin-bottom:8px;text-shadow:0 2px 8px rgba(0,0,0,0.4)}
+  .home-subtitle{font-size:11px;color:var(--accent);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+  .home-byline{font-size:13px;color:var(--platinum);margin-bottom:4px;font-style:italic}
+  .home-role{font-size:11px;color:rgba(216,221,230,0.6);margin-bottom:32px}
+  
+  .author-photo{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--accent);margin:0 auto 20px;display:block;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+
+  .divider{width:60px;height:1px;background:linear-gradient(90deg,transparent,var(--accent),transparent);margin:24px auto}
+  
+  .nav-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+  .nav-btn{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:18px 12px;cursor:pointer;color:var(--white);font-family:inherit;font-size:12px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
+  .nav-btn::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,169,110,0.1),transparent);opacity:0;transition:opacity 0.3s}
+  .nav-btn:hover::before{opacity:1}
+  .nav-btn:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,0.4)}
+  .nav-btn-icon{font-size:28px;margin-bottom:8px}
+  .nav-btn-label{font-weight:bold;color:var(--accent);font-size:11px;letter-spacing:0.5px;text-transform:uppercase;line-height:1.4}
+
+  .nav-btn-full{grid-column:1/-1;background:linear-gradient(135deg,var(--blue),var(--teal));border:1px solid var(--accent);border-radius:10px;padding:16px;cursor:pointer;color:var(--accent);font-family:inherit;font-size:13px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;transition:all 0.3s}
+  .nav-btn-full:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(30,111,168,0.4)}
+
+  /* ===== SECTION HEADER ===== */
+  .section-header{background:linear-gradient(135deg,var(--navy2),var(--blue));padding:30px 20px 24px;text-align:center;border-bottom:2px solid var(--accent)}
+  .section-header h1{font-size:20px;color:var(--white);margin-bottom:6px}
+  .section-header p{font-size:12px;color:var(--accent);letter-spacing:1px;text-transform:uppercase}
+
+  /* ===== CARDS ===== */
+  .content-wrap{padding:16px;max-width:540px;margin:0 auto}
+  .card{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:14px}
+  .card-title{font-size:14px;font-weight:bold;color:var(--accent);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .card-body{font-size:13px;color:var(--platinum);line-height:1.8}
+  .card-body p{margin-bottom:10px}
+
+  /* ===== FRAMEWORK PAGES ===== */
+  .page-nav{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;background:var(--navy2);border-bottom:1px solid var(--border);scrollbar-width:none}
+  .page-nav::-webkit-scrollbar{display:none}
+  .page-pill{background:var(--card-bg);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:11px;color:var(--platinum);cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s}
+  .page-pill.active{background:var(--accent);color:var(--navy);font-weight:bold;border-color:var(--accent)}
+
+  .framework-page{display:none}
+  .framework-page.active{display:block}
+  .fw-page-title{font-size:18px;color:var(--accent);margin-bottom:6px;font-weight:bold}
+  .fw-page-sub{font-size:11px;color:var(--platinum);opacity:0.7;margin-bottom:16px;letter-spacing:1px;text-transform:uppercase}
+  .fw-section{margin-bottom:16px}
+  .fw-section h3{font-size:13px;color:var(--accent);margin-bottom:8px;border-left:3px solid var(--accent);padding-left:10px}
+  .fw-section p{font-size:13px;color:var(--platinum);line-height:1.85;margin-bottom:8px}
+  .fw-box{background:rgba(200,169,110,0.08);border:1px solid rgba(200,169,110,0.2);border-radius:8px;padding:14px;margin-top:12px;font-size:12px;color:var(--accent);font-style:italic;line-height:1.7}
+  .fw-box::before{content:'🔷 ';font-style:normal}
+  .reflection-box{background:rgba(30,111,168,0.15);border:1px solid rgba(30,111,168,0.3);border-radius:8px;padding:14px;margin-top:12px}
+  .reflection-box h4{font-size:11px;color:var(--teal);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .reflection-box p{font-size:12px;color:var(--platinum);line-height:1.7}
+
+  /* ===== SLIDERS & INPUTS ===== */
+  label{display:block;font-size:12px;color:var(--accent);margin-bottom:6px;margin-top:14px;letter-spacing:0.5px;text-transform:uppercase}
+  input[type=range]{width:100%;-webkit-appearance:none;height:6px;background:rgba(200,169,110,0.2);border-radius:3px;outline:none}
+  input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--accent);cursor:pointer;border:2px solid var(--navy)}
+  select{width:100%;background:var(--navy2);border:1px solid var(--border);color:var(--white);padding:10px 12px;border-radius:6px;font-family:inherit;font-size:13px;outline:none}
+  select:focus{border-color:var(--accent)}
+  input[type=number]{width:100%;background:var(--navy2);border:1px solid var(--border);color:var(--white);padding:10px 12px;border-radius:6px;font-family:inherit;font-size:13px;outline:none}
+  input[type=number]:focus{border-color:var(--accent)}
+  
+  .range-display{text-align:right;font-size:13px;color:var(--white);font-weight:bold;margin-top:4px}
+
+  /* ===== RESULTS ===== */
+  .result-panel{background:rgba(200,169,110,0.06);border:1px solid var(--accent);border-radius:10px;padding:18px;margin-top:18px}
+  .result-panel h3{font-size:13px;color:var(--accent);margin-bottom:14px;letter-spacing:1px;text-transform:uppercase}
+  .metric-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(200,169,110,0.1)}
+  .metric-row:last-child{border-bottom:none}
+  .metric-label{font-size:12px;color:var(--platinum)}
+  .metric-value{font-size:15px;font-weight:bold;color:var(--accent)}
+  .metric-bar{height:5px;border-radius:3px;margin-top:6px;transition:width 0.8s ease}
+
+  /* ===== CHART ===== */
+  .chart-wrap{background:var(--navy2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-top:14px;overflow:hidden}
+  .chart-title{font-size:12px;color:var(--accent);margin-bottom:12px;letter-spacing:1px;text-transform:uppercase}
+  canvas{width:100%!important;max-height:220px}
+
+  /* ===== BUTTONS ===== */
+  .btn-primary{width:100%;background:linear-gradient(135deg,var(--blue),var(--teal));border:1px solid var(--accent);color:var(--accent);padding:14px;border-radius:8px;font-family:inherit;font-size:13px;font-weight:bold;letter-spacing:1px;cursor:pointer;margin-top:18px;transition:all 0.3s;text-transform:uppercase}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(30,111,168,0.4)}
+  .btn-secondary{background:transparent;border:1px solid var(--accent);color:var(--accent);padding:10px 20px;border-radius:6px;font-family:inherit;font-size:12px;cursor:pointer;transition:all 0.2s}
+  .btn-secondary:hover{background:var(--accent);color:var(--navy)}
+
+  /* ===== RADIO TOGGLE ===== */
+  .toggle-group{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .toggle-opt{flex:1;min-width:80px;padding:10px 8px;background:var(--navy2);border:1px solid var(--border);border-radius:6px;text-align:center;cursor:pointer;font-size:12px;color:var(--platinum);transition:all 0.2s;user-select:none}
+  .toggle-opt.selected{background:rgba(200,169,110,0.15);border-color:var(--accent);color:var(--accent);font-weight:bold}
+
+  /* ===== RADAR ===== */
+  .radar-wrap{display:flex;justify-content:center;padding:10px}
+
+  /* ===== RISK BARS ===== */
+  .risk-item{margin-bottom:16px}
+  .risk-header{display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px}
+  .risk-label{color:var(--platinum)}
+  .risk-val{color:var(--accent);font-weight:bold}
+  .risk-bar-bg{height:8px;background:rgba(255,255,255,0.1);border-radius:4px;overflow:hidden}
+  .risk-bar-fill{height:100%;border-radius:4px;transition:width 0.8s ease}
+
+  /* ===== REPORT ===== */
+  .report-section{margin-bottom:20px;padding:16px;background:var(--card-bg);border:1px solid var(--border);border-radius:10px}
+  .report-section h3{color:var(--accent);font-size:14px;margin-bottom:10px;border-bottom:1px solid var(--border);padding-bottom:8px}
+  .report-section p,
+  .report-section li{font-size:13px;color:var(--platinum);line-height:1.8;margin-bottom:6px}
+  .report-section ul{padding-left:18px}
+  
+  /* ===== YEAR TABLE ===== */
+  .year-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}
+  .year-table th{background:rgba(200,169,110,0.15);color:var(--accent);padding:8px 10px;text-align:left;font-size:11px;letter-spacing:0.5px;text-transform:uppercase}
+  .year-table td{padding:8px 10px;border-bottom:1px solid rgba(200,169,110,0.1);color:var(--platinum)}
+  .year-table tr:last-child td{border-bottom:none}
+
+  /* ===== EQUITY ALLOCATION ===== */
+  .alloc-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .alloc-item{background:var(--navy2);border:1px solid var(--border);border-radius:8px;padding:12px}
+  .alloc-name{font-size:11px;color:var(--platinum);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+  .alloc-val{font-size:18px;font-weight:bold;color:var(--accent)}
+
+  /* ===== TRADE-OFF ===== */
+  .tradeoff-card{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px;cursor:pointer;transition:all 0.3s}
+  .tradeoff-card:hover{border-color:var(--accent)}
+  .tradeoff-card.selected{border-color:var(--accent);background:rgba(200,169,110,0.1)}
+  .tradeoff-title{font-size:13px;color:var(--white);font-weight:bold;margin-bottom:4px}
+  .tradeoff-sub{font-size:11px;color:var(--platinum);opacity:0.7}
+
+  /* ===== INTERPRETATION BANDS ===== */
+  .band{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:6px;margin-bottom:6px}
+  .band-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+  .band-label{font-size:12px;color:var(--platinum)}
+  .band.active-band{background:rgba(200,169,110,0.12);border:1px solid var(--accent)}
+  .band.active-band .band-label{color:var(--accent);font-weight:bold}
+
+  /* ===== FOOTER ===== */
+  .footer{text-align:center;padding:20px;font-size:11px;color:rgba(216,221,230,0.4);border-top:1px solid var(--border);margin-top:20px}
+
+  /* ===== NCI GAUGE ===== */
+  .nci-gauge{text-align:center;margin:20px 0}
+  .nci-score{font-size:52px;font-weight:bold;color:var(--accent);text-shadow:0 0 20px rgba(200,169,110,0.4)}
+  .nci-label{font-size:12px;color:var(--platinum);letter-spacing:2px;text-transform:uppercase;margin-top:4px}
+  .nci-band{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:bold;margin-top:8px}
+
+  /* ===== DASHBOARD GRID ===== */
+  .dash-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+  .dash-kpi{background:var(--card-bg);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center}
+  .dash-kpi-val{font-size:26px;font-weight:bold;color:var(--accent)}
+  .dash-kpi-label{font-size:10px;color:var(--platinum);text-transform:uppercase;letter-spacing:0.5px;margin-top:4px}
+  
+  /* ===== SCROLL TO TOP ===== */
+  #scrollTop{position:fixed;bottom:20px;right:20px;background:var(--accent);color:var(--navy);border:none;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer;display:none;z-index:999;box-shadow:var(--shadow)}
+</style>
+</head>
+<body>
+
+<!-- ===== HOME SCREEN ===== -->
+<div id="home" class="screen active">
+  <div class="bg-pattern"></div>
+  <div class="home-inner">
+    <div class="badge-strip">Aligned with NEP 2020 | NCF 2023 | Systemic Reform Modeling</div>
+    
+    <img src="author.jpg" alt="Mateen Yousuf" class="author-photo" onerror="this.style.display='none'"/>
+
+    <div class="emblem">
+      <div class="emblem-ring"><span class="emblem-icon">🏛️</span></div>
+    </div>
+
+    <div class="home-title">National Education Vision<br/>Simulation &amp; Policy Modeling Lab</div>
+    <div class="home-subtitle">Offline Edition • 2025–2026</div>
+    <div class="home-byline">Developed by Mateen Yousuf</div>
+    <div class="home-role">Teacher · School Education Department Kashmir</div>
+
+    <div class="divider"></div>
+
+    <div class="nav-grid">
+      <button class="nav-btn" onclick="go('framework')">
+        <div class="nav-btn-icon">📖</div>
+        <div class="nav-btn-label">Systemic Framework Foundation</div>
+      </button>
+      <button class="nav-btn" onclick="go('policy')">
+        <div class="nav-btn-icon">🛠️</div>
+        <div class="nav-btn-label">Policy Modeling Studio</div>
+      </button>
+      <button class="nav-btn" onclick="go('projection')">
+        <div class="nav-btn-icon">📈</div>
+        <div class="nav-btn-label">Reform Projection Dashboard</div>
+      </button>
+      <button class="nav-btn" onclick="go('nci')">
+        <div class="nav-btn-icon">🧮</div>
+        <div class="nav-btn-label">Competency Index Simulator</div>
+      </button>
+      <button class="nav-btn" onclick="go('equity')">
+        <div class="nav-btn-icon">⚖️</div>
+        <div class="nav-btn-label">Equity &amp; Resource Model</div>
+      </button>
+      <button class="nav-btn" onclick="go('tradeoff')">
+        <div class="nav-btn-icon">🔀</div>
+        <div class="nav-btn-label">Policy Trade-Off Simulator</div>
+      </button>
+      <button class="nav-btn" onclick="go('risk')">
+        <div class="nav-btn-icon">⚠️</div>
+        <div class="nav-btn-label">System Risk Analyzer</div>
+      </button>
+      <button class="nav-btn" onclick="go('dashboard')">
+        <div class="nav-btn-icon">📊</div>
+        <div class="nav-btn-label">National Reform Dashboard</div>
+      </button>
+      <button class="nav-btn-full" onclick="go('report')">
+        📄 &nbsp; Policy Report Generator
+      </button>
+    </div>
+
+    <div class="footer">
+      © 2026 Mateen Yousuf · School Education Department Kashmir<br/>
+      Offline PWA — Works without internet · NEP 2020 Aligned
+    </div>
+  </div>
+</div>
+
+<!-- ===== FRAMEWORK SCREEN ===== -->
+<div id="framework" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Systemic Framework Foundation</div>
+    <span style="font-size:11px;color:var(--accent)">18 Pages</span>
+  </div>
+  <div class="page-nav" id="pageNav"></div>
+  <div class="content-wrap" id="frameworkContent"></div>
+</div>
+
+<!-- ===== POLICY MODELING SCREEN ===== -->
+<div id="policy" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Policy Modeling Studio</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">🛠️ Configure Your Policy Model</div>
+      <label>Policy Domain</label>
+      <select id="policyDomain">
+        <option value="curriculum">Curriculum Reform</option>
+        <option value="assessment">Assessment Reform</option>
+        <option value="teacher">Teacher Development</option>
+        <option value="infra">Infrastructure Expansion</option>
+        <option value="digital">Digital Integration</option>
+        <option value="equity">Equity &amp; Inclusion</option>
+        <option value="vocational">Vocational Education</option>
+      </select>
+      <label>Reform Intensity</label>
+      <div class="toggle-group" id="intensityGroup">
+        <div class="toggle-opt selected" onclick="selectToggle('intensityGroup',this,'low')">Low</div>
+        <div class="toggle-opt" onclick="selectToggle('intensityGroup',this,'moderate')">Moderate</div>
+        <div class="toggle-opt" onclick="selectToggle('intensityGroup',this,'high')">High</div>
+      </div>
+      <label>Budget Allocation Units (1–100)</label>
+      <input type="range" id="budgetSlider" min="1" max="100" value="50" oninput="document.getElementById('budgetVal').textContent=this.value"/>
+      <div class="range-display"><span id="budgetVal">50</span> units</div>
+      <label>Implementation Timeline</label>
+      <div class="toggle-group" id="timelineGroup">
+        <div class="toggle-opt" onclick="selectToggle('timelineGroup',this,'3')">3 Years</div>
+        <div class="toggle-opt selected" onclick="selectToggle('timelineGroup',this,'5')">5 Years</div>
+        <div class="toggle-opt" onclick="selectToggle('timelineGroup',this,'10')">10 Years</div>
+      </div>
+      <button class="btn-primary" onclick="runPolicyModel()">▶ Run Policy Model</button>
+    </div>
+
+    <div class="result-panel" id="policyResults" style="display:none">
+      <h3>📊 Model Results</h3>
+      <div id="policyMetrics"></div>
+      <div class="chart-wrap" style="margin-top:14px">
+        <div class="chart-title">Reform Index Projection</div>
+        <canvas id="policyChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PROJECTION SCREEN ===== -->
+<div id="projection" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Reform Projection Dashboard</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">📈 Configure Projection Parameters</div>
+      <label>Starting Competency Level (%)</label>
+      <input type="range" id="startComp" min="10" max="80" value="40" oninput="document.getElementById('startCompVal').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="startCompVal">40%</span></div>
+      <label>Annual Investment Growth Rate (%)</label>
+      <input type="range" id="investRate" min="1" max="20" value="8" oninput="document.getElementById('investRateVal').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="investRateVal">8%</span></div>
+      <label>Reform Commitment Level</label>
+      <div class="toggle-group" id="commitGroup">
+        <div class="toggle-opt" onclick="selectToggle('commitGroup',this,'low')">Low</div>
+        <div class="toggle-opt selected" onclick="selectToggle('commitGroup',this,'medium')">Medium</div>
+        <div class="toggle-opt" onclick="selectToggle('commitGroup',this,'high')">High</div>
+      </div>
+      <button class="btn-primary" onclick="runProjection()">▶ Generate 10-Year Projection</button>
+    </div>
+    <div id="projectionResults" style="display:none">
+      <div class="chart-wrap"><div class="chart-title">10-Year Competency Growth Curve</div><canvas id="projChart" height="220"></canvas></div>
+      <div class="chart-wrap" style="margin-top:10px"><div class="chart-title">Equity Improvement Trend</div><canvas id="equityChart" height="180"></canvas></div>
+      <div class="card" style="margin-top:10px">
+        <div class="card-title">📅 Year-by-Year Projection</div>
+        <table class="year-table" id="yearTable"></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== NCI SCREEN ===== -->
+<div id="nci" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">National Competency Index</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">🧮 Enter National Education Data</div>
+      <label>% at Foundational Proficiency</label>
+      <input type="range" id="nci1" min="0" max="100" value="30" oninput="document.getElementById('nci1v').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="nci1v">30%</span></div>
+      <label>% at Grade-Level Competency</label>
+      <input type="range" id="nci2" min="0" max="100" value="45" oninput="document.getElementById('nci2v').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="nci2v">45%</span></div>
+      <label>% Advanced Learners</label>
+      <input type="range" id="nci3" min="0" max="100" value="15" oninput="document.getElementById('nci3v').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="nci3v">15%</span></div>
+      <label>Dropout Rate (%)</label>
+      <input type="range" id="nci4" min="0" max="50" value="12" oninput="document.getElementById('nci4v').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="nci4v">12%</span></div>
+      <label>Gender Equity Gap (0=equal, 100=extreme)</label>
+      <input type="range" id="nci5" min="0" max="100" value="20" oninput="document.getElementById('nci5v').textContent=this.value"/>
+      <div class="range-display"><span id="nci5v">20</span></div>
+      <button class="btn-primary" onclick="calcNCI()">▶ Calculate National Competency Index</button>
+    </div>
+    <div id="nciResults" style="display:none">
+      <div class="nci-gauge">
+        <div class="nci-score" id="nciScore">0</div>
+        <div class="nci-label">National Competency Index</div>
+        <div class="nci-band" id="nciBand"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📊 Index Interpretation Bands</div>
+        <div class="band" id="b1"><div class="band-dot" style="background:#e74c3c"></div><div class="band-label">0–25: Critical — Urgent systemic intervention required</div></div>
+        <div class="band" id="b2"><div class="band-dot" style="background:#e67e22"></div><div class="band-label">26–45: Low — Significant reform needed across domains</div></div>
+        <div class="band" id="b3"><div class="band-dot" style="background:#f1c40f"></div><div class="band-label">46–60: Developing — Moderate progress, gaps persist</div></div>
+        <div class="band" id="b4"><div class="band-dot" style="background:#2ecc71"></div><div class="band-label">61–75: Progressing — Good trajectory, sustain effort</div></div>
+        <div class="band" id="b5"><div class="band-dot" style="background:#1a8cff"></div><div class="band-label">76–100: Achieved — System performing at national standard</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔢 Formula Breakdown</div>
+        <div class="card-body" id="nciBreakdown"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== EQUITY SCREEN ===== -->
+<div id="equity" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Equity &amp; Resource Model</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">⚖️ Allocate Resources (Total: 100 Units)</div>
+      <label>Rural Schools <span id="ruralV" style="color:var(--white);text-transform:none">20</span></label>
+      <input type="range" id="rural" min="0" max="60" value="20" oninput="updateEquity()"/>
+      <label>Urban Schools <span id="urbanV" style="color:var(--white);text-transform:none">20</span></label>
+      <input type="range" id="urban" min="0" max="60" value="20" oninput="updateEquity()"/>
+      <label>Teacher Training <span id="teacherV" style="color:var(--white);text-transform:none">20</span></label>
+      <input type="range" id="teacherT" min="0" max="60" value="20" oninput="updateEquity()"/>
+      <label>Digital Devices <span id="digitalV" style="color:var(--white);text-transform:none">20</span></label>
+      <input type="range" id="digital" min="0" max="60" value="20" oninput="updateEquity()"/>
+      <label>Remedial Programs <span id="remedialV" style="color:var(--white);text-transform:none">20</span></label>
+      <input type="range" id="remedial" min="0" max="60" value="20" oninput="updateEquity()"/>
+      <div style="margin-top:12px;padding:10px;background:rgba(200,169,110,0.1);border-radius:6px;font-size:12px;color:var(--accent);text-align:center">
+        Total Allocated: <strong id="totalAlloc">100</strong> / 100 units
+      </div>
+      <button class="btn-primary" onclick="runEquity()">▶ Calculate Equity Projections</button>
+    </div>
+    <div id="equityResults" style="display:none">
+      <div class="result-panel">
+        <h3>📊 Equity Projection Metrics</h3>
+        <div id="equityMetrics"></div>
+      </div>
+      <div class="chart-wrap" style="margin-top:12px">
+        <div class="chart-title">Resource Allocation Distribution</div>
+        <canvas id="equityPieChart" height="220"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TRADE-OFF SCREEN ===== -->
+<div id="tradeoff" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Policy Trade-Off Simulator</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">🔀 Select a Policy Trade-Off Scenario</div>
+      <div id="tradeoffList"></div>
+      <button class="btn-primary" onclick="runTradeoff()">▶ Analyze Trade-Off</button>
+    </div>
+    <div id="tradeoffResults" style="display:none">
+      <div class="result-panel">
+        <h3>📊 Trade-Off Analysis</h3>
+        <div id="tradeoffMetrics"></div>
+      </div>
+      <div class="chart-wrap" style="margin-top:10px">
+        <div class="chart-title">Short-Term vs Long-Term Impact</div>
+        <canvas id="tradeoffChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== RISK SCREEN ===== -->
+<div id="risk" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">System Risk Analyzer</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">⚠️ Configure Risk Parameters</div>
+      <label>Budget Reduction Risk (%)</label>
+      <input type="range" id="rBudget" min="0" max="100" value="30" oninput="document.getElementById('rBudgetV').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="rBudgetV">30%</span></div>
+      <label>Policy Resistance Level</label>
+      <input type="range" id="rPolicy" min="0" max="100" value="40" oninput="document.getElementById('rPolicyV').textContent=this.value"/>
+      <div class="range-display"><span id="rPolicyV">40</span></div>
+      <label>Teacher Shortage Index</label>
+      <input type="range" id="rTeacher" min="0" max="100" value="25" oninput="document.getElementById('rTeacherV').textContent=this.value"/>
+      <div class="range-display"><span id="rTeacherV">25</span></div>
+      <label>Enrollment Decline Risk (%)</label>
+      <input type="range" id="rEnroll" min="0" max="100" value="15" oninput="document.getElementById('rEnrollV').textContent=this.value+'%'"/>
+      <div class="range-display"><span id="rEnrollV">15%</span></div>
+      <button class="btn-primary" onclick="runRisk()">▶ Analyze System Risks</button>
+    </div>
+    <div id="riskResults" style="display:none">
+      <div class="result-panel">
+        <h3>⚠️ Risk Analysis Results</h3>
+        <div id="riskMetrics"></div>
+      </div>
+      <div class="chart-wrap" style="margin-top:12px">
+        <div class="chart-title">Risk Radar Analysis</div>
+        <canvas id="riskRadar" height="260"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD SCREEN ===== -->
+<div id="dashboard" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">National Reform Dashboard</div>
+  </div>
+  <div class="content-wrap">
+    <div class="dash-grid" id="dashKPIs"></div>
+    <div class="chart-wrap"><div class="chart-title">Reform Progress Index — Multi-Year</div><canvas id="dashLine" height="200"></canvas></div>
+    <div class="chart-wrap" style="margin-top:10px"><div class="chart-title">System Health Radar</div><canvas id="dashRadar" height="260"></canvas></div>
+    <div class="chart-wrap" style="margin-top:10px"><div class="chart-title">Cost vs Impact Comparison</div><canvas id="dashBar" height="200"></canvas></div>
+    <div class="footer">Dashboard reflects aggregated simulation data from current session. Run simulations to update values.</div>
+  </div>
+</div>
+
+<!-- ===== REPORT SCREEN ===== -->
+<div id="report" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="go('home')">← Home</button>
+    <div class="top-bar-title">Policy Report Generator</div>
+  </div>
+  <div class="content-wrap">
+    <div class="card">
+      <div class="card-title">📄 Generate Comprehensive Policy Report</div>
+      <div class="card-body">
+        <p>This generates a full reform simulation summary based on all your session data — including policy model outputs, competency projections, equity analysis, risk assessments, and strategic recommendations.</p>
+      </div>
+      <button class="btn-primary" onclick="generateReport()">▶ Generate Full Report</button>
+      <button class="btn-secondary" style="width:100%;margin-top:10px" onclick="printReport()">🖨️ Print / Save as PDF</button>
+    </div>
+    <div id="reportContent"></div>
+  </div>
+</div>
+
+<button id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// ========================
+// GLOBAL STATE
+// ========================
+const S = {
+  policyDomain:'curriculum', intensity:'low', budget:50, timeline:5,
+  nci:{grade:45,advanced:15,equity:0,retention:0,score:0},
+  equity:{rural:20,urban:20,teacher:20,digital:20,remedial:20},
+  projection:{start:40,invest:8,commit:'medium'},
+  risk:{budget:30,policy:40,teacher:25,enroll:15},
+  tradeoff:0,
+  lastReport:{}
+};
+
+function loadState(){try{const d=localStorage.getItem('nevSimState');if(d)Object.assign(S,JSON.parse(d))}catch(e){}}
+function saveState(){try{localStorage.setItem('nevSimState',JSON.stringify(S))}catch(e){}}
+loadState();
+
+// ========================
+// NAVIGATION
+// ========================
+function go(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='framework')initFramework();
+  if(id==='dashboard')initDashboard();
+  if(id==='tradeoff')initTradeoff();
+  if(id==='report')generateReport();
+}
+
+// ========================
+// TOGGLE GROUPS
+// ========================
+function selectToggle(groupId,el,val){
+  document.querySelectorAll('#'+groupId+' .toggle-opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  if(groupId==='intensityGroup')S.intensity=val;
+  if(groupId==='timelineGroup')S.timeline=parseInt(val);
+  if(groupId==='commitGroup')S.projection.commit=val;
+}
+
+// ========================
+// FRAMEWORK PAGES DATA
+// ========================
+const PAGES=[
+{title:'NEP 2020 as Systemic Reform Blueprint',sub:'The Vision, The Architecture, The Imperative',content:[
+{h:'Understanding the Systemic Imperative',p:'The National Education Policy 2020 represents the most comprehensive and ambitious educational reform in India since the Kothari Commission of 1964–1966. Unlike incremental policy adjustments that merely tweak curriculum content or modify examination patterns, NEP 2020 articulates a fundamentally different vision of what education must accomplish in the 21st century. It positions education not merely as a vehicle for academic achievement, but as the primary instrument of national transformation, social equity, economic resilience, and democratic deepening.'},
+{h:'The Blueprint Logic',p:'NEP 2020 operates on a systems-thinking paradigm — it recognizes that schools, teachers, curriculum, assessment, governance, and financing are not independent variables but deeply interdependent components of a single ecosystem. A change in one domain inevitably reverberates across others. This is why the Policy addresses everything from early childhood care to higher education research simultaneously, rather than isolating individual reform areas. The systemic blueprint is designed to be coherent, not piecemeal.'},
+{h:'From Input to Outcome Orientation',p:'Perhaps the most radical departure from previous policy frameworks is the shift from input-based accountability (How many schools exist? How many teachers are enrolled?) to outcome-based accountability (What can students actually do? How equitably are competencies distributed?). This shift demands a completely new architecture of measurement, reporting, and institutional responsibility — one that NEP 2020 explicitly mandates through the creation of PARAKH and the reimagining of school assessment frameworks.'},
+{h:'The Five Pillars of NEP Reform',p:'NEP 2020 rests on five interlocking pillars: Access (ensuring every child can attend school), Equity (ensuring no group is systematically disadvantaged), Quality (ensuring meaningful learning), Affordability (ensuring financial barriers do not exclude), and Accountability (ensuring institutions deliver on their mandates). These pillars are not sequential — they must advance simultaneously, which makes reform both complex and urgent.'},
+{box:'NEP 2020 does not merely propose changes to what is taught — it proposes a transformation in how education systems are organized, governed, financed, and evaluated at every level from classroom to national policy.'},
+{reflection:'Policy Reflection: In your school or district, which of the five NEP pillars faces the greatest implementation gap? What systemic factors explain this gap, and what lever — governance, financing, capacity — would have the greatest catalytic effect?'}
+]},
+{title:'Structural Transformation: The 5+3+3+4 Model',sub:'Reimagining the Architecture of Schooling',content:[
+{h:'Why Structure Matters',p:'The restructuring of school education into a 5+3+3+4 framework is not a cosmetic renaming of grade levels. It represents a fundamental reconceptualization of how human development unfolds and how educational institutions should align with that development. The old 10+2 structure was historically inherited, not developmentally designed. The new structure is grounded in neuroscience, developmental psychology, and global best practices in early childhood education.'},
+{h:'Foundational Stage (Ages 3–8)',p:'The foundational stage encompasses three years of pre-primary education (Anganwadi/preschool) and Grades 1–2. This stage focuses on play-based, activity-based, and discovery-based learning. The emphasis is on language development, early numeracy, sensory exploration, and the formation of foundational cognitive habits. Critically, NEP 2020 mandates that all children achieve basic foundational literacy and numeracy by Grade 3 — a target that requires massive investment in early grade teaching quality.'},
+{h:'Preparatory Stage (Ages 8–11, Grades 3–5)',p:'The preparatory stage begins the gradual introduction of structured subject learning — sciences, mathematics, arts, social sciences — but through an experiential and hands-on pedagogical lens. The classroom in this stage should resemble a laboratory of curiosity rather than a lecture hall of passive reception. Regional languages are emphasized as primary media of instruction to maximize cognitive engagement.'},
+{h:'Middle Stage (Ages 11–14, Grades 6–8)',p:'The middle stage introduces subject specialization with interdisciplinary connections. Coding, experiential science, mathematics reasoning, and social science inquiry are introduced. Critically, vocational exposure begins — every student must experience at least one vocational skill in an experiential format. The middle stage is where many students historically have dropped out; NEP 2020 demands that this stage become the most engaging and personally relevant phase of schooling.'},
+{h:'Secondary Stage (Ages 14–18, Grades 9–12)',p:'The secondary stage reimagines the traditional rigid Arts-Commerce-Science streaming. Students are now able to mix subjects across these domains — a science student can study music; a commerce student can study philosophy. The semesterization and elective structure creates a far more flexible pathway toward both higher education and vocational success.'},
+{box:'The 5+3+3+4 structure is not an administrative reorganization — it is a developmental philosophy made structural. Every transition point corresponds to a critical cognitive and socio-emotional developmental milestone.'}
+]},
+{title:'Curriculum Reform at Scale',sub:'From Content Coverage to Competency Development',content:[
+{h:'The Curriculum Coverage Trap',p:'One of the most persistent dysfunctions of Indian school education has been the curriculum coverage model — where teachers are evaluated on how much content they have "completed" rather than how much students have actually learned. This model produces surface learning, examination gaming, and the progressive alienation of students from knowledge. NEP 2020 directly challenges this model by mandating a 40% reduction in curriculum content and a radical shift toward conceptual understanding and higher-order thinking.'},
+{h:'Competency-Based Curriculum Design',p:'The National Curriculum Framework 2023 operationalizes NEP 2020\'s vision through competency-based design. Rather than organizing learning around chapters and topics, the NCF organizes it around competencies — observable, measurable capabilities that students develop progressively across grade levels. Each competency is described in terms of what students can do, not what they have been taught. This shift requires a fundamental redesign of textbooks, lesson plans, assessment rubrics, and teacher preparation.'},
+{h:'Multilingualism as Pedagogical Principle',p:'NEP 2020 mandates the three-language formula and prioritizes mother tongue instruction through at least Grade 5, and ideally through Grade 8. This is not a political statement — it is a neuroscientific and pedagogical imperative. Research consistently demonstrates that children learn mathematics, science, and social concepts far more effectively when instruction occurs in the language they think in at home. The shift to mother tongue instruction requires massive curriculum redesign, textbook translation, and teacher retraining at scale.'},
+{h:'Integration of Arts and Culture',p:'The fragmentation of knowledge into isolated subjects is a legacy of industrial-era schooling. NEP 2020 mandates the integration of arts, culture, sports, and vocational activities into the mainstream curriculum as curricular equals, not extracurricular additions. This has deep implications for how schools allocate time, how timetables are structured, and how teachers are trained in interdisciplinary facilitation.'},
+{box:'Curriculum reform at scale requires not just new textbooks — it requires a new contract between teachers and knowledge, between students and learning, and between schools and their communities.'}
+]},
+{title:'Assessment Architecture & PARAKH',sub:'Moving Beyond Examination to Evidence of Learning',content:[
+{h:'The Examination Pathology',p:'High-stakes examinations have historically distorted Indian education in profound ways. When Board examinations determine life outcomes for students, the entire education system organizes itself around examination preparation rather than genuine learning. Teachers teach to the test. Students memorize rather than understand. Schools compete on pass percentages rather than learning quality. NEP 2020 diagnoses this as an assessment pathology and proposes a comprehensive alternative architecture.'},
+{h:'PARAKH: The New Assessment Authority',p:'The Performance Assessment, Review and Analysis of Knowledge for Holistic Development (PARAKH) is the national body mandated by NEP 2020 to set standards and norms for student assessment across all school boards. PARAKH\'s mandate includes developing equivalence across different state boards, creating competency-based assessment frameworks, and ensuring that assessment serves learning rather than merely sorting students into categories.'},
+{h:'Formative vs Summative Balance',p:'The new assessment architecture envisions a 360-degree, holistic progress card that captures not just academic performance but also cognitive skills, socio-emotional capacities, creative abilities, and physical health. This requires teachers to develop sophisticated formative assessment capabilities — regular, low-stakes checks for understanding that inform their teaching rather than simply producing scores.'},
+{h:'Self-Assessment and Peer Assessment',p:'NEP 2020 explicitly calls for the development of student self-assessment and peer assessment practices. These are not merely pedagogical techniques — they are instruments for developing metacognitive awareness and collaborative intelligence. Students who can accurately assess their own understanding and support peers in learning are developing competencies that matter deeply in the knowledge economy.'},
+{box:'Assessment must become the servant of learning, not its judge. When assessment is primarily formative and developmental, it transforms from an anxiety-producing event into a powerful learning tool.'}
+]},
+{title:'Teacher Capacity Ecosystem',sub:'The Human Infrastructure of Reform',content:[
+{h:'The Teacher as the Reform Fulcrum',p:'Every education reform in history has ultimately risen or fallen on the quality, motivation, and capacity of classroom teachers. NEP 2020 recognizes this with unusual clarity: the policy devotes more substantive attention to teacher development than perhaps any previous Indian education policy. The vision is of a teacher who is not merely an instructor of content but a designer of learning experiences, a diagnostician of student understanding, and a reflective professional committed to continuous growth.'},
+{h:'The Four-Year Integrated B.Ed.',p:'NEP 2020 mandates that by 2030, the minimum qualification for teaching will be a four-year integrated Bachelor of Education (B.Ed.) degree. This integrated programme will combine deep subject matter preparation with rich pedagogical knowledge, substantial school-based practice, and research engagement. The current two-year B.Ed. produces technically qualified but pedagogically underprepared teachers. The four-year integrated model aims to produce genuinely professional educators.'},
+{h:'Continuous Professional Development',p:'Teacher development cannot end at pre-service training. NEP 2020 mandates at least 50 hours of continuous professional development per year for every teacher. This development must be school-based, collaborative, and connected to actual classroom challenges rather than generic lecture-style training events. Professional Learning Communities — structured groups of teachers who observe each other\'s practice, analyze student work together, and support each other\'s growth — are the preferred vehicle for this development.'},
+{h:'Teacher Status and Motivation',p:'Systemic reform requires motivated teachers. NEP 2020 calls for significant improvements in teacher compensation, career progression pathways, and professional recognition. It advocates for merit-based career advancement that rewards demonstrated impact on student learning, not merely seniority. The aspiration is for teaching to become one of the most respected, desired, and well-compensated professions in India.'},
+{box:'Teacher capacity is not just a training problem — it is a systemic design problem. Build the right structures, cultures, and incentives, and teachers will rise to extraordinary levels of professional excellence.'}
+]},
+{title:'School Complex Governance Model',sub:'Decentralization, Accountability and Local Ownership',content:[
+{h:'The School Complex Vision',p:'NEP 2020 introduces the School Complex model as a fundamental unit of educational governance. A school complex consists of one secondary school and all the elementary schools in its neighbourhood, typically 5–10 schools within walking or cycling distance. The complex functions as a collaborative educational ecosystem: sharing resources, coordinating curricula, supporting teacher development, and ensuring equitable access to specialized facilities like laboratories, libraries, sports equipment, and digital infrastructure.'},
+{h:'Resource Pooling and Efficiency',p:'Many Indian schools — particularly in rural areas — are too small to function efficiently as standalone institutions. They lack specialist teachers, adequate facilities, and the critical mass of students needed to run effective learning environments. The school complex model allows small schools to pool resources without merging administratively. Students remain in their local community schools, but gain access to the resources and expertise of the broader complex.'},
+{h:'Governance Architecture',p:'Each school complex has a School Management Committee (SMC) that includes parents, community members, teachers, and local officials. This committee has genuine authority over key decisions — resource allocation, school improvement planning, teacher professional development, and community engagement. This decentralization of governance is designed to increase local ownership and accountability while reducing bureaucratic dependency.'},
+{h:'Horizontal Collaboration among Teachers',p:'The school complex creates horizontal networks of professional collaboration among teachers across schools. A mathematics specialist in the secondary school can support mathematics teaching across all elementary schools in the complex. Art teachers, physical education specialists, and counsellors can serve the entire complex rather than being confined to a single institution.'},
+{box:'The school complex is not merely an administrative structure — it is a vision of education as a community function rather than a government service. When communities own their school complexes, reform becomes self-sustaining.'}
+]},
+{title:'Digital Infrastructure & Equity',sub:'Technology as Enabler, Not Silver Bullet',content:[
+{h:'The Digital Paradox',p:'India sits at a profound digital paradox: it is among the world\'s largest producers of technology and digital services, yet millions of its school-going children lack access to reliable electricity, functional smartphones, or internet connectivity. Any technology strategy for education that fails to confront this paradox will deepen inequality rather than reduce it. NEP 2020 takes a nuanced position on technology — embracing its transformative potential while insisting that equity must precede digitization.'},
+{h:'DIKSHA and National Digital Infrastructure',p:'The Digital Infrastructure for Knowledge Sharing (DIKSHA) platform represents India\'s most ambitious attempt at creating a nationally shared, multilingual, open-source repository of educational content. DIKSHA hosts textbooks, teacher training resources, assessment items, and learning materials across all states and languages. The vision is that any teacher or student in any corner of India can access high-quality educational content in their own language, for free, without internet connectivity barriers.'},
+{h:'Low-Tech and No-Tech Solutions',p:'NEP 2020 explicitly acknowledges that technology-based solutions must be complemented — and in many contexts replaced — by low-tech and no-tech pedagogical approaches. Activity-based learning, peer learning, project-based inquiry, and arts integration are all highly effective and require no technology whatsoever. The policy insists that digital access gaps must not become learning gaps — teachers must be equipped to deliver powerful learning experiences regardless of technological availability.'},
+{h:'Teacher Digital Literacy',p:'Digital infrastructure is only as useful as teachers\' capacity to deploy it pedagogically. Providing tablets to teachers without accompanying digital pedagogy development is a waste of resources. NEP 2020 mandates the development of a national teacher digital literacy programme that covers not just tool use but pedagogical integration — how to use digital resources to spark inquiry, deepen understanding, and differentiate instruction for diverse learners.'},
+{box:'Technology in education must follow the equity imperative, not precede it. Build connectivity, build teacher capacity, build culturally relevant content — and then build the hardware infrastructure. Not the reverse.'}
+]},
+{title:'Financing Education Reform',sub:'The Economics of Transformation',content:[
+{h:'The 6% GDP Commitment',p:'NEP 2020 reaffirms and strengthens the long-standing but consistently unmet commitment to allocate 6% of GDP to education. Currently, India spends approximately 3% of GDP on education — one of the lowest rates among comparable economies. Achieving the 6% target would nearly double the financial resources available for education, enabling the scale of infrastructure investment, teacher training, curriculum development, and institutional reform that NEP 2020 envisions.'},
+{h:'The Cost of Not Reforming',p:'Education finance discussions often focus on the cost of reform. Equally important — and systematically underestimated — is the cost of not reforming. Every year that millions of students complete schooling without foundational literacy represents an enormous loss of human potential and economic productivity. The economic return on high-quality early education investment is estimated at between 7% and 12% annually — one of the highest returns available in public investment.'},
+{h:'Equity in Resource Distribution',p:'Financial resources in Indian education are distributed highly inequitably. Urban schools receive disproportionately more funding per student than rural schools. Private schools serving wealthy families receive implicit subsidies through tax exemptions while government schools serving poor families remain chronically underfunded. NEP 2020 calls for equity-weighted funding formulae that direct greater resources to schools serving disadvantaged populations.'},
+{h:'Public-Private Partnership Frameworks',p:'NEP 2020 acknowledges the role of private investment in education while insisting on robust regulatory frameworks that prevent commercial exploitation. Public-Private Partnerships must be structured to enhance rather than replace public provision, particularly for populations who cannot afford private fees. The regulatory architecture must ensure quality, equity, and accountability across all educational providers, public and private.'},
+{box:'Education finance is not merely about allocating money — it is about allocating vision. Where a society chooses to invest in education reveals what it truly believes about its future.'}
+]},
+{title:'Vocational Integration at National Scale',sub:'Connecting Education to Livelihood and Dignity',content:[
+{h:'The Vocational-Academic Divide',p:'One of the most damaging structural features of Indian education has been the stigmatization of vocational education and the elevation of academic education as the only legitimate pathway to social status. This has produced a profound mismatch: millions of academically educated young people who lack practical skills, alongside a massive skilled labour shortage across virtually every sector of the economy. NEP 2020 attempts to dissolve the vocational-academic divide by integrating vocational learning into the mainstream curriculum from Grade 6 onwards.'},
+{h:'The Bagless Day and Skill Immersion',p:'NEP 2020 mandates at least 10 days per year of "bagless school days" where students engage in practical skill immersion experiences — working with local artisans, farmers, mechanics, healthcare workers, and entrepreneurs. These experiences are not extracurricular — they are curricular. They develop practical intelligence, respect for different forms of labour, and a richer understanding of how knowledge operates in the real world.'},
+{h:'National Skills Qualifications Framework',p:'Vocational learning outcomes must be recognized and credentialed through a coherent national qualifications framework. The National Skills Qualifications Framework (NSQF) provides a ladder of vocational competency levels from foundational through advanced, enabling students to build vocational credentials progressively while maintaining academic pathways. This equivalence between vocational and academic qualification is essential for removing the stigma associated with vocational education.'},
+{h:'Industry Partnership at Scale',p:'Effective vocational education requires genuine industry partnership — not tokenistic advisory committees but deep engagement with curriculum design, practical training facilities, apprenticeship placement, and graduate employment. NEP 2020 calls for formal industry-education partnerships at district and state levels, with industry contributing expertise, equipment, and employment opportunities.'},
+{box:'Vocational integration is an act of democratic respect — it signals that the knowledge of farmers, artisans, mechanics, and healers deserves the same institutional dignity as the knowledge of doctors, engineers, and lawyers.'}
+]},
+{title:'Higher Education Multidisciplinary Model',sub:'Universities as Ecosystems of Knowledge',content:[
+{h:'From Affiliating Colleges to Autonomous Universities',p:'The current architecture of Indian higher education — large affiliating universities overseeing hundreds of weakly resourced colleges — is among the most academically dysfunctional systems in the world. Colleges have no curricular autonomy, no research capacity, and no institutional identity. NEP 2020 envisions a transformation toward large, multidisciplinary universities and autonomous degree-granting colleges with genuine academic freedom and institutional accountability.'},
+{h:'The Liberal Education Vision',p:'NEP 2020 adopts a liberal education model that encourages students to study across disciplines rather than being confined to a single subject stream from the first year of university. A student admitted to study physics can also study music, economics, philosophy, and computer science. This multidisciplinary approach develops the integrative thinking, creative problem-solving, and adaptive intelligence that the 21st century demands.'},
+{h:'Research and Innovation Ecosystem',p:'The National Research Foundation (NRF) is proposed as a major funding body to support cutting-edge research across all disciplines in Indian universities. Currently, research in Indian higher education is concentrated in a handful of elite institutions. NEP 2020 envisions a democratic expansion of research capacity — supporting inquiry at regional universities, connecting academic research with local development challenges, and creating pathways from research to innovation to enterprise.'},
+{box:'A university that only produces graduates has fulfilled its minimum function. A university that produces knowledge, challenges assumptions, and serves its community has fulfilled its full democratic function.'}
+]},
+{title:'Competency Continuum Across Grades',sub:'Mapping Learning from Foundation to Mastery',content:[
+{h:'The Competency Architecture',p:'A competency continuum maps the progressive development of specific capabilities across all grades of schooling. Rather than describing what students should be taught at each grade, the continuum describes what students should be able to do — and how that capability should deepen and become more sophisticated as students advance. This shift from content coverage to competency development represents one of the most significant conceptual transformations embedded in NEP 2020 and NCF 2023.'},
+{h:'Literacy Competency Continuum',p:'Literacy develops progressively from phonological awareness in early childhood through decoding fluency in early grades to critical reading comprehension in middle school and sophisticated textual analysis in secondary school. Each stage builds on the previous one — a gap at any stage creates compounding difficulties at subsequent stages. The competency continuum makes these developmental dependencies explicit, allowing teachers to identify gaps and provide targeted support.'},
+{h:'Numeracy and Mathematical Reasoning',p:'Similarly, mathematical competency develops from concrete manipulation of objects through pictorial representation to abstract symbolic reasoning. Students who do not develop strong number sense and operational understanding in foundational grades struggle with algebraic reasoning in middle school and calculus in secondary school. The competency continuum for mathematics maps these dependencies and provides clear diagnostic guidance for teachers.'},
+{h:'Socio-Emotional Learning Competencies',p:'NEP 2020 includes socio-emotional learning competencies — empathy, self-regulation, collaboration, communication, and resilience — as integral to the competency architecture rather than supplementary to it. These competencies are explicitly mapped across grade levels and are expected to be actively developed through pedagogical design rather than left to emerge accidentally.'},
+{box:'A competency continuum is the curriculum\'s conscience — it holds the system accountable not for what was taught, but for what was learned, and ensures that no child is passed forward with invisible gaps in essential capabilities.'}
+]},
+{title:'Monitoring & Evaluation Architecture',sub:'From Compliance Reporting to Learning Evidence',content:[
+{h:'The Compliance Trap',p:'Most education monitoring systems in developing countries are designed primarily for compliance reporting: Are teachers present? Are buildings constructed? Are textbooks distributed? These inputs matter, but their presence tells us almost nothing about whether learning is occurring. NEP 2020 demands a fundamental shift in monitoring orientation — from input compliance to outcome evidence, from administrative reporting to pedagogical intelligence.'},
+{h:'National Achievement Survey',p:'The National Achievement Survey (NAS) is India\'s large-scale learning assessment that measures the competency levels of students across grades and states. NEP 2020 envisions a strengthened NAS that provides state-level, district-level, and school-level data to guide targeted intervention — not to rank or shame institutions, but to identify where support is most urgently needed and what forms of support are most effective.'},
+{h:'School Self-Evaluation Framework',p:'NEP 2020 mandates the development of a School Self-Evaluation Framework that enables every school to conduct an annual, evidence-based review of its own performance across multiple dimensions — learning outcomes, equity, teacher development, community engagement, and institutional culture. This self-evaluation is intended to drive school improvement planning, not satisfy external inspectors.'},
+{h:'Real-Time Data Systems',p:'Modern monitoring requires real-time data systems that provide teachers, school leaders, and district officials with timely, actionable information. Termly reports on learning outcomes are useful; weekly diagnostic data is transformative. NEP 2020 calls for the development of lightweight, mobile-enabled data collection systems that give teachers immediate feedback on student progress without creating excessive administrative burden.'},
+{box:'Monitoring that serves learning must be designed by educators, for educators. When teachers find monitoring systems genuinely useful for their teaching, they use them honestly. When they find them bureaucratically burdensome, they game them.'}
+]},
+{title:'Data Governance & Ethical Reporting',sub:'Trust, Privacy, and Institutional Integrity',content:[
+{h:'Data as Public Good',p:'Educational data — about students, teachers, schools, and systems — is an extraordinarily valuable public resource when used ethically and intelligently. It can identify learning gaps before they become entrenched, reveal inequities before they become permanent, and surface effective practices before they remain isolated. NEP 2020 recognizes the transformative potential of educational data while insisting on robust ethical frameworks that protect the rights and dignity of individuals.'},
+{h:'Student Data Privacy',p:'Student data privacy is a fundamental right, not a bureaucratic formality. Student assessment data, attendance records, health information, and family background details must be collected only for legitimate educational purposes, stored securely, shared only with appropriate authorization, and never used in ways that stigmatize or disadvantage individual children. NEP 2020 calls for comprehensive data privacy legislation specific to the educational context.'},
+{h:'Transparent Institutional Reporting',p:'School and system-level performance data must be publicly available in forms that are meaningful to parents, communities, and policymakers — not buried in technical reports accessible only to specialists. Transparent reporting creates accountability, enables informed parental choice, and supports evidence-based advocacy. However, transparency must be accompanied by support — schools that are performing poorly need resources and guidance, not only exposure.'},
+{box:'Data without wisdom is just numbers. Educational data governance must be guided by a fundamental commitment: every data point represents a human being, and every analytical decision must be made with that human being\'s dignity and flourishing in mind.'}
+]},
+{title:'Inclusion & Social Equity Strategy',sub:'Education as the Great Equalizer — or the Great Divider',content:[
+{h:'The Equity Imperative',p:'NEP 2020 makes equity not merely an ethical aspiration but a policy imperative. The policy explicitly names the groups most systematically excluded from quality education: girls, children from Scheduled Castes and Scheduled Tribes, children with disabilities, children from economically deprived families, children in conflict-affected areas, and children who have migrated with their families. For each group, specific targeted interventions are mandated.'},
+{h:'Gender Equity in Education',p:'Despite significant progress in girls\' enrollment rates over the past two decades, gender gaps in learning outcomes, secondary school completion, and transition to higher education remain significant in many regions. NEP 2020 mandates gender-sensitive pedagogy, safe school environments, menstrual hygiene facilities, and targeted scholarship programmes for girls. The policy also recognizes transgender students and mandates inclusive and non-discriminatory school environments for all gender identities.'},
+{h:'Children with Special Needs',p:'Inclusive education — the integration of children with disabilities into mainstream classrooms with appropriate support — is a cornerstone of NEP 2020\'s equity vision. Every school must be physically accessible. Every teacher must have training in basic inclusive pedagogy. Every child with a disability must have an Individualized Education Plan. The aspiration is for no child to be excluded from the school community on the grounds of disability.'},
+{h:'Socio-Economically Disadvantaged Groups',p:'Special educational zones, targeted scholarships, residential school facilities, and community-based outreach programmes are all deployed in NEP 2020\'s strategy for reaching the most marginalized children. The policy explicitly commits to tracking equity disaggregated by caste, gender, disability status, and income level — ensuring that aggregate national progress does not mask continuing deprivation among specific groups.'},
+{box:'Equity in education is not about treating every student identically — it is about ensuring that every student receives what they specifically need to reach their full potential. True equity sometimes demands profound inequality of input.'}
+]},
+{title:'Reform Sustainability Theory',sub:'Building Change That Endures',content:[
+{h:'The Sustainability Challenge',p:'History is littered with ambitious education reforms that produced impressive short-term gains but collapsed when political administrations changed, funding dried up, or initial champions moved on. Sustainability in education reform is not a technical problem — it is a political, cultural, and institutional design problem. NEP 2020 is aware of this challenge and includes explicit provisions intended to build the institutional infrastructure that outlasts individual champions.'},
+{h:'Institutionalizing Reform',p:'Sustainable reform requires embedding change in institutional structures that outlast individuals. This means reforming curriculum frameworks, assessment systems, teacher qualification requirements, governance legislation, and funding formulas — not just issuing policy circulars. When reform is encoded in law, embedded in institutional processes, and reflected in resource allocation, it becomes resistant to reversal.'},
+{h:'Community Ownership as Sustainability Driver',p:'The most sustainable education reforms are those that communities come to regard as their own. When parents see their children learning, when teachers feel professionally valued, when community leaders see the school complex serving local needs — reform gains a constituency that defends and sustains it beyond electoral cycles and administrative changes.'},
+{box:'Sustainable reform is not imposed from above and maintained through compliance — it is grown from below and sustained through genuine ownership. The ultimate measure of reform sustainability is whether communities would fight to preserve it if a future government tried to dismantle it.'}
+]},
+{title:'Change Resistance in Systems',sub:'Understanding and Navigating Systemic Inertia',content:[
+{h:'Why Systems Resist Change',p:'All complex systems — including education systems — develop powerful mechanisms of self-preservation that resist external disruption. These mechanisms are not purely irrational: they exist because rapid, poorly designed change has historically caused more harm than stability. Understanding the sources and logic of change resistance is essential for reform strategists who want to achieve genuine transformation rather than merely provoke defensive reactions.'},
+{h:'Sources of Teacher Resistance',p:'Teachers resist reform for rational reasons: they have invested years developing their current practice; they have been through previous reform cycles that produced only disruption without improvement; they are not involved in designing the changes they are expected to implement; they lack the time, support, and professional development needed to change effectively. Reform that ignores these realities will encounter fierce resistance that it mistakes for conservatism.'},
+{h:'Political and Administrative Resistance',p:'Education bureaucracies resist reform because reform threatens established power structures, familiar routines, and existing accountability relationships. Decentralization threatens central administrators. Outcome accountability threatens those who have perfected input compliance. Transparency threatens those who benefit from opacity. Effective reform must negotiate these political economies carefully, building coalitions of interest rather than simply mandating change from above.'},
+{box:'Change resistance is often the immune system of a system defending itself against poorly designed disruption. Wise reformers distinguish between resistance to bad change — which should be heeded — and resistance to necessary transformation — which must be navigated with intelligence and patience.'}
+]},
+{title:'Public Trust & Stakeholder Confidence',sub:'The Social Contract of Education Reform',content:[
+{h:'Trust as Reform Infrastructure',p:'Education reform cannot succeed in a low-trust environment. When parents do not trust that government schools will serve their children well, they make enormous sacrifices to access private schools. When teachers do not trust that reforms will be sustained, they wait out each new initiative. When communities do not trust that their voices matter, they disengage from governance structures. Building trust is therefore not peripheral to reform — it is foundational infrastructure.'},
+{h:'Parent Engagement as Trust Builder',p:'Parents who are meaningfully engaged in school governance, kept informed about their children\'s learning progress, and listened to when they raise concerns develop genuine ownership of the school. This ownership is the most powerful source of sustainable trust. NEP 2020 mandates active parent engagement not as a compliance requirement but as a trust-building practice.'},
+{h:'Teacher Voice in Reform Design',p:'Reforms designed without teacher input will encounter maximum resistance. Reforms co-designed with teachers will have built-in advocates. This is why NEP 2020 calls for teacher participation in curriculum development, assessment design, and school improvement planning. When teachers feel that reform reflects their professional wisdom, they implement it with conviction rather than compliance.'},
+{box:'Public trust in education is not built through communication campaigns and publicity events — it is built through the cumulative experience of children actually learning, teachers being genuinely supported, and communities being authentically heard.'}
+]},
+{title:'Long-Term Vision Modeling',sub:'Imagining Education in 2040 and Beyond',content:[
+{h:'The 2040 Education Vision',p:'NEP 2020 sets a horizon of 2040 as the target for India to achieve a fully transformed education system — one that delivers high-quality, equitable, holistic education to all children from early childhood through higher education. This 20-year horizon is deliberately long: genuine systemic transformation cannot occur in a single election cycle or administrative term. It requires sustained political commitment, consistent institutional investment, and patient capacity building across generations.'},
+{h:'Scenario Modeling for Systemic Change',p:'Long-term vision modeling requires the ability to construct and compare alternative futures — not as predictions but as structured explorations of where different policy choices might lead. If India invests heavily in teacher development but underinvests in digital infrastructure: what are the outcomes? If equity-weighted funding is implemented but governance decentralization is delayed: what are the consequences? Scenario modeling builds the strategic intelligence needed to navigate complex reform landscapes.'},
+{h:'The Role of Young People in Shaping the Vision',p:'NEP 2020\'s ultimate beneficiaries are the children currently in schools and those yet to enter them. A 20-year reform vision must be co-created with young people — their aspirations, their understanding of their own learning needs, and their vision of the society they want to inhabit. Education reform that is designed by adults for adults\' conceptions of what children need will always miss something essential.'},
+{h:'From Vision to System Change',p:'Vision without systemic change is merely aspiration. For the 2040 vision to be realized, it must be translated into institutional redesign, resource reallocation, capacity investment, governance reform, and cultural transformation at every level of the system. The journey from vision to system change is the central challenge of educational leadership in the 21st century.'},
+{box:'The best time to plant a tree was twenty years ago. The second best time is now. The 2040 education vision reminds us that the decisions made today about curriculum, teacher training, equity, and governance will shape the minds and futures of children not yet born.'}
+]}
+];
+
+function initFramework(){
+  const nav=document.getElementById('pageNav');
+  const content=document.getElementById('frameworkContent');
+  nav.innerHTML='';
+  content.innerHTML='';
+  PAGES.forEach((p,i)=>{
+    const pill=document.createElement('div');
+    pill.className='page-pill'+(i===0?' active':'');
+    pill.textContent='Page '+(i+1);
+    pill.onclick=()=>showPage(i);
+    nav.appendChild(pill);
+    
+    const div=document.createElement('div');
+    div.className='framework-page'+(i===0?' active':'');
+    div.id='fwpage'+i;
+    let html=`<div class="card"><div class="fw-page-title">${p.title}</div><div class="fw-page-sub">${p.sub}</div>`;
+    p.content.forEach(c=>{
+      if(c.h)html+=`<div class="fw-section"><h3>${c.h}</h3>`;
+      if(c.p)html+=`<p>${c.p}</p>`;
+      if(c.h)html+=`</div>`;
+      if(c.box)html+=`<div class="fw-box">${c.box}</div>`;
+      if(c.reflection)html+=`<div class="reflection-box"><h4>🔷 Policy Reflection Prompt</h4><p>${c.reflection}</p></div>`;
+    });
+    html+=`</div>`;
+    if(i<PAGES.length-1)html+=`<button class="btn-primary" onclick="showPage(${i+1});document.getElementById('pageNav').children[${i+1}].scrollIntoView({inline:'center'})">Next Page →</button>`;
+    div.innerHTML=html;
+    content.appendChild(div);
+  });
+}
+
+function showPage(i){
+  document.querySelectorAll('.framework-page').forEach((p,j)=>{p.className='framework-page'+(j===i?' active':'')});
+  document.querySelectorAll('.page-pill').forEach((p,j)=>{p.className='page-pill'+(j===i?' active':'')});
+  window.scrollTo(0,60);
+}
+
+// ========================
+// POLICY MODEL
+// ========================
+const DOMAIN_DATA={
+  curriculum:{name:'Curriculum Reform',factors:{competency:0.85,adoption:0.75,strain:0.55,sustain:0.80}},
+  assessment:{name:'Assessment Reform',factors:{competency:0.70,adoption:0.65,strain:0.45,sustain:0.75}},
+  teacher:{name:'Teacher Development',factors:{competency:0.90,adoption:0.70,strain:0.40,sustain:0.90}},
+  infra:{name:'Infrastructure Expansion',factors:{competency:0.60,adoption:0.80,strain:0.70,sustain:0.65}},
+  digital:{name:'Digital Integration',factors:{competency:0.65,adoption:0.85,strain:0.60,sustain:0.70}},
+  equity:{name:'Equity & Inclusion',factors:{competency:0.75,adoption:0.60,strain:0.50,sustain:0.85}},
+  vocational:{name:'Vocational Education',factors:{competency:0.70,adoption:0.65,strain:0.55,sustain:0.75}}
+};
+
+let policyChartObj=null;
+function runPolicyModel(){
+  const domain=document.getElementById('policyDomain').value;
+  const budget=parseInt(document.getElementById('budgetSlider').value);
+  const intensity=S.intensity;
+  const timeline=S.timeline;
+  const d=DOMAIN_DATA[domain];
+  const iMult=intensity==='low'?0.6:intensity==='moderate'?1.0:1.4;
+  const tMult=timeline===3?0.7:timeline===5?1.0:1.35;
+  const bMult=budget/100;
+  
+  const cgi=Math.min(100,Math.round(d.factors.competency*iMult*tMult*bMult*100));
+  const rar=Math.min(100,Math.round(d.factors.adoption*iMult*bMult*100));
+  const rsi=Math.min(100,Math.round(d.factors.strain*iMult*(2-bMult)*100));
+  const ss=Math.min(100,Math.round(d.factors.sustain*tMult*bMult*100));
+  
+  S.lastReport.policy={domain:d.name,intensity,budget,timeline,cgi,rar,rsi,ss};
+  saveState();
+  
+  const res=document.getElementById('policyResults');
+  res.style.display='block';
+  document.getElementById('policyMetrics').innerHTML=`
+    ${metricRow('Competency Growth Index',cgi,'%','#2ecc71')}
+    ${metricRow('Reform Adoption Rate',rar,'%','#3498db')}
+    ${metricRow('Resource Strain Index',rsi,'%','#e67e22')}
+    ${metricRow('Sustainability Score',ss,'%','#9b59b6')}
+  `;
+  
+  // Chart
+  const years=Array.from({length:timeline},(_,i)=>('Year '+(i+1)));
+  const projData=years.map((_,i)=>{
+    const progress=(i+1)/timeline;
+    return Math.round(cgi*Math.pow(progress,0.7));
+  });
+  
+  const ctx=document.getElementById('policyChart').getContext('2d');
+  if(policyChartObj)policyChartObj.destroy();
+  policyChartObj=drawLineChart(ctx,years,projData,'Competency Growth Index','#c8a96e');
+}
+
+function metricRow(label,val,suffix,color){
+  return `<div class="metric-row">
+    <div>
+      <div class="metric-label">${label}</div>
+      <div class="metric-bar" style="background:${color};width:${val}%;max-width:100%"></div>
+    </div>
+    <div class="metric-value">${val}${suffix}</div>
+  </div>`;
+}
+
+// ========================
+// PROJECTION ENGINE
+// ========================
+const YEAR_LABELS=['Implementation Shock','Stabilization','Adoption Growth','Competency Shift I','Competency Shift II','System Maturity I','System Maturity II','System Maturity III','System Maturity IV','System Maturity V'];
+let projChartObj=null,eqChartObj=null;
+
+function runProjection(){
+  const start=parseInt(document.getElementById('startComp').value);
+  const invest=parseInt(document.getElementById('investRate').value);
+  const commit=S.projection.commit;
+  const cMult=commit==='low'?0.6:commit==='medium'?1.0:1.45;
+  
+  const compData=[],equityData=[],years=[];
+  let curr=start,eq=100-start*0.4;
+  
+  for(let y=1;y<=10;y++){
+    years.push('Y'+y);
+    const shock=y===1?0.9:1;
+    const growth=invest*(0.8+y*0.04)*cMult*shock/100;
+    curr=Math.min(95,curr*(1+growth));
+    compData.push(Math.round(curr));
+    eq=Math.min(90,eq*(1+growth*0.6));
+    equityData.push(Math.round(eq));
+  }
+  
+  S.lastReport.projection={start,invest,commit,compData,equityData};
+  saveState();
+  
+  document.getElementById('projectionResults').style.display='block';
+  
+  const ctx1=document.getElementById('projChart').getContext('2d');
+  const ctx2=document.getElementById('equityChart').getContext('2d');
+  if(projChartObj)projChartObj.destroy();
+  if(eqChartObj)eqChartObj.destroy();
+  projChartObj=drawLineChart(ctx1,years,compData,'Competency Level (%)','#c8a96e');
+  eqChartObj=drawLineChart(ctx2,years,equityData,'Equity Score','#2ecc71');
+  
+  // Year table
+  const tbl=document.getElementById('yearTable');
+  tbl.innerHTML=`<tr><th>Year</th><th>Phase</th><th>Competency %</th><th>Equity Score</th></tr>`;
+  years.forEach((y,i)=>{
+    tbl.innerHTML+=`<tr><td>${y}</td><td>${YEAR_LABELS[i]}</td><td>${compData[i]}%</td><td>${equityData[i]}</td></tr>`;
+  });
+}
+
+// ========================
+// NCI CALCULATOR
+// ========================
+function calcNCI(){
+  const grade=parseInt(document.getElementById('nci2').value);
+  const advanced=parseInt(document.getElementById('nci3').value);
+  const dropout=parseInt(document.getElementById('nci4').value);
+  const gap=parseInt(document.getElementById('nci5').value);
+  
+  const equityFactor=Math.max(0,(100-gap)/100);
+  const retentionFactor=Math.max(0,(100-dropout)/100);
+  
+  const nci=Math.round(
+    0.4*grade +
+    0.3*advanced +
+    0.2*(equityFactor*100) +
+    0.1*(retentionFactor*100)
+  );
+  
+  S.nci={grade,advanced,equityFactor:equityFactor*100,retentionFactor:retentionFactor*100,score:nci};
+  S.lastReport.nci={score:nci,grade,advanced};
+  saveState();
+  
+  document.getElementById('nciResults').style.display='block';
+  document.getElementById('nciScore').textContent=nci;
+  
+  const bands=['b1','b2','b3','b4','b5'];
+  bands.forEach(b=>document.getElementById(b).classList.remove('active-band'));
+  
+  let bandLabel='',bandColor='',activeB='';
+  if(nci<=25){bandLabel='Critical';bandColor='#e74c3c';activeB='b1';}
+  else if(nci<=45){bandLabel='Low';bandColor='#e67e22';activeB='b2';}
+  else if(nci<=60){bandLabel='Developing';bandColor='#f1c40f';activeB='b3';}
+  else if(nci<=75){bandLabel='Progressing';bandColor='#2ecc71';activeB='b4';}
+  else{bandLabel='Achieved';bandColor='#1a8cff';activeB='b5';}
+  
+  document.getElementById('nciBand').textContent=bandLabel;
+  document.getElementById('nciBand').style.cssText=`background:${bandColor}22;border:1px solid ${bandColor};color:${bandColor}`;
+  document.getElementById(activeB).classList.add('active-band');
+  
+  document.getElementById('nciBreakdown').innerHTML=`
+    <p><strong>NCI Formula:</strong></p>
+    <p>NCI = (0.4 × Grade-Level %) + (0.3 × Advanced %) + (0.2 × Equity Factor) + (0.1 × Retention Factor)</p>
+    <p>= (0.4 × ${grade}) + (0.3 × ${advanced}) + (0.2 × ${Math.round(equityFactor*100)}) + (0.1 × ${Math.round(retentionFactor*100)})</p>
+    <p>= ${(0.4*grade).toFixed(1)} + ${(0.3*advanced).toFixed(1)} + ${(0.2*equityFactor*100).toFixed(1)} + ${(0.1*retentionFactor*100).toFixed(1)}</p>
+    <p style="color:var(--accent);font-weight:bold;font-size:16px">= <strong>${nci}</strong></p>
+  `;
+}
+
+// ========================
+// EQUITY MODEL
+// ========================
+let equityPieObj=null;
+function updateEquity(){
+  const r=parseInt(document.getElementById('rural').value);
+  const u=parseInt(document.getElementById('urban').value);
+  const t=parseInt(document.getElementById('teacherT').value);
+  const d=parseInt(document.getElementById('digital').value);
+  const rem=parseInt(document.getElementById('remedial').value);
+  const total=r+u+t+d+rem;
+  document.getElementById('ruralV').textContent=r;
+  document.getElementById('urbanV').textContent=u;
+  document.getElementById('teacherV').textContent=t;
+  document.getElementById('digitalV').textContent=d;
+  document.getElementById('remedialV').textContent=rem;
+  document.getElementById('totalAlloc').textContent=total;
+  document.getElementById('totalAlloc').style.color=Math.abs(total-100)<5?'var(--success)':'var(--danger)';
+}
+
+function runEquity(){
+  const r=parseInt(document.getElementById('rural').value);
+  const u=parseInt(document.getElementById('urban').value);
+  const t=parseInt(document.getElementById('teacherT').value);
+  const d=parseInt(document.getElementById('digital').value);
+  const rem=parseInt(document.getElementById('remedial').value);
+  const total=r+u+t+d+rem;
+  
+  const equityIdx=Math.min(100,Math.round((r*1.5+t*1.3+rem*1.2+d*0.9+u*0.7)/total*100*0.8));
+  const budgetEff=Math.min(100,Math.round((100-Math.abs(total-100)*0.5)*0.9));
+  const opportunityCost=Math.round(100-equityIdx*0.7);
+  const riskExposure=Math.round(Math.abs(total-100)*0.8+20);
+  
+  S.lastReport.equity={equityIdx,budgetEff,r,u,t,d,rem};
+  saveState();
+  
+  document.getElementById('equityResults').style.display='block';
+  document.getElementById('equityMetrics').innerHTML=`
+    ${metricRow('Equity Improvement Projection',equityIdx,'%','#2ecc71')}
+    ${metricRow('Budget Efficiency Ratio',budgetEff,'%','#3498db')}
+    ${metricRow('Opportunity Cost Index',opportunityCost,'','#e67e22')}
+    ${metricRow('Risk Exposure',Math.min(100,riskExposure),'%','#e74c3c')}
+  `;
+  
+  // Pie chart via bar chart simulation
+  const ctx=document.getElementById('equityPieChart').getContext('2d');
+  if(equityPieObj)equityPieObj.destroy();
+  equityPieObj=drawBarChart(ctx,
+    ['Rural Schools','Urban Schools','Teacher Training','Digital Devices','Remedial Programs'],
+    [r,u,t,d,rem],
+    ['#c8a96e','#3498db','#2ecc71','#9b59b6','#e67e22']
+  );
+}
+
+// ========================
+// TRADE-OFF SIMULATOR
+// ========================
+const TRADEOFFS=[
+  {title:'Increase Teacher Salary vs Invest in Infrastructure',sub:'Human capital vs Physical capital',
+   results:{shortA:75,shortB:40,longA:90,longB:65,sustA:88,sustB:55}},
+  {title:'Expand Digital Devices vs Fund CPD',sub:'Technology hardware vs Professional development',
+   results:{shortA:60,shortB:70,longA:70,longB:85,sustA:60,sustB:90}},
+  {title:'Push Assessment Reform vs Curriculum Redesign',sub:'Measurement change vs Content transformation',
+   results:{shortA:50,shortB:65,longA:65,longB:80,sustA:70,sustB:75}},
+  {title:'Equity Spending vs Academic Excellence Programs',sub:'Inclusive growth vs Elite advancement',
+   results:{shortA:55,shortB:80,longA:85,longB:70,sustA:90,sustB:65}},
+  {title:'Vocational Integration vs Academic Pathway',sub:'Practical skills vs Theoretical depth',
+   results:{shortA:65,shortB:75,longA:80,longB:75,sustA:85,sustB:70}},
+];
+
+let tradeoffChartObj=null;
+function initTradeoff(){
+  const list=document.getElementById('tradeoffList');
+  list.innerHTML='';
+  TRADEOFFS.forEach((t,i)=>{
+    const d=document.createElement('div');
+    d.className='tradeoff-card'+(i===0?' selected':'');
+    d.innerHTML=`<div class="tradeoff-title">${t.title}</div><div class="tradeoff-sub">${t.sub}</div>`;
+    d.onclick=()=>{
+      document.querySelectorAll('.tradeoff-card').forEach(c=>c.classList.remove('selected'));
+      d.classList.add('selected');
+      S.tradeoff=i;
+    };
+    if(i===0)S.tradeoff=0;
+    list.appendChild(d);
+  });
+}
+
+function runTradeoff(){
+  const t=TRADEOFFS[S.tradeoff];
+  const r=t.results;
+  const parts=t.title.split(' vs ');
+  const A=parts[0].trim();
+  const B=parts[1].trim();
+  
+  document.getElementById('tradeoffResults').style.display='block';
+  document.getElementById('tradeoffMetrics').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;margin-bottom:10px">
+      <div style="text-align:center;color:var(--accent);font-weight:bold;font-size:11px;text-transform:uppercase">${A.substring(0,20)}...</div>
+      <div style="text-align:center;color:#3498db;font-weight:bold;font-size:11px;text-transform:uppercase">${B.substring(0,20)}...</div>
+    </div>
+    <div class="metric-row"><div class="metric-label">Short-Term Gain</div><div><span style="color:var(--accent)">${r.shortA}</span> vs <span style="color:#3498db">${r.shortB}</span></div></div>
+    <div class="metric-row"><div class="metric-label">Long-Term Impact</div><div><span style="color:var(--accent)">${r.longA}</span> vs <span style="color:#3498db">${r.longB}</span></div></div>
+    <div class="metric-row"><div class="metric-label">Sustainability Score</div><div><span style="color:var(--accent)">${r.sustA}</span> vs <span style="color:#3498db">${r.sustB}</span></div></div>
+    <div class="metric-row"><div class="metric-label">Recommended Priority</div><div class="metric-value" style="font-size:12px">${r.longA>r.longB?A:B}</div></div>
+  `;
+  
+  const ctx=document.getElementById('tradeoffChart').getContext('2d');
+  if(tradeoffChartObj)tradeoffChartObj.destroy();
+  tradeoffChartObj=drawGroupedBarChart(ctx,
+    ['Short-Term','Long-Term','Sustainability'],
+    [r.shortA,r.longA,r.sustA],
+    [r.shortB,r.longB,r.sustB],
+    A.substring(0,15)+'...',
+    B.substring(0,15)+'...'
+  );
+  S.lastReport.tradeoff=t.title;
+  saveState();
+}
+
+// ========================
+// RISK ANALYZER
+// ========================
+let riskRadarObj=null;
+function runRisk(){
+  const b=parseInt(document.getElementById('rBudget').value);
+  const p=parseInt(document.getElementById('rPolicy').value);
+  const t=parseInt(document.getElementById('rTeacher').value);
+  const e=parseInt(document.getElementById('rEnroll').value);
+  
+  const stability=Math.max(0,Math.round(100-(b*0.35+p*0.30+t*0.20+e*0.15)));
+  const adapt=Math.max(0,Math.round(100-(b*0.25+p*0.35+t*0.25+e*0.15)));
+  const delay=Math.min(100,Math.round((b*0.30+p*0.35+t*0.20+e*0.15)));
+  
+  S.lastReport.risk={stability,adapt,delay,b,p,t,e};
+  saveState();
+  
+  document.getElementById('riskResults').style.display='block';
+  document.getElementById('riskMetrics').innerHTML=`
+    <div class="risk-item">
+      <div class="risk-header"><span class="risk-label">System Stability Index</span><span class="risk-val">${stability}%</span></div>
+      <div class="risk-bar-bg"><div class="risk-bar-fill" style="width:${stability}%;background:${stability>60?'#2ecc71':stability>30?'#e67e22':'#e74c3c'}"></div></div>
+    </div>
+    <div class="risk-item">
+      <div class="risk-header"><span class="risk-label">Adaptation Capacity</span><span class="risk-val">${adapt}%</span></div>
+      <div class="risk-bar-bg"><div class="risk-bar-fill" style="width:${adapt}%;background:${adapt>60?'#2ecc71':adapt>30?'#e67e22':'#e74c3c'}"></div></div>
+    </div>
+    <div class="risk-item">
+      <div class="risk-header"><span class="risk-label">Reform Delay Factor</span><span class="risk-val">${delay}%</span></div>
+      <div class="risk-bar-bg"><div class="risk-bar-fill" style="width:${delay}%;background:${delay<30?'#2ecc71':delay<60?'#e67e22':'#e74c3c'}"></div></div>
+    </div>
+  `;
+  
+  const ctx=document.getElementById('riskRadar').getContext('2d');
+  if(riskRadarObj)riskRadarObj.destroy();
+  riskRadarObj=drawRadarChart(ctx,
+    ['Budget Risk','Policy Resistance','Teacher Shortage','Enrollment Risk','Stability','Adaptation'],
+    [b,p,t,e,100-stability,100-adapt]
+  );
+}
+
+// ========================
+// DASHBOARD
+// ========================
+let dashLineObj=null,dashRadarObj=null,dashBarObj=null;
+function initDashboard(){
+  const r=S.lastReport;
+  const kpis=[
+    {label:'Competency Growth Index',val:(r.policy?.cgi??42)+'%'},
+    {label:'Sustainability Score',val:(r.policy?.ss??65)+'%'},
+    {label:'National Competency Index',val:r.nci?.score??'–'},
+    {label:'System Stability',val:(r.risk?.stability??70)+'%'},
+    {label:'Equity Index',val:(r.equity?.equityIdx??55)+'%'},
+    {label:'Budget Efficiency',val:(r.equity?.budgetEff??72)+'%'},
+  ];
+  document.getElementById('dashKPIs').innerHTML=kpis.map(k=>`
+    <div class="dash-kpi"><div class="dash-kpi-val">${k.val}</div><div class="dash-kpi-label">${k.label}</div></div>
+  `).join('');
+  
+  const years=['Y1','Y2','Y3','Y4','Y5','Y6','Y7','Y8','Y9','Y10'];
+  const compD=r.projection?.compData??[42,45,50,57,63,68,72,76,80,84];
+  
+  const ctx1=document.getElementById('dashLine').getContext('2d');
+  const ctx2=document.getElementById('dashRadar').getContext('2d');
+  const ctx3=document.getElementById('dashBar').getContext('2d');
+  if(dashLineObj)dashLineObj.destroy();
+  if(dashRadarObj)dashRadarObj.destroy();
+  if(dashBarObj)dashBarObj.destroy();
+  
+  dashLineObj=drawLineChart(ctx1,years,compD,'Reform Index','#c8a96e');
+  dashRadarObj=drawRadarChart(ctx2,
+    ['Curriculum','Assessment','Teacher Dev','Infrastructure','Digital','Equity','Vocational'],
+    [r.policy?.cgi??65,70,r.policy?.ss??68,55,60,r.equity?.equityIdx??58,62]
+  );
+  dashBarObj=drawBarChart(ctx3,
+    ['Curriculum','Assessment','Teacher','Digital','Equity'],
+    [r.policy?.cgi??65,70,r.policy?.ss??68,60,r.equity?.equityIdx??58],
+    ['#c8a96e','#3498db','#2ecc71','#9b59b6','#e67e22']
+  );
+}
+
+// ========================
+// REPORT GENERATOR
+// ========================
+function generateReport(){
+  const r=S.lastReport;
+  const today=new Date().toLocaleDateString('en-IN',{year:'numeric',month:'long',day:'numeric'});
+  
+  document.getElementById('reportContent').innerHTML=`
+    <div class="report-section" style="text-align:center;background:linear-gradient(135deg,var(--navy2),var(--blue));border-color:var(--accent)">
+      <h3 style="font-size:18px;border:none;color:var(--white)">National Education Vision Simulation Lab</h3>
+      <p style="color:var(--accent);font-size:12px;margin-top:6px">Policy Reform Simulation Report</p>
+      <p style="color:var(--platinum);font-size:11px;margin-top:4px">Generated: ${today} | Developed by Mateen Yousuf</p>
+      <p style="color:var(--platinum);font-size:11px">Teacher, School Education Department Kashmir</p>
+    </div>
+    
+    <div class="report-section">
+      <h3>1. Executive Summary</h3>
+      <p>This report presents the outputs of a comprehensive education policy simulation conducted using the National Education Vision Simulation &amp; Policy Modeling Lab, aligned with NEP 2020 and NCF 2023 frameworks. The simulation models multi-domain reform scenarios, competency growth trajectories, equity interventions, risk profiles, and resource allocation decisions.</p>
+      <p>The simulations draw on deterministic policy modeling formulas grounded in systemic reform theory, educational economics, and evidence from national-level education datasets.</p>
+    </div>
+    
+    <div class="report-section">
+      <h3>2. Policy Model Simulation Results</h3>
+      ${r.policy ? `
+        <ul>
+          <li>Policy Domain: <strong>${r.policy.domain}</strong></li>
+          <li>Reform Intensity: <strong>${r.policy.intensity}</strong></li>
+          <li>Budget Allocation: <strong>${r.policy.budget} units</strong></li>
+          <li>Implementation Timeline: <strong>${r.policy.timeline} years</strong></li>
+          <li>Competency Growth Index: <strong>${r.policy.cgi}%</strong></li>
+          <li>Reform Adoption Rate: <strong>${r.policy.rar}%</strong></li>
+          <li>Resource Strain Index: <strong>${r.policy.rsi}%</strong></li>
+          <li>Sustainability Score: <strong>${r.policy.ss}%</strong></li>
+        </ul>
+      ` : '<p>No policy model simulation has been run in this session. Use the Policy Modeling Studio to generate data.</p>'}
+    </div>
+    
+    <div class="report-section">
+      <h3>3. National Competency Index</h3>
+      ${r.nci ? `
+        <p>National Competency Index Score: <strong style="color:var(--accent);font-size:20px">${r.nci.score}</strong></p>
+        <p>Grade-Level Competency: ${r.nci.grade}% | Advanced Learners: ${r.nci.advanced}%</p>
+        <p>Interpretation: The NCI of ${r.nci.score} indicates ${r.nci.score<=25?'a critical system requiring urgent intervention':r.nci.score<=45?'significant reform is needed across all domains':r.nci.score<=60?'developing progress with persistent gaps':r.nci.score<=75?'good trajectory requiring sustained effort':'a system performing at or near national standards'}.</p>
+      ` : '<p>No competency index calculation has been performed. Use the NCI Simulator to generate data.</p>'}
+    </div>
+    
+    <div class="report-section">
+      <h3>4. Equity & Resource Analysis</h3>
+      ${r.equity ? `
+        <ul>
+          <li>Equity Improvement Projection: <strong>${r.equity.equityIdx}%</strong></li>
+          <li>Budget Efficiency Ratio: <strong>${r.equity.budgetEff}%</strong></li>
+          <li>Rural Allocation: ${r.equity.r} units | Urban: ${r.equity.u} units</li>
+          <li>Teacher Training: ${r.equity.t} units | Digital: ${r.equity.d} units | Remedial: ${r.equity.rem} units</li>
+        </ul>
+      ` : '<p>No equity simulation has been run. Use the Equity & Resource Model to generate data.</p>'}
+    </div>
+    
+    <div class="report-section">
+      <h3>5. Risk Assessment</h3>
+      ${r.risk ? `
+        <ul>
+          <li>System Stability Index: <strong>${r.risk.stability}%</strong></li>
+          <li>Adaptation Capacity: <strong>${r.risk.adapt}%</strong></li>
+          <li>Reform Delay Factor: <strong>${r.risk.delay}%</strong></li>
+          <li>Budget Risk: ${r.risk.b}% | Policy Resistance: ${r.risk.p} | Teacher Shortage: ${r.risk.t} | Enrollment Risk: ${r.risk.e}%</li>
+        </ul>
+      ` : '<p>No risk analysis has been run. Use the System Risk Analyzer to generate data.</p>'}
+    </div>
+    
+    <div class="report-section">
+      <h3>6. Strategic Recommendations</h3>
+      <ul>
+        <li>Prioritize foundational literacy and numeracy as the anchor of all reform — no competency goal is achievable without this base.</li>
+        <li>Invest in teacher professional development as the highest-leverage reform action — teacher capacity multiplies the impact of every other investment.</li>
+        <li>Implement equity-weighted resource distribution — rural schools and marginalized student populations require proportionally greater investment to achieve equitable outcomes.</li>
+        <li>Establish robust monitoring systems that generate actionable data at school and cluster level, not merely at district or state level.</li>
+        <li>Build community ownership of school improvement — reforms with local champions and parent engagement demonstrate significantly higher sustainability rates.</li>
+        <li>Sequence reform carefully — curriculum and assessment reforms must be accompanied by teacher capacity development, not preceded by it.</li>
+        <li>Maintain long-term policy continuity — education reform operates on generational timescales and requires political commitment across election cycles.</li>
+      </ul>
+    </div>
+    
+    <div class="report-section">
+      <h3>7. Sustainability Roadmap</h3>
+      <ul>
+        <li><strong>Year 1–2 (Foundation Phase):</strong> Institutional readiness, teacher training, community engagement, data infrastructure</li>
+        <li><strong>Year 3–5 (Implementation Phase):</strong> Curriculum rollout, assessment reform, school complex activation, equity monitoring</li>
+        <li><strong>Year 6–10 (Consolidation Phase):</strong> Competency shift measurement, policy refinement based on evidence, sustainability mechanisms</li>
+        <li><strong>Year 11–20 (Transformation Phase):</strong> System maturity, equity achievement, next-generation reform planning</li>
+      </ul>
+    </div>
+    
+    <div class="report-section" style="text-align:center;border-color:var(--accent)">
+      <p style="font-size:12px;color:var(--accent);font-style:italic">"Education is not the filling of a pail, but the lighting of a fire." — W.B. Yeats</p>
+      <p style="font-size:11px;color:rgba(216,221,230,0.5);margin-top:8px">Developed by Mateen Yousuf · School Education Department Kashmir · NEP 2020 Aligned · Offline PWA</p>
+    </div>
+  `;
+}
+
+function printReport(){
+  window.print();
+}
+
+// ========================
+// CHART UTILITIES (Pure Canvas — No Library)
+// ========================
+function drawLineChart(ctx,labels,data,label,color){
+  const w=ctx.canvas.width=ctx.canvas.offsetWidth;
+  const h=ctx.canvas.height=220;
+  const pad={l:40,r:20,t:20,b:30};
+  const pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  const max=Math.max(...data,100);
+  ctx.clearRect(0,0,w,h);
+  
+  // Grid
+  ctx.strokeStyle='rgba(200,169,110,0.1)';
+  ctx.lineWidth=1;
+  [0,25,50,75,100].forEach(v=>{
+    const y=pad.t+ph-(v/max)*ph;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+pw,y);ctx.stroke();
+    ctx.fillStyle='rgba(216,221,230,0.5)';ctx.font='10px Georgia';
+    ctx.fillText(v,4,y+4);
+  });
+  
+  // Line
+  const step=pw/(labels.length-1);
+  ctx.beginPath();
+  data.forEach((d,i)=>{
+    const x=pad.l+i*step;
+    const y=pad.t+ph-(d/max)*ph;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.stroke();
+  
+  // Fill
+  ctx.beginPath();
+  data.forEach((d,i)=>{
+    const x=pad.l+i*step;
+    const y=pad.t+ph-(d/max)*ph;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.lineTo(pad.l+(data.length-1)*step,pad.t+ph);
+  ctx.lineTo(pad.l,pad.t+ph);
+  ctx.closePath();
+  ctx.fillStyle=color+'22';ctx.fill();
+  
+  // Dots
+  data.forEach((d,i)=>{
+    const x=pad.l+i*step;
+    const y=pad.t+ph-(d/max)*ph;
+    ctx.beginPath();ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle=color;ctx.fill();
+  });
+  
+  // X Labels
+  ctx.fillStyle='rgba(216,221,230,0.6)';ctx.font='10px Georgia';ctx.textAlign='center';
+  labels.forEach((l,i)=>{
+    if(i%2===0||labels.length<=6)ctx.fillText(l,pad.l+i*step,h-8);
+  });
+  
+  return {destroy:()=>{}};
+}
+
+function drawBarChart(ctx,labels,data,colors){
+  const w=ctx.canvas.width=ctx.canvas.offsetWidth;
+  const h=ctx.canvas.height=220;
+  const pad={l:40,r:20,t:20,b:40};
+  const pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  const max=Math.max(...data,100);
+  ctx.clearRect(0,0,w,h);
+  
+  // Grid
+  ctx.strokeStyle='rgba(200,169,110,0.1)';ctx.lineWidth=1;
+  [0,25,50,75,100].forEach(v=>{
+    const y=pad.t+ph-(v/max)*ph;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+pw,y);ctx.stroke();
+    ctx.fillStyle='rgba(216,221,230,0.5)';ctx.font='10px Georgia';ctx.textAlign='right';
+    ctx.fillText(v,pad.l-4,y+4);
+  });
+  
+  const bw=pw/labels.length*0.6;
+  const gap=pw/labels.length;
+  
+  data.forEach((d,i)=>{
+    const x=pad.l+i*gap+gap*0.2;
+    const bh=(d/max)*ph;
+    const y=pad.t+ph-bh;
+    ctx.fillStyle=Array.isArray(colors)?colors[i%colors.length]:colors;
+    ctx.fillRect(x,y,bw,bh);
+    ctx.fillStyle='rgba(216,221,230,0.6)';ctx.font='9px Georgia';ctx.textAlign='center';
+    ctx.fillText(labels[i],x+bw/2,h-8);
+    ctx.fillStyle='rgba(216,221,230,0.8)';ctx.fillText(d+'%',x+bw/2,y-4);
+  });
+  
+  return {destroy:()=>{}};
+}
+
+function drawGroupedBarChart(ctx,labels,dataA,dataB,labelA,labelB){
+  const w=ctx.canvas.width=ctx.canvas.offsetWidth;
+  const h=ctx.canvas.height=200;
+  const pad={l:40,r:20,t:30,b:40};
+  const pw=w-pad.l-pad.r,ph=h-pad.t-pad.b;
+  const max=100;
+  ctx.clearRect(0,0,w,h);
+  
+  // Legend
+  ctx.fillStyle='#c8a96e';ctx.fillRect(pad.l,6,16,10);
+  ctx.fillStyle='rgba(216,221,230,0.8)';ctx.font='10px Georgia';ctx.textAlign='left';
+  ctx.fillText(labelA,pad.l+20,15);
+  ctx.fillStyle='#3498db';ctx.fillRect(pad.l+w*0.4,6,16,10);
+  ctx.fillStyle='rgba(216,221,230,0.8)';ctx.fillText(labelB,pad.l+w*0.4+20,15);
+  
+  const gw=pw/labels.length;
+  const bw=gw*0.3;
+  
+  labels.forEach((l,i)=>{
+    const gx=pad.l+i*gw+gw*0.05;
+    // A
+    const ahA=(dataA[i]/max)*ph;
+    ctx.fillStyle='#c8a96e';
+    ctx.fillRect(gx,pad.t+ph-ahA,bw,ahA);
+    // B
+    const ahB=(dataB[i]/max)*ph;
+    ctx.fillStyle='#3498db';
+    ctx.fillRect(gx+bw+2,pad.t+ph-ahB,bw,ahB);
+    
+    ctx.fillStyle='rgba(216,221,230,0.6)';ctx.font='10px Georgia';ctx.textAlign='center';
+    ctx.fillText(l,gx+bw,h-8);
+  });
+  
+  return {destroy:()=>{}};
+}
+
+function drawRadarChart(ctx,labels,data){
+  const w=ctx.canvas.width=ctx.canvas.offsetWidth;
+  const h=ctx.canvas.height=260;
+  const cx=w/2,cy=h/2,r=Math.min(w,h)*0.36;
+  const n=labels.length;
+  const max=100;
+  ctx.clearRect(0,0,w,h);
+  
+  // Grids
+  [25,50,75,100].forEach(v=>{
+    ctx.beginPath();
+    for(let i=0;i<n;i++){
+      const a=(i/n)*Math.PI*2-Math.PI/2;
+      const x=cx+Math.cos(a)*(r*v/max);
+      const y=cy+Math.sin(a)*(r*v/max);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(200,169,110,0.15)';ctx.lineWidth=1;ctx.stroke();
+  });
+  
+  // Spokes
+  for(let i=0;i<n;i++){
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+Math.cos(a)*r,cy+Math.sin(a)*r);
+    ctx.strokeStyle='rgba(200,169,110,0.1)';ctx.stroke();
+  }
+  
+  // Data
+  ctx.beginPath();
+  data.forEach((d,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    const x=cx+Math.cos(a)*(r*d/max);
+    const y=cy+Math.sin(a)*(r*d/max);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle='rgba(200,169,110,0.2)';ctx.fill();
+  ctx.strokeStyle='#c8a96e';ctx.lineWidth=2;ctx.stroke();
+  
+  // Labels
+  labels.forEach((l,i)=>{
+    const a=(i/n)*Math.PI*2-Math.PI/2;
+    const x=cx+Math.cos(a)*(r+20);
+    const y=cy+Math.sin(a)*(r+20);
+    ctx.fillStyle='rgba(216,221,230,0.8)';ctx.font='11px Georgia';ctx.textAlign='center';
+    ctx.fillText(l,x,y+4);
+  });
+  
+  return {destroy:()=>{}};
+}
+
+// ========================
+// SCROLL TOP
+// ========================
+window.addEventListener('scroll',()=>{
+  document.getElementById('scrollTop').style.display=window.scrollY>300?'block':'none';
+});
+
+// ========================
+// PWA SERVICE WORKER
+// ========================
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('./service-worker.js').catch(()=>{});
+  });
+}
+</script>
+</body>
+</html>
